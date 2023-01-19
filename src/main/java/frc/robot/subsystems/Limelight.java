@@ -14,6 +14,7 @@ public class Limelight extends SubsystemBase {
 
     double tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
     SmartDashboard.putBoolean("tv", tv >= 1.0);
-    
+
+    SmartDashboard.putBoolean("target valid", tv >= 1.0);
     }
 }

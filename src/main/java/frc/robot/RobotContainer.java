@@ -29,9 +29,12 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton runUp = new JoystickButton(driver, XboxController.Button.kA.value);
+    private final JoystickButton runDown = new JoystickButton(driver, XboxController.Button.kB.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
+    private final Elevator m_Elevator = new Elevator();
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -59,6 +62,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        runUp.onTrue(new InstantCommand(() -> m_Elevator.runUp()));
+        runDown.onTrue(new InstantCommand(() -> m_Elevator.runDown()));
     }
 
     /**
