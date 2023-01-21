@@ -199,6 +199,6 @@ public class Swerve extends SubsystemBase {
         resetOdometry(drive1m.getInitialPose());
       })
       .andThen(createCommandForTrajectory(drive1m))
-      .andThen(() -> drive(new Translation2d(0, 0), 0, true, true));
+      .andThen(() -> drive(new Translation2d(0, 0), 0, true, false));
   }
 }
