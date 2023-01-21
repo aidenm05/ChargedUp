@@ -36,19 +36,19 @@ public class Elevator extends SubsystemBase {
     followerMotor.configFactoryDefault();
     // total clicks of the elevator chasis 491,717
     //mainMotor.configForwardSoftLimitThreshold(3.0);
+    mainMotor.configSelectedFeedbackSensor(
+      TalonFXFeedbackDevice.IntegratedSensor,
+      0,
+      10
+    );
 
     followerMotor.follow(mainMotor);
     followerMotor.setInverted(TalonFXInvertType.Clockwise); // subject to change
-
-    mainMotor.setSensorPhase(false);
     mainMotor.setInverted(TalonFXInvertType.CounterClockwise);
 
-    mainMotor.configSelectedFeedbackSensor(
-      TalonFXFeedbackDevice.IntegratedSensor,
-      1,
-      30
-    );
+    mainMotor.configNeutralDeadband(0.01);
 
+    /* Set relevant frame periods to be at least as fast as periodic rate */
     mainMotor.setStatusFramePeriod(
       StatusFrameEnhanced.Status_13_Base_PIDF0,
       10,
@@ -60,12 +60,6 @@ public class Elevator extends SubsystemBase {
       Constants.kTimeoutMs
     );
 
-    mainMotor.configMotionCruiseVelocity(15000, 30);
-    mainMotor.configMotionAcceleration(6000, 30);
-    mainMotor.config_kP(1, 0.1, 30);
-
-    mainMotor.configNeutralDeadband(0.01);
-
     /* Set the peak and nominal outputs */
     mainMotor.configNominalOutputForward(0, Constants.kTimeoutMs);
     mainMotor.configNominalOutputReverse(0, Constants.kTimeoutMs);
@@ -74,12 +68,22 @@ public class Elevator extends SubsystemBase {
 
     /* Set Motion Magic gains in slot0 - see documentation */
     mainMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
-    mainMotor.config_kF(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
-    mainMotor.config_kP(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
-    mainMotor.config_kI(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
-    mainMotor.config_kD(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
+    mainMotor.config_kF(Constants.kSlotIdx, 1000, Constants.kTimeoutMs);
 
-    mainMotor.configMotionSCurveStrength(0);
+    mainMotor.config_kP(Constants.kSlotIdx, .1, Constants.kTimeoutMs);
+    mainMotor.config_kI(Constants.kSlotIdx, 0.0, Constants.kTimeoutMs);
+    mainMotor.config_kD(Constants.kSlotIdx, 0.0, Constants.kTimeoutMs);
+
+    /* Set acceleration and vcruise velocity - see documentation */
+    mainMotor.configMotionCruiseVelocity(15000, Constants.kTimeoutMs);
+    mainMotor.configMotionAcceleration(15000, Constants.kTimeoutMs);
+
+    /* Zero the sensor once on robot boot up */
+    mainMotor.setSelectedSensorPosition(
+      0,
+      Constants.kPIDLoopIdx,
+      Constants.kTimeoutMs
+    );
   }
 
   public void runUp() {
@@ -114,7 +118,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setPosition() {
-    mainMotor.setSelectedSensorPosition(0);
+    //setSelectedSensorPosition(0);
     double targetPos = calculatedPosition * 2048 * 10.0;
     mainMotor.set(TalonFXControlMode.MotionMagic, 10000);
   }
