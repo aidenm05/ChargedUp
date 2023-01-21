@@ -23,11 +23,12 @@ public class Elevator extends SubsystemBase {
   public WPI_TalonFX mainMotor;
   public WPI_TalonFX followerMotor;
   public double targetVelocity;
+  public double calculatedPosition = 0;
 
   public Elevator() {
     mainMotor = new WPI_TalonFX(1, "torch"); // change
     followerMotor = new WPI_TalonFX(2, "torch"); // change
-
+    SmartDashboard.putNumber("elevator", calculatedPosition);
     mainMotor.configFactoryDefault();
     followerMotor.configFactoryDefault();
     // 491,717
@@ -56,16 +57,19 @@ public class Elevator extends SubsystemBase {
   //            .withName("runDown");
   //}
 
-  public void runUp() {
-    mainMotor.set(TalonFXControlMode.PercentOutput, -0.3);
+  public void increasePosition() {
+    calculatedPosition = calculatedPosition + 100;
+    //mainMotor.set(TalonFXControlMode.Position, calculatedPosition);
+
   }
 
-  public void runDown() {
-    mainMotor.set(TalonFXControlMode.PercentOutput, 0.3);
+  public void decreasePosition() {
+    calculatedPosition = calculatedPosition - 100;
+    //mainMotor.set(TalonFXControlMode.Position, calculatedPosition);
   }
 
-  public void elevatorStop() {
-    mainMotor.set(TalonFXControlMode.PercentOutput, 0.0);
+  public void setPosition() {
+    mainMotor.set(TalonFXControlMode.Position, 4000);
   }
 
   public void reset() {
