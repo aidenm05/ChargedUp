@@ -48,6 +48,10 @@ public class RobotContainer {
     driver,
     XboxController.Button.kRightBumper.value
   );
+  private final JoystickButton drive1m = new JoystickButton(
+    driver,
+    XboxController.Button.kX.value
+  );
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
@@ -83,6 +87,7 @@ public class RobotContainer {
     runDown.onTrue(new InstantCommand(() -> m_Elevator.runDown()));
     zeroElevatorEncoder.onTrue(new InstantCommand(() -> m_Elevator.reset()));
     runDown.onFalse(new InstantCommand(() -> m_Elevator.elevatorStop()));
+    drive1m.onTrue(s_Swerve.drive1m());
   }
 
   /**
