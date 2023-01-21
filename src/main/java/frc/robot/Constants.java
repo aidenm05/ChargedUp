@@ -18,6 +18,7 @@ public final class Constants {
    * configuration.
    */
   public static final int kSlotIdx = 0;
+  public final int test = 0;
 
   /**
    * Talon FX supports multiple (cascaded) PID loops. For
