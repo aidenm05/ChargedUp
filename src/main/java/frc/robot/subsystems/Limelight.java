@@ -6,15 +6,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Limelight extends SubsystemBase {
 
-    @Override
-    public void periodic(){
-    
-    double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+  @Override
+  public void periodic() {
+    double tx = NetworkTableInstance
+      .getDefault()
+      .getTable("limelight")
+      .getEntry("tx")
+      .getDouble(0);
     SmartDashboard.putNumber("tx", tx);
 
-    double tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
+    double tv = NetworkTableInstance
+      .getDefault()
+      .getTable("limelight")
+      .getEntry("tv")
+      .getDouble(0);
     SmartDashboard.putBoolean("tv", tv >= 1.0);
 
     SmartDashboard.putBoolean("target valid", tv >= 1.0);
-    }
+  }
 }
