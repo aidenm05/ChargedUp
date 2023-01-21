@@ -2,7 +2,9 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.SensorTerm;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import javax.swing.text.Position;
 
 public class Elevator extends SubsystemBase {
@@ -24,26 +27,68 @@ public class Elevator extends SubsystemBase {
   public WPI_TalonFX followerMotor;
   public double targetVelocity;
   public double calculatedPosition = 0;
+  public double motorPosition;
 
   public Elevator() {
-    mainMotor = new WPI_TalonFX(1, "torch"); // change
-    followerMotor = new WPI_TalonFX(2, "torch"); // change
-    SmartDashboard.putNumber("elevator", calculatedPosition);
+    mainMotor = new WPI_TalonFX(1); // change
+    followerMotor = new WPI_TalonFX(2); // change
     mainMotor.configFactoryDefault();
     followerMotor.configFactoryDefault();
-    // 491,717
-    mainMotor.configForwardSoftLimitThreshold(3.0);
+    // total clicks of the elevator chasis 491,717
+    //mainMotor.configForwardSoftLimitThreshold(3.0);
 
     followerMotor.follow(mainMotor);
     followerMotor.setInverted(TalonFXInvertType.Clockwise); // subject to change
+
+    mainMotor.setSensorPhase(false);
     mainMotor.setInverted(TalonFXInvertType.CounterClockwise);
 
+    mainMotor.configSelectedFeedbackSensor(
+      TalonFXFeedbackDevice.IntegratedSensor,
+      1,
+      30
+    );
+
+    mainMotor.setStatusFramePeriod(
+      StatusFrameEnhanced.Status_13_Base_PIDF0,
+      10,
+      Constants.kTimeoutMs
+    );
+    mainMotor.setStatusFramePeriod(
+      StatusFrameEnhanced.Status_10_MotionMagic,
+      10,
+      Constants.kTimeoutMs
+    );
+
+    mainMotor.configMotionCruiseVelocity(15000, 30);
+    mainMotor.configMotionAcceleration(6000, 30);
+    mainMotor.config_kP(1, 0.1, 30);
+
     mainMotor.configNeutralDeadband(0.01);
+
+    /* Set the peak and nominal outputs */
+    mainMotor.configNominalOutputForward(0, Constants.kTimeoutMs);
+    mainMotor.configNominalOutputReverse(0, Constants.kTimeoutMs);
+    mainMotor.configPeakOutputForward(1, Constants.kTimeoutMs);
+    mainMotor.configPeakOutputReverse(-1, Constants.kTimeoutMs);
+
+    /* Set Motion Magic gains in slot0 - see documentation */
+    mainMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
+    mainMotor.config_kF(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
+    mainMotor.config_kP(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
+    mainMotor.config_kI(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
+    mainMotor.config_kD(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
+
+    mainMotor.configMotionSCurveStrength(0);
   }
 
-  // public void runUp(){
-  //     mainMotor.set(TalonFXControlMode.PercentOutput, .5);
-  // }
+  public void runUp() {
+    mainMotor.set(TalonFXControlMode.PercentOutput, .5);
+  }
+
+  public void stop() {
+    mainMotor.set(TalonFXControlMode.PercentOutput, 0);
+  }
 
   //public CommandBase runUp(){
   //    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .5))
@@ -58,18 +103,20 @@ public class Elevator extends SubsystemBase {
   //}
 
   public void increasePosition() {
-    calculatedPosition = calculatedPosition + 100;
+    calculatedPosition = calculatedPosition + 1;
     //mainMotor.set(TalonFXControlMode.Position, calculatedPosition);
 
   }
 
   public void decreasePosition() {
-    calculatedPosition = calculatedPosition - 100;
+    calculatedPosition = calculatedPosition - 1;
     //mainMotor.set(TalonFXControlMode.Position, calculatedPosition);
   }
 
   public void setPosition() {
-    mainMotor.set(TalonFXControlMode.Position, 4000);
+    mainMotor.setSelectedSensorPosition(0);
+    double targetPos = calculatedPosition * 2048 * 10.0;
+    mainMotor.set(TalonFXControlMode.MotionMagic, 10000);
   }
 
   public void reset() {
@@ -78,7 +125,7 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    double position = mainMotor.getSelectedSensorPosition();
-    SmartDashboard.putNumber("sensor position", position);
+    motorPosition = mainMotor.getSelectedSensorPosition();
+    SmartDashboard.putNumber("Elevator", motorPosition);
   }
 }

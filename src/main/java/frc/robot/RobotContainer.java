@@ -86,6 +86,7 @@ public class RobotContainer {
     // runUp.whileTrue(new RunCommand(() -> m_Elevator.increasePosition()));
     // runDown.whileTrue(new RunCommand(() -> m_Elevator.decreasePosition()));
     runUp.onTrue(new InstantCommand(() -> m_Elevator.setPosition()));
+    //runUp.onFalse(new InstantCommand(() -> m_Elevator.stop()));
     // runDown.onFalse(new InstantCommand(() -> m_Elevator.setPosition()));
     zeroElevatorEncoder.onTrue(new InstantCommand(() -> m_Elevator.reset()));
     drive1m.onTrue(s_Swerve.drive1m());
