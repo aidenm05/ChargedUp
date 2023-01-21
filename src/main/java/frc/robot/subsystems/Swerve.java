@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.controller.PIDController;
@@ -27,6 +28,7 @@ import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -173,5 +175,30 @@ public class Swerve extends SubsystemBase {
         mod.getState().speedMetersPerSecond
       );
     }
+  }
+
+  public CommandBase createCommandForTrajectory(
+    PathPlannerTrajectory trajectory
+  ) {
+    return new PPSwerveControllerCommand(
+      trajectory,
+      this::getPose, // Functional interface to feed supplier
+      Constants.Swerve.swerveKinematics,
+      // Position controllers
+      new PIDController(Constants.AutoConstants.kPXController, 0, 0),
+      new PIDController(Constants.AutoConstants.kPYController, 0, 0),
+      new PIDController(Constants.AutoConstants.kPThetaController, 0, 0),
+      this::setModuleStates,
+      this
+    );
+  }
+
+  public CommandBase drive1m() {
+    PathPlannerTrajectory drive1m = PathPlanner.loadPath("Drive1m", 4, 3);
+    return runOnce(() -> {
+        resetOdometry(drive1m.getInitialPose());
+      })
+      .andThen(createCommandForTrajectory(drive1m))
+      .andThen(() -> drive(new Translation2d(0, 0), 0, true, true));
   }
 }
