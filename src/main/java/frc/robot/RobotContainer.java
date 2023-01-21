@@ -1,7 +1,5 @@
 package frc.robot;
 
-import java.lang.reflect.InaccessibleObjectException;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -11,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import java.lang.reflect.InaccessibleObjectException;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -45,6 +44,10 @@ public class RobotContainer {
     driver,
     XboxController.Button.kB.value
   );
+  private final JoystickButton zeroElevatorEncoder = new JoystickButton(
+    driver,
+    XboxController.Button.kRightBumper.value
+  );
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
@@ -76,7 +79,10 @@ public class RobotContainer {
     /* Driver Buttons */
     zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     runUp.onTrue(new InstantCommand(() -> m_Elevator.runUp()));
+    runUp.onFalse(new InstantCommand(() -> m_Elevator.elevatorStop()));
     runDown.onTrue(new InstantCommand(() -> m_Elevator.runDown()));
+    zeroElevatorEncoder.onTrue(new InstantCommand(() -> m_Elevator.reset()));
+    runDown.onFalse(new InstantCommand(() -> m_Elevator.elevatorStop()));
   }
 
   /**

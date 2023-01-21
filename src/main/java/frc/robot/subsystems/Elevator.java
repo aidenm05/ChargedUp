@@ -25,8 +25,8 @@ public class Elevator extends SubsystemBase {
   public double targetVelocity;
 
   public Elevator() {
-    mainMotor = new WPI_TalonFX(1); // change
-    followerMotor = new WPI_TalonFX(2); // change
+    mainMotor = new WPI_TalonFX(1, "torch"); // change
+    followerMotor = new WPI_TalonFX(2, "torch"); // change
 
     mainMotor.configFactoryDefault();
     followerMotor.configFactoryDefault();
@@ -39,47 +39,42 @@ public class Elevator extends SubsystemBase {
 
     mainMotor.configNeutralDeadband(0.01);
   }
-    // public void runUp(){
-    //     mainMotor.set(TalonFXControlMode.PercentOutput, .5);
-    // } 
 
-    //public CommandBase runUp(){
-    //    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .5))
-    //            .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
-    //            .withName("runUp");
-    //}
+  // public void runUp(){
+  //     mainMotor.set(TalonFXControlMode.PercentOutput, .5);
+  // }
 
-    //public CommandBase runDown(){
-    //    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.5))
-    //            .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
-    //            .withName("runDown");
-    //}
-    
-    public void runUp(){
-        mainMotor.set(TalonFXControlMode.PercentOutput, -0.3);
-    }
+  //public CommandBase runUp(){
+  //    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .5))
+  //            .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
+  //            .withName("runUp");
+  //}
 
-    public void runDown(){
-        mainMotor.set(TalonFXControlMode.PercentOutput, 0.3);
-    }
+  //public CommandBase runDown(){
+  //    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.5))
+  //            .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
+  //            .withName("runDown");
+  //}
 
-    public void elevatorStop(){
-        mainMotor.set(TalonFXControlMode.PercentOutput, 0.0);
-    }
+  public void runUp() {
+    mainMotor.set(TalonFXControlMode.PercentOutput, -0.3);
+  }
 
+  public void runDown() {
+    mainMotor.set(TalonFXControlMode.PercentOutput, 0.3);
+  }
 
-    public void reset(){
-        mainMotor.setSelectedSensorPosition(0);
-    }
+  public void elevatorStop() {
+    mainMotor.set(TalonFXControlMode.PercentOutput, 0.0);
+  }
 
+  public void reset() {
+    mainMotor.setSelectedSensorPosition(0);
+  }
 
-
-
-    @Override
-    public void periodic(){
-
-        double position = mainMotor.getSelectedSensorPosition();
-        SmartDashboard.putNumber("sensor position", position);
-
-    }
+  @Override
+  public void periodic() {
+    double position = mainMotor.getSelectedSensorPosition();
+    SmartDashboard.putNumber("sensor position", position);
+  }
 }
