@@ -11,10 +11,9 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
-  
   public static final int kSlotIdx = 0;
   public final int test = 0;
-  public final static int kPIDLoopIdx = 0;
+  public static final int kPIDLoopIdx = 0;
   public static final int kTimeoutMs = 30;
 
   // /**
@@ -34,8 +33,8 @@ public final class Constants {
     );
 
     /* Drivetrain Constants */
-    public static final double trackWidth = Units.inchesToMeters(25); //TODO: This must be tuned to specific robot
-    public static final double wheelBase = Units.inchesToMeters(34); //TODO: This must be tuned to specific robot
+    public static final double trackWidth = Units.inchesToMeters(19.75); //TODO: This must be tuned to specific robot
+    public static final double wheelBase = Units.inchesToMeters(28.5); //TODO: This must be tuned to specific robot
     public static final double wheelCircumference =
       chosenModule.wheelCircumference;
 
