@@ -17,6 +17,7 @@ public class Elevator extends SubsystemBase {
   public double motorPosition;
   StringBuilder _sb = new StringBuilder();
   public int smoothing = 0;
+  int targetPos = 10000;
 
 
   public Elevator() {
@@ -110,7 +111,8 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setPosition() {
-    mainMotor.set(TalonFXControlMode.MotionMagic, 10000);
+    
+    mainMotor.set(TalonFXControlMode.MotionMagic, targetPos);
   }
 
   public void reset() {
@@ -126,7 +128,12 @@ public class Elevator extends SubsystemBase {
     _sb.append(motorOutput);
     _sb.append("\tVel");
     _sb.append(mainMotor.getSelectedSensorVelocity(Constants.kPIDLoopIdx));
-    
+
+    _sb.append("\terr;");
+    _sb.append(mainMotor.getClosedLoopError(Constants.kPIDLoopIdx));
+    _sb.append("\ttrg:");
+    _sb.append(targetPos);
+
     
 
   }
