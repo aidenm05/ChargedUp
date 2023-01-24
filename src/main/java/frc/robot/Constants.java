@@ -49,8 +49,8 @@ public final class Constants {
     );
 
     /* Drivetrain Constants */
-    public static final double trackWidth = Units.inchesToMeters(20.75); //TODO: This must be tuned to specific robot
-    public static final double wheelBase = Units.inchesToMeters(28.8); //TODO: This must be tuned to specific robot
+    public static final double trackWidth = Units.inchesToMeters(25); //TODO: This must be tuned to specific robot
+    public static final double wheelBase = Units.inchesToMeters(34); //TODO: This must be tuned to specific robot
     public static final double wheelCircumference =
       chosenModule.wheelCircumference;
 
