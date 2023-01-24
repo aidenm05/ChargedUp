@@ -83,11 +83,14 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    // runUp.whileTrue(new RunCommand(() -> m_Elevator.increasePosition()));
-    // runDown.whileTrue(new RunCommand(() -> m_Elevator.decreasePosition()));
-    runUp.onTrue(new InstantCommand(() -> m_Elevator.setPosition()));
-    //runUp.onFalse(new InstantCommand(() -> m_Elevator.stop()));
-    // runDown.onFalse(new InstantCommand(() -> m_Elevator.setPosition()));
+    //runUp.whileTrue(new RunCommand(() -> m_Elevator.increasePosition()));
+    //runDown.whileTrue(new RunCommand(() -> m_Elevator.decreasePosition()));
+    runUp.onTrue(new InstantCommand(() -> m_Elevator.runUp()));
+    runUp.onFalse(new InstantCommand(() -> m_Elevator.stop()));
+    runDown.onFalse(new InstantCommand(() -> m_Elevator.stop()));
+    runDown.onTrue(new InstantCommand(() -> m_Elevator.runDown()));
+
+
     zeroElevatorEncoder.onTrue(new InstantCommand(() -> m_Elevator.reset()));
     drive1m.onTrue(s_Swerve.drive1m());
   }
