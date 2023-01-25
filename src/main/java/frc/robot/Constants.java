@@ -11,6 +11,9 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
+  public static final double LIMELIGHT_DEADBAND = 1;
+  public static final double MIN_STEER_K = .4;
+
   // weird motion magic
   /**
    * Which PID slot to pull gains from. Starting 2018, you can choose from
