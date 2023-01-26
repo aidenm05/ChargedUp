@@ -17,7 +17,7 @@ public class Elevator extends SubsystemBase {
 
   public WPI_TalonFX mainMotor;
   public WPI_TalonFX followerMotor;
-  public double calculatedPosition = 0;
+  public double calculatedPOutput = 0;
   public double motorPosition;
   StringBuilder _sb = new StringBuilder();
   public int smoothing = 0;
@@ -25,8 +25,8 @@ public class Elevator extends SubsystemBase {
   int downTargetPosition = 100;
 
   public Elevator() {
-    mainMotor = new WPI_TalonFX(1); // add "torch as second parameter when on canivore"
-    followerMotor = new WPI_TalonFX(2); // add "torch as second parameter when on canivore"
+    mainMotor = new WPI_TalonFX(1, "torch"); // add "torch as second parameter when on canivore"
+    followerMotor = new WPI_TalonFX(2, "torch"); // add "torch as second parameter when on canivore"
     mainMotor.configFactoryDefault();
     followerMotor.configFactoryDefault();
     mainMotor.configSelectedFeedbackSensor(
@@ -37,8 +37,8 @@ public class Elevator extends SubsystemBase {
 
     followerMotor.follow(mainMotor); //set the follower motor to mimic the mainmotor
 
-    followerMotor.setInverted(TalonFXInvertType.Clockwise); // motors need to be inverted from each other as they face opposite ways.  We need to determine if positive is up or down on the elevator.
-    mainMotor.setInverted(TalonFXInvertType.CounterClockwise);
+    followerMotor.setInverted(TalonFXInvertType.CounterClockwise); // motors need to be inverted from each other as they face opposite ways.  We need to determine if positive is up or down on the elevator.
+    mainMotor.setInverted(TalonFXInvertType.Clockwise);
 
     mainMotor.configNeutralDeadband(0.001);
 
@@ -71,7 +71,7 @@ public class Elevator extends SubsystemBase {
     mainMotor.configMotionCruiseVelocity(15000, Constants.kTimeoutMs);
     mainMotor.configMotionAcceleration(15000, Constants.kTimeoutMs);
 
-    /* Zero the sensor once on robot boot up */
+    /* Zero the sensor once on robot boot up not forever */
     mainMotor.setSelectedSensorPosition(
       0,
       Constants.kPIDLoopIdx,
@@ -87,17 +87,11 @@ public class Elevator extends SubsystemBase {
   //   mainMotor.set(TalonFXControlMode.PercentOutput, -0.2);
   // }
 
-  public void stop() {
-    mainMotor.set(TalonFXControlMode.PercentOutput, 0);
-  }
+  // public void stop() {
+  //   mainMotor.set(TalonFXControlMode.PercentOutput, 0);
+  // }
 
-  //Attempt to use triggers
-  //public CommandBase runUp(){
-  //    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .5))
-  //            .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
-  //            .withName("runUp");
-  //}
-
+  //nice run up and down commands
   public CommandBase runDown() {
     return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.5))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
@@ -110,21 +104,27 @@ public class Elevator extends SubsystemBase {
       .withName("runDown");
   }
 
-  public void increasePosition() {
-    calculatedPosition = calculatedPosition + 1;
-    //mainMotor.set(TalonFXControlMode.Position, calculatedPosition)
+  //methods to find percent outputs needed for feedforward etc etc
+  public void increasePercentOutput() {
+    calculatedPOutput = calculatedPOutput + .05;
+    goTo(calculatedPOutput);
   }
 
-  public void decreasePosition() {
-    calculatedPosition = calculatedPosition - 1;
-    //mainMotor.set(TalonFXControlMode.Position, calculatedPosition);
+  public void decreasePercentOutput() {
+    calculatedPOutput = calculatedPOutput - .05;
+    goTo(calculatedPOutput);
   }
 
+  public void goTo(double calculatedPercentOutput) {
+    mainMotor.set(ControlMode.PercentOutput, calculatedPercentOutput);
+  }
+
+  //motion magic shenanigans
   public void setupPosition() {
     mainMotor.set(TalonFXControlMode.MotionMagic, upTargetPos);
   }
 
-  public void setDownPosition(){
+  public void setDownPosition() {
     mainMotor.set(TalonFXControlMode.MotionMagic, downTargetPosition);
   }
 
@@ -135,6 +135,7 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Elevator", mainMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Percent Output", calculatedPOutput);
     double motorOutput = mainMotor.getMotorOutputPercent();
 
     _sb.append("\tOut%");
@@ -149,5 +150,7 @@ public class Elevator extends SubsystemBase {
     _sb.append(mainMotor.getClosedLoopError(Constants.kPIDLoopIdx));
     _sb.append("\ttrg:");
     _sb.append(upTargetPos);
+
+    System.out.println(_sb.toString());
   }
 }

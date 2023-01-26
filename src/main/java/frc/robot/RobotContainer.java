@@ -22,6 +22,7 @@ public class RobotContainer {
 
   /* Controllers */
   private final Joystick driver = new Joystick(0);
+  private final Joystick driver2 = new Joystick(1);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -29,29 +30,45 @@ public class RobotContainer {
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   /* Driver Buttons */
-  private final JoystickButton zeroGyro = new JoystickButton(
+  private final JoystickButton yButton1 = new JoystickButton(
     driver,
     XboxController.Button.kY.value
   );
-  private final JoystickButton robotCentric = new JoystickButton(
+  private final JoystickButton leftBumper1 = new JoystickButton( //maybe we wanna change this to leftBumper
     driver,
     XboxController.Button.kLeftBumper.value
   );
-  private final JoystickButton runUp = new JoystickButton(
+  private final JoystickButton aButton1 = new JoystickButton(
     driver,
     XboxController.Button.kA.value
   );
-  private final JoystickButton runDown = new JoystickButton(
+  private final JoystickButton bButton1 = new JoystickButton(
     driver,
     XboxController.Button.kB.value
   );
-  private final JoystickButton zeroElevatorEncoder = new JoystickButton(
+  private final JoystickButton rightBumper1 = new JoystickButton( //rightBumper
     driver,
     XboxController.Button.kRightBumper.value
   );
-  private final JoystickButton drive1m = new JoystickButton(
+  private final JoystickButton xButton1 = new JoystickButton(
     driver,
     XboxController.Button.kX.value
+  );
+  private final JoystickButton aButton2 = new JoystickButton(
+    driver2,
+    XboxController.Button.kA.value
+  );
+  private final JoystickButton bButton2 = new JoystickButton(
+    driver2,
+    XboxController.Button.kB.value
+  );
+  private final JoystickButton xButton2 = new JoystickButton(
+    driver2,
+    XboxController.Button.kX.value
+  );
+  private final JoystickButton yButton2 = new JoystickButton(
+    driver2,
+    XboxController.Button.kY.value
   );
 
   /* Subsystems */
@@ -67,7 +84,7 @@ public class RobotContainer {
         () -> -driver.getRawAxis(translationAxis),
         () -> -driver.getRawAxis(strafeAxis),
         () -> -driver.getRawAxis(rotationAxis),
-        () -> robotCentric.getAsBoolean()
+        () -> leftBumper1.getAsBoolean()
       )
     );
 
@@ -83,16 +100,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    yButton1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     //runUp.whileTrue(new RunCommand(() -> m_Elevator.increasePosition()));
     //runDown.whileTrue(new RunCommand(() -> m_Elevator.decreasePosition()));
-    runUp.onTrue(new InstantCommand(() -> m_Elevator.runUp()));
-    runUp.onFalse(new InstantCommand(() -> m_Elevator.stop()));
-    runDown.onFalse(new InstantCommand(() -> m_Elevator.stop()));
-    runDown.onTrue(new InstantCommand(() -> m_Elevator.runDown()));
+    aButton1.whileTrue(m_Elevator.runUp());
+    bButton1.whileTrue(m_Elevator.runDown());
 
-    zeroElevatorEncoder.onTrue(new InstantCommand(() -> m_Elevator.reset()));
-    drive1m.onTrue(s_Swerve.drive1m());
+    rightBumper1.onTrue(new InstantCommand(() -> m_Elevator.reset()));
+    xButton1.onTrue(s_Swerve.drive1m());
     // moveToGoalAprilTags.onTrue(s_Swerve.moveToGoalAprilTags());
     // moveToGoalRetro.onTrue(s_Swerve.moveToGoalRetroreflective());
   }
