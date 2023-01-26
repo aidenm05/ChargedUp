@@ -21,7 +21,8 @@ public class Elevator extends SubsystemBase {
   public double motorPosition;
   StringBuilder _sb = new StringBuilder();
   public int smoothing = 0;
-  int targetPos = 10000;
+  int upTargetPos = 10000;
+  int downTargetPosition = 100;
 
   public Elevator() {
     mainMotor = new WPI_TalonFX(1); // add "torch as second parameter when on canivore"
@@ -62,7 +63,7 @@ public class Elevator extends SubsystemBase {
     /* Set Motion Magic gains in slot0 - see documentation */
     mainMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
     mainMotor.config_kF(Constants.kSlotIdx, 1000, Constants.kTimeoutMs);
-    mainMotor.config_kP(Constants.kSlotIdx, .1, Constants.kTimeoutMs);
+    mainMotor.config_kP(Constants.kSlotIdx, 0.0, Constants.kTimeoutMs);
     mainMotor.config_kI(Constants.kSlotIdx, 0.0, Constants.kTimeoutMs);
     mainMotor.config_kD(Constants.kSlotIdx, 0.0, Constants.kTimeoutMs);
 
@@ -119,8 +120,12 @@ public class Elevator extends SubsystemBase {
     //mainMotor.set(TalonFXControlMode.Position, calculatedPosition);
   }
 
-  public void setPosition() {
-    mainMotor.set(TalonFXControlMode.MotionMagic, targetPos);
+  public void setupPosition() {
+    mainMotor.set(TalonFXControlMode.MotionMagic, upTargetPos);
+  }
+
+  public void setDownPosition(){
+    mainMotor.set(TalonFXControlMode.MotionMagic, downTargetPosition);
   }
 
   public void reset() {
@@ -137,9 +142,12 @@ public class Elevator extends SubsystemBase {
     _sb.append("\tVel");
     _sb.append(mainMotor.getSelectedSensorVelocity(Constants.kPIDLoopIdx));
 
+    _sb.append("\t Position:");
+    _sb.append(mainMotor.getSelectedSensorPosition());
+
     _sb.append("\terr;");
     _sb.append(mainMotor.getClosedLoopError(Constants.kPIDLoopIdx));
     _sb.append("\ttrg:");
-    _sb.append(targetPos);
+    _sb.append(upTargetPos);
   }
 }
