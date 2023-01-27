@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -39,7 +40,8 @@ public class Elevator extends SubsystemBase {
 
     followerMotor.setInverted(TalonFXInvertType.CounterClockwise); // motors need to be inverted from each other as they face opposite ways.  We need to determine if positive is up or down on the elevator.
     mainMotor.setInverted(TalonFXInvertType.Clockwise);
-
+    mainMotor.setNeutralMode(NeutralMode.Brake);
+    followerMotor.setNeutralMode(NeutralMode.Brake);
     mainMotor.configNeutralDeadband(0.001);
 
     /* Set relevant frame periods to be at least as fast as periodic rate */
@@ -79,30 +81,30 @@ public class Elevator extends SubsystemBase {
     );
   }
 
-  // public void runUp() {
-  //   mainMotor.set(TalonFXControlMode.PercentOutput, 1);
-  // }
+  public void runUp() {
+    mainMotor.set(TalonFXControlMode.PercentOutput, 1);
+  }
 
-  // public void runDown() {
-  //   mainMotor.set(TalonFXControlMode.PercentOutput, -0.2);
-  // }
+  public void runDown() {
+    mainMotor.set(TalonFXControlMode.PercentOutput, -0.2);
+  }
 
-  // public void stop() {
-  //   mainMotor.set(TalonFXControlMode.PercentOutput, 0);
-  // }
+  public void stop() {
+    mainMotor.set(TalonFXControlMode.PercentOutput, 0);
+  }
 
   //nice run up and down commands
-  public CommandBase runDown() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.5))
-      .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
-      .withName("runDown");
-  }
+  // public CommandBase runDown() {
+  //   return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.5))
+  //     .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
+  //     .withName("runDown");
+  // }
 
-  public CommandBase runUp() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .5))
-      .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
-      .withName("runDown");
-  }
+  // public CommandBase runUp() {
+  //   return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .5))
+  //     .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
+  //     .withName("runDown");
+  // }
 
   //methods to find percent outputs needed for feedforward etc etc
   public void increasePercentOutput() {
@@ -138,19 +140,18 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Percent Output", calculatedPOutput);
     double motorOutput = mainMotor.getMotorOutputPercent();
 
-    _sb.append("\tOut%");
+    _sb.append("\nOut%");
     _sb.append(motorOutput);
-    _sb.append("\tVel");
+    _sb.append("\t Vel");
     _sb.append(mainMotor.getSelectedSensorVelocity(Constants.kPIDLoopIdx));
 
     _sb.append("\t Position:");
     _sb.append(mainMotor.getSelectedSensorPosition());
 
-    _sb.append("\terr;");
+    _sb.append("\t err;");
     _sb.append(mainMotor.getClosedLoopError(Constants.kPIDLoopIdx));
-    _sb.append("\ttrg:");
+    _sb.append("\t trg:");
     _sb.append(upTargetPos);
-
-    System.out.println(_sb.toString());
+    // System.out.println(_sb.toString());
   }
 }

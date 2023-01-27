@@ -21,8 +21,8 @@ import java.lang.reflect.InaccessibleObjectException;
 public class RobotContainer {
 
   /* Controllers */
-  private final Joystick driver = new Joystick(0);
-  private final Joystick driver2 = new Joystick(1);
+  private final Joystick driver1 = new Joystick(0);
+  // private final Joystick driver2 = new Joystick(1);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -31,49 +31,50 @@ public class RobotContainer {
 
   /* Driver Buttons */
   private final JoystickButton yButton1 = new JoystickButton(
-    driver,
+    driver1,
     XboxController.Button.kY.value
   );
   private final JoystickButton leftBumper1 = new JoystickButton( //maybe we wanna change this to leftBumper
-    driver,
+    driver1,
     XboxController.Button.kLeftBumper.value
   );
   private final JoystickButton aButton1 = new JoystickButton(
-    driver,
+    driver1,
     XboxController.Button.kA.value
   );
   private final JoystickButton bButton1 = new JoystickButton(
-    driver,
+    driver1,
     XboxController.Button.kB.value
   );
   private final JoystickButton rightBumper1 = new JoystickButton( //rightBumper
-    driver,
+    driver1,
     XboxController.Button.kRightBumper.value
   );
   private final JoystickButton xButton1 = new JoystickButton(
-    driver,
+    driver1,
     XboxController.Button.kX.value
   );
-  private final JoystickButton aButton2 = new JoystickButton(
-    driver2,
-    XboxController.Button.kA.value
-  );
-  private final JoystickButton bButton2 = new JoystickButton(
-    driver2,
-    XboxController.Button.kB.value
-  );
-  private final JoystickButton xButton2 = new JoystickButton(
-    driver2,
-    XboxController.Button.kX.value
-  );
-  private final JoystickButton yButton2 = new JoystickButton(
-    driver2,
-    XboxController.Button.kY.value
-  );
+  // private final JoystickButton aButton2 = new JoystickButton(
+  //   driver2,
+  //   XboxController.Button.kA.value
+  // );
+  // private final JoystickButton bButton2 = new JoystickButton(
+  //   driver2,
+  //   XboxController.Button.kB.value
+  // );
+  // private final JoystickButton xButton2 = new JoystickButton(
+  //   driver2,
+  //   XboxController.Button.kX.value
+  // );
+  // private final JoystickButton yButton2 = new JoystickButton(
+  //   driver2,
+  //   XboxController.Button.kY.value
+  // );
 
   /* Subsystems */
   private final Limelight m_Limelight = new Limelight();
   private final Swerve s_Swerve = new Swerve(m_Limelight);
+
   private final Elevator m_Elevator = new Elevator();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -81,9 +82,9 @@ public class RobotContainer {
     s_Swerve.setDefaultCommand(
       new TeleopSwerve(
         s_Swerve,
-        () -> -driver.getRawAxis(translationAxis),
-        () -> -driver.getRawAxis(strafeAxis),
-        () -> -driver.getRawAxis(rotationAxis),
+        () -> -driver1.getRawAxis(translationAxis),
+        () -> -driver1.getRawAxis(strafeAxis),
+        () -> -driver1.getRawAxis(rotationAxis),
         () -> leftBumper1.getAsBoolean()
       )
     );
@@ -103,10 +104,13 @@ public class RobotContainer {
     yButton1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     //runUp.whileTrue(new RunCommand(() -> m_Elevator.increasePosition()));
     //runDown.whileTrue(new RunCommand(() -> m_Elevator.decreasePosition()));
-    aButton1.whileTrue(m_Elevator.runUp());
-    bButton1.whileTrue(m_Elevator.runDown());
-
-    rightBumper1.onTrue(new InstantCommand(() -> m_Elevator.reset()));
+    //aButton1.onTrue(m_Elevator.runUp());
+    //bButton1.whileTrue(m_Elevator.runDown());
+    aButton1.onTrue(new InstantCommand(() -> m_Elevator.runUp()));
+    aButton1.onFalse(new InstantCommand(() -> m_Elevator.stop()));
+    bButton1.onTrue(new InstantCommand(() -> m_Elevator.runDown()));
+    bButton1.onFalse(new InstantCommand(() -> m_Elevator.stop()));
+    // rightBumper1.onTrue(new InstantCommand(() -> m_Elevator.reset()));
     xButton1.onTrue(s_Swerve.drive1m());
     // moveToGoalAprilTags.onTrue(s_Swerve.moveToGoalAprilTags());
     // moveToGoalRetro.onTrue(s_Swerve.moveToGoalRetroreflective());
