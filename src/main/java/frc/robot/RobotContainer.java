@@ -75,8 +75,6 @@ public class RobotContainer {
   private final Limelight m_Limelight = new Limelight();
   private final Swerve s_Swerve = new Swerve(m_Limelight);
 
-  private final Elevator m_Elevator = new Elevator();
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     s_Swerve.setDefaultCommand(
@@ -104,12 +102,17 @@ public class RobotContainer {
     yButton1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     //runUp.whileTrue(new RunCommand(() -> m_Elevator.increasePosition()));
     //runDown.whileTrue(new RunCommand(() -> m_Elevator.decreasePosition()));
-    //aButton1.onTrue(m_Elevator.runUp());
-    //bButton1.whileTrue(m_Elevator.runDown());
-    aButton1.onTrue(new InstantCommand(() -> m_Elevator.runUp()));
-    aButton1.onFalse(new InstantCommand(() -> m_Elevator.stop()));
-    bButton1.onTrue(new InstantCommand(() -> m_Elevator.runDown()));
-    bButton1.onFalse(new InstantCommand(() -> m_Elevator.stop()));
+
+    if (Constants.mantis == false) {
+      final Elevator m_Elevator = new Elevator();
+      aButton1.whileTrue(m_Elevator.runUp());
+      bButton1.whileTrue(m_Elevator.runDown());
+    }
+
+    // aButton1.onTrue(new InstantCommand(() -> m_Elevator.runUp()));
+    // aButton1.onFalse(new InstantCommand(() -> m_Elevator.stop()));
+    // bButton1.onTrue(new InstantCommand(() -> m_Elevator.runDown()));
+    // bButton1.onFalse(new InstantCommand(() -> m_Elevator.stop()));
     // rightBumper1.onTrue(new InstantCommand(() -> m_Elevator.reset()));
     xButton1.onTrue(s_Swerve.drive1m());
     // moveToGoalAprilTags.onTrue(s_Swerve.moveToGoalAprilTags());

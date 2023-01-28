@@ -24,6 +24,7 @@ public class Elevator extends SubsystemBase {
   public int smoothing = 0;
   int upTargetPos = 10000;
   int downTargetPosition = 100;
+  int count = 0;
 
   public Elevator() {
     mainMotor = new WPI_TalonFX(1, "torch"); // add "torch as second parameter when on canivore"
@@ -81,30 +82,30 @@ public class Elevator extends SubsystemBase {
     );
   }
 
-  public void runUp() {
-    mainMotor.set(TalonFXControlMode.PercentOutput, 1);
-  }
+  // public void runUp() {
+  //   mainMotor.set(TalonFXControlMode.PercentOutput, 1);
+  // }
 
-  public void runDown() {
-    mainMotor.set(TalonFXControlMode.PercentOutput, -0.2);
-  }
+  // public void runDown() {
+  //   mainMotor.set(TalonFXControlMode.PercentOutput, -0.2);
+  // }
 
-  public void stop() {
-    mainMotor.set(TalonFXControlMode.PercentOutput, 0);
-  }
+  // public void stop() {
+  //   mainMotor.set(TalonFXControlMode.PercentOutput, 0);
+  // }
 
   //nice run up and down commands
-  // public CommandBase runDown() {
-  //   return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.5))
-  //     .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
-  //     .withName("runDown");
-  // }
+  public CommandBase runDown() {
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.5))
+      .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
+      .withName("runDown");
+  }
 
-  // public CommandBase runUp() {
-  //   return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .5))
-  //     .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
-  //     .withName("runDown");
-  // }
+  public CommandBase runUp() {
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .5))
+      .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
+      .withName("runDown");
+  }
 
   //methods to find percent outputs needed for feedforward etc etc
   public void increasePercentOutput() {
@@ -152,6 +153,11 @@ public class Elevator extends SubsystemBase {
     _sb.append(mainMotor.getClosedLoopError(Constants.kPIDLoopIdx));
     _sb.append("\t trg:");
     _sb.append(upTargetPos);
-    // System.out.println(_sb.toString());
+    if (count % 20 == 0) {
+      count = 0;
+      System.out.println(_sb.toString());
+    }
+    count = count + 1;
+    _sb.setLength(0);
   }
 }

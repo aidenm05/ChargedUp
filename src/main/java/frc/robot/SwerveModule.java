@@ -32,17 +32,31 @@ public class SwerveModule {
     this.moduleNumber = moduleNumber;
     this.angleOffset = moduleConstants.angleOffset;
 
+    if (Constants.mantis == true) {
+      angleEncoder = new CANCoder(moduleConstants.cancoderID);
+      configAngleEncoder();
+
+      /* Angle Motor Config */
+      mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
+      configAngleMotor();
+
+      /* Drive Motor Config */
+      mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
+      configDriveMotor();
+    } else {
+      angleEncoder = new CANCoder(moduleConstants.cancoderID, "torch");
+      configAngleEncoder();
+
+      /* Angle Motor Config */
+      mAngleMotor = new TalonFX(moduleConstants.angleMotorID, "torch");
+      configAngleMotor();
+
+      /* Drive Motor Config */
+      mDriveMotor = new TalonFX(moduleConstants.driveMotorID, "torch");
+      configDriveMotor();
+    }
+
     /* Angle Encoder Config */
-    angleEncoder = new CANCoder(moduleConstants.cancoderID, "torch");
-    configAngleEncoder();
-
-    /* Angle Motor Config */
-    mAngleMotor = new TalonFX(moduleConstants.angleMotorID, "torch");
-    configAngleMotor();
-
-    /* Drive Motor Config */
-    mDriveMotor = new TalonFX(moduleConstants.driveMotorID, "torch");
-    configDriveMotor();
 
     lastAngle = getState().angle;
   }

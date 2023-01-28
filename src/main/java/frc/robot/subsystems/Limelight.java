@@ -12,6 +12,8 @@ public class Limelight extends SubsystemBase {
   double tv = 0;
   double ta = 0;
 
+  //rotation for vision tracking-- we need to correct rotation on the limelight
+
   @Override
   public void periodic() {
     tx =
