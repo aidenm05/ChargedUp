@@ -44,7 +44,7 @@ public class Swerve extends SubsystemBase {
 
   public Swerve(Limelight limelight) {
     m_Limelight = limelight;
-    if (Constants.mantis == true) {
+    if (Constants.mantis) {
       gyro = new Pigeon2(Constants.Swerve.pigeonID);
     } else {
       gyro = new Pigeon2(Constants.Swerve.pigeonID, "torch");
@@ -112,6 +112,32 @@ public class Swerve extends SubsystemBase {
   public void alignToGoal() {
     drive(new Translation2d(0, m_Limelight.getSteeringValue()), 0, true, false);
   }
+
+  // WIP
+
+  // public void alignToCenterClockwise() {
+  //   drive(new Translation2d(0, 0), -1, true, false);
+  // }
+
+  // public void alignToCenterCounterclockwise() {
+  //   drive(new Translation2d(0, 0), 1, true, false);
+  // }
+
+  // public CommandBase alignToBase() {
+  //   if (Math.abs(getYaw().getDegrees() % 360) >= 180) {
+  //     return run(() -> alignToCenterCounterclockwise())
+  //       .until(() ->
+  //         Math.abs(getYaw().getDegrees() % 360) <= 10 ||
+  //         Math.abs(getYaw().getDegrees() % 360) >= 350
+  //       );
+  //   } else {
+  //     return run(() -> alignToCenterClockwise())
+  //       .until(() ->
+  //         Math.abs(getYaw().getDegrees() % 360) <= 10 ||
+  //         Math.abs(getYaw().getDegrees() % 360) >= 350
+  //       );
+  //   }
+  // }
 
   public CommandBase moveToGoalAprilTags() {
     // TODO: We probably need to add a wait here so that the pipeline has time to update
@@ -189,6 +215,11 @@ public class Swerve extends SubsystemBase {
     SmartDashboard.putNumber("gyro", gyro.getYaw());
     gyroAngle.setDouble(gyro.getYaw());
     //SmartDashboard.putNumber("gyro2", getyaw);
+    SmartDashboard.putNumber("yawdegrees", getYaw().getDegrees());
+    SmartDashboard.putNumber(
+      "yawdegreesmodulo",
+      Math.abs(getYaw().getDegrees()) % 360
+    );
 
     for (SwerveModule mod : mSwerveMods) {
       SmartDashboard.putNumber(

@@ -74,6 +74,7 @@ public class RobotContainer {
   /* Subsystems */
   private final Limelight m_Limelight = new Limelight();
   private final Swerve s_Swerve = new Swerve(m_Limelight);
+  private final Elevator m_Elevator = new Elevator();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -103,11 +104,10 @@ public class RobotContainer {
     //runUp.whileTrue(new RunCommand(() -> m_Elevator.increasePosition()));
     //runDown.whileTrue(new RunCommand(() -> m_Elevator.decreasePosition()));
 
-    if (Constants.mantis == false) {
-      final Elevator m_Elevator = new Elevator();
-      aButton1.whileTrue(m_Elevator.runUp());
-      bButton1.whileTrue(m_Elevator.runDown());
-    }
+    aButton1.whileTrue(m_Elevator.runUp());
+    bButton1.whileTrue(m_Elevator.runDown());
+
+    // rightBumper1.onTrue(s_Swerve.alignToBase());
 
     // aButton1.onTrue(new InstantCommand(() -> m_Elevator.runUp()));
     // aButton1.onFalse(new InstantCommand(() -> m_Elevator.stop()));

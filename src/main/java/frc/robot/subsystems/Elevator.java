@@ -27,8 +27,13 @@ public class Elevator extends SubsystemBase {
   int count = 0;
 
   public Elevator() {
-    mainMotor = new WPI_TalonFX(1, "torch"); // add "torch as second parameter when on canivore"
-    followerMotor = new WPI_TalonFX(2, "torch"); // add "torch as second parameter when on canivore"
+    if (Constants.mantis) {
+      mainMotor = new WPI_TalonFX(1); // add "torch as second parameter when on canivore"
+      followerMotor = new WPI_TalonFX(2); // add "torch as second parameter when on canivore"
+    } else {
+      mainMotor = new WPI_TalonFX(1, "torch"); // add "torch as second parameter when on canivore"
+      followerMotor = new WPI_TalonFX(2, "torch"); // add "torch as second parameter when on canivore"
+    }
     mainMotor.configFactoryDefault();
     followerMotor.configFactoryDefault();
     mainMotor.configSelectedFeedbackSensor(
@@ -104,7 +109,7 @@ public class Elevator extends SubsystemBase {
   public CommandBase runUp() {
     return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .5))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
-      .withName("runDown");
+      .withName("runUp");
   }
 
   //methods to find percent outputs needed for feedforward etc etc

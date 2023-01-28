@@ -11,7 +11,7 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
-  public static final boolean mantis = true;
+  public static final boolean mantis = false;
 
   public static final double LIMELIGHT_DEADBAND = 1;
   public static final double MIN_STEER_K = .4;
@@ -196,7 +196,7 @@ public final class Constants {
   }
 
   public static void confirmMantisConstants() {
-    if (mantis == true) {
+    if (mantis) {
       Swerve.trackWidth = Units.inchesToMeters(21.25);
       Swerve.wheelBase = Units.inchesToMeters(21.25);
       Swerve.pigeonID = 0;
