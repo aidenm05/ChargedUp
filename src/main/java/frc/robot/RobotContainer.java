@@ -114,7 +114,8 @@ public class RobotContainer {
     // bButton1.onTrue(new InstantCommand(() -> m_Elevator.runDown()));
     // bButton1.onFalse(new InstantCommand(() -> m_Elevator.stop()));
     // rightBumper1.onTrue(new InstantCommand(() -> m_Elevator.reset()));
-    xButton1.onTrue(s_Swerve.drive1m());
+    xButton1.whileTrue(m_Elevator.armUp());
+    yButton1.whileTrue(m_Elevator.armDown());
     // moveToGoalAprilTags.onTrue(s_Swerve.moveToGoalAprilTags());
     // moveToGoalRetro.onTrue(s_Swerve.moveToGoalRetroreflective());
   }

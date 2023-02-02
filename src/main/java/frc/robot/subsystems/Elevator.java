@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
@@ -18,6 +19,7 @@ public class Elevator extends SubsystemBase {
 
   public WPI_TalonFX mainMotor;
   public WPI_TalonFX followerMotor;
+  public WPI_TalonFX armMotor;
   public double calculatedPOutput = 0;
   public double motorPosition;
   StringBuilder _sb = new StringBuilder();
@@ -33,6 +35,7 @@ public class Elevator extends SubsystemBase {
     } else {
       mainMotor = new WPI_TalonFX(1, "torch"); // add "torch as second parameter when on canivore"
       followerMotor = new WPI_TalonFX(2, "torch"); // add "torch as second parameter when on canivore"
+      armMotor = new WPI_TalonFX(3, "torch");
     }
     mainMotor.configFactoryDefault();
     followerMotor.configFactoryDefault();
@@ -49,6 +52,20 @@ public class Elevator extends SubsystemBase {
     mainMotor.setNeutralMode(NeutralMode.Brake);
     followerMotor.setNeutralMode(NeutralMode.Brake);
     mainMotor.configNeutralDeadband(0.001);
+
+    SupplyCurrentLimitConfiguration elevatorSupplyLimit = new SupplyCurrentLimitConfiguration(
+      true,
+      25,
+      40,
+      .1
+    );
+
+    mainMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
+    followerMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
+    armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
+
+    armMotor.setNeutralMode(NeutralMode.Brake);
+    armMotor.configNeutralDeadband(.001);
 
     /* Set relevant frame periods to be at least as fast as periodic rate */
     mainMotor.setStatusFramePeriod(
@@ -101,15 +118,28 @@ public class Elevator extends SubsystemBase {
 
   //nice run up and down commands
   public CommandBase runDown() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.5))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.3))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("runDown");
   }
 
   public CommandBase runUp() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .5))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .3))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("runUp");
+  }
+
+  //basic percent outputs for arm
+  public CommandBase armDown() {
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -.2))
+      .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
+      .withName("armDown");
+  }
+
+  public CommandBase armUp() {
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, .2))
+      .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
+      .withName("armUp");
   }
 
   //methods to find percent outputs needed for feedforward etc etc
