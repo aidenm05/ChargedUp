@@ -93,14 +93,14 @@ public class Elevator extends SubsystemBase {
 
     /* Set Motion Magic gains in slot0 - see documentation */
     mainMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
-    mainMotor.config_kF(Constants.kSlotIdx, 1000, Constants.kTimeoutMs);
+    mainMotor.config_kF(Constants.kSlotIdx, 0.0471, Constants.kTimeoutMs);
     mainMotor.config_kP(Constants.kSlotIdx, 0.0, Constants.kTimeoutMs);
     mainMotor.config_kI(Constants.kSlotIdx, 0.0, Constants.kTimeoutMs);
     mainMotor.config_kD(Constants.kSlotIdx, 0.0, Constants.kTimeoutMs);
 
     /* Set acceleration and vcruise velocity - see documentation */
-    mainMotor.configMotionCruiseVelocity(15000, Constants.kTimeoutMs);
-    mainMotor.configMotionAcceleration(15000, Constants.kTimeoutMs);
+    mainMotor.configMotionCruiseVelocity(16275, Constants.kTimeoutMs);
+    mainMotor.configMotionAcceleration(16275, Constants.kTimeoutMs);
 
     /* Zero the sensor once on robot boot up not forever */
     mainMotor.setSelectedSensorPosition(
@@ -109,9 +109,9 @@ public class Elevator extends SubsystemBase {
       Constants.kTimeoutMs
     );
 
-    mainMotor.configForwardSoftLimitEnable(true);
-    mainMotor.configForwardSoftLimitThreshold(200000);
-    mainMotor.configReverseSoftLimitEnable(true);
+    mainMotor.configForwardSoftLimitEnable(false);
+    mainMotor.configForwardSoftLimitThreshold(100000);
+    mainMotor.configReverseSoftLimitEnable(false);
     mainMotor.configReverseSoftLimitThreshold(0);
   }
 
@@ -135,7 +135,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public CommandBase runUp() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .3))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, 1))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("runUp");
   }
@@ -177,7 +177,7 @@ public class Elevator extends SubsystemBase {
     mainMotor.set(TalonFXControlMode.MotionMagic, downTargetPosition);
   }
 
-  public void reset() {
+  public void resetelevatorencoder() {
     mainMotor.setSelectedSensorPosition(0);
   }
 
