@@ -115,18 +115,6 @@ public class Elevator extends SubsystemBase {
     mainMotor.configReverseSoftLimitThreshold(0);
   }
 
-  // public void runUp() {
-  //   mainMotor.set(TalonFXControlMode.PercentOutput, 1);
-  // }
-
-  // public void runDown() {
-  //   mainMotor.set(TalonFXControlMode.PercentOutput, -0.2);
-  // }
-
-  // public void stop() {
-  //   mainMotor.set(TalonFXControlMode.PercentOutput, 0);
-  // }
-
   //nice run up and down commands
 
   public CommandBase resetElevatorEncoder() {

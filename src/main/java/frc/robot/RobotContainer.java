@@ -21,8 +21,8 @@ import java.lang.reflect.InaccessibleObjectException;
 public class RobotContainer {
 
   /* Controllers */
-  private final Joystick driver1 = new Joystick(0);
-  private final Joystick driver2 = new Joystick(1);
+  private final Joystick driver2 = new Joystick(0);
+  private final Joystick driver1 = new Joystick(1);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -128,21 +128,11 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    //runUp.whileTrue(new RunCommand(() -> m_Elevator.increasePosition()));
-    //runDown.whileTrue(new RunCommand(() -> m_Elevator.decreasePosition()));
 
     aButton2.whileTrue(m_Elevator.runUp());
     bButton2.whileTrue(m_Elevator.runDown());
-
-    // rightBumper1.onTrue(s_Swerve.alignToBase());
-
-    // aButton1.onTrue(new InstantCommand(() -> m_Elevator.runUp()));
-    // aButton1.onFalse(new InstantCommand(() -> m_Elevator.stop()));
-    // bButton1.onTrue(new InstantCommand(() -> m_Elevator.runDown()));
-    // bButton1.onFalse(new InstantCommand(() -> m_Elevator.stop()));
-    // rightBumper1.onTrue(new InstantCommand(() -> m_Elevator.reset()));
-    xButton2.whileTrue(m_Elevator.armUp());
-    yButton2.whileTrue(m_Elevator.armDown());
+    yButton2.whileTrue(m_Elevator.armUp());
+    xButton2.whileTrue(m_Elevator.armDown());
     start2.onTrue(m_Elevator.resetElevatorEncoder());
     back2.onTrue(m_Elevator.resetArmEncoder());
     leftBumper2.onTrue(m_Claw.close());
