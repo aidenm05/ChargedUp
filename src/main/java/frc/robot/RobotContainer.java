@@ -143,8 +143,8 @@ public class RobotContainer {
     // rightBumper1.onTrue(new InstantCommand(() -> m_Elevator.reset()));
     xButton2.whileTrue(m_Elevator.armUp());
     yButton2.whileTrue(m_Elevator.armDown());
-    start2.onTrue(m_Elevator.resetElevatorEncoder());
-    back2.onTrue(m_Elevator.resetArmEncoder());
+    start2.onTrue(new InstantCommand(() -> m_Elevator.resetElevatorEncoder()));
+    back2.onTrue(new InstantCommand(() -> m_Elevator.resetArmEncoder()));
     leftBumper2.onTrue(m_Claw.close());
     rightBumper2.onTrue(m_Claw.open());
   }

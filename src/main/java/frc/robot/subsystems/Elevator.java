@@ -44,14 +44,15 @@ public class Elevator extends SubsystemBase {
       followerMotor = new WPI_TalonFX(2, "torch"); // add "torch as second parameter when on canivore"
       armMotor = new WPI_TalonFX(3, "torch");
 
+    
       armMotor.setNeutralMode(NeutralMode.Brake);
       armMotor.configNeutralDeadband(.001);
       armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
       armMotor.setInverted(true);
 
-      armMotor.configForwardSoftLimitEnable(false);
+      armMotor.configForwardSoftLimitEnable(true);
       armMotor.configForwardSoftLimitThreshold(30000);
-      armMotor.configReverseSoftLimitEnable(false);
+      armMotor.configReverseSoftLimitEnable(true);
       armMotor.configReverseSoftLimitThreshold(-9000);
     }
     mainMotor.configFactoryDefault();
@@ -128,15 +129,6 @@ public class Elevator extends SubsystemBase {
   // }
 
   //nice run up and down commands
-
-  public CommandBase resetElevatorEncoder() {
-    return run(() -> mainMotor.setSelectedSensorPosition(0));
-  }
-
-  public CommandBase resetArmEncoder() {
-    return run(() -> armMotor.setSelectedSensorPosition(0));
-  }
-
   public CommandBase runDown() {
     return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.3))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
@@ -144,7 +136,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public CommandBase runUp() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .3))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, 1))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("runUp");
   }
@@ -186,7 +178,11 @@ public class Elevator extends SubsystemBase {
     mainMotor.set(TalonFXControlMode.MotionMagic, downTargetPosition);
   }
 
-  public void resetelevatorencoder() {
+  public void resetElevatorEncoder() {
+    mainMotor.setSelectedSensorPosition(0);
+  }
+
+  public void resetArmEncoder() {
     mainMotor.setSelectedSensorPosition(0);
   }
 
@@ -195,6 +191,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator", mainMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("Percent Output", calculatedPOutput);
     double motorOutput = mainMotor.getMotorOutputPercent();
+    SmartDashboard.putNumber("Arm Encoder", armMotor.getSelectedSensorPosition());
 
     _sb.append("\nOut%");
     _sb.append(motorOutput);
