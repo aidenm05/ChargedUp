@@ -54,6 +54,11 @@ public class RobotContainer {
     driver1,
     XboxController.Button.kX.value
   );
+  private final JoystickButton startSelect1 = new JoystickButton(
+    driver1,
+    XboxController.Button.kStart.value
+  );
+
   // private final JoystickButton aButton2 = new JoystickButton(
   //   driver2,
   //   XboxController.Button.kA.value
@@ -75,6 +80,8 @@ public class RobotContainer {
   private final Limelight m_Limelight = new Limelight();
   private final Swerve s_Swerve = new Swerve(m_Limelight);
   private final Elevator m_Elevator = new Elevator();
+
+  private final Claw m_Claw = new Claw();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -100,7 +107,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    yButton1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    startSelect1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     //runUp.whileTrue(new RunCommand(() -> m_Elevator.increasePosition()));
     //runDown.whileTrue(new RunCommand(() -> m_Elevator.decreasePosition()));
 
@@ -118,6 +125,8 @@ public class RobotContainer {
     yButton1.whileTrue(m_Elevator.armDown());
     // moveToGoalAprilTags.onTrue(s_Swerve.moveToGoalAprilTags());
     // moveToGoalRetro.onTrue(s_Swerve.moveToGoalRetroreflective());
+    leftBumper1.onTrue(m_Claw.close());
+    rightBumper1.onTrue(m_Claw.open());
   }
 
   /**

@@ -29,6 +29,13 @@ public class Elevator extends SubsystemBase {
   int count = 0;
 
   public Elevator() {
+    SupplyCurrentLimitConfiguration elevatorSupplyLimit = new SupplyCurrentLimitConfiguration(
+      true,
+      25,
+      40,
+      .1
+    );
+
     if (Constants.mantis) {
       mainMotor = new WPI_TalonFX(1); // add "torch as second parameter when on canivore"
       followerMotor = new WPI_TalonFX(2); // add "torch as second parameter when on canivore"
@@ -36,6 +43,16 @@ public class Elevator extends SubsystemBase {
       mainMotor = new WPI_TalonFX(1, "torch"); // add "torch as second parameter when on canivore"
       followerMotor = new WPI_TalonFX(2, "torch"); // add "torch as second parameter when on canivore"
       armMotor = new WPI_TalonFX(3, "torch");
+
+      armMotor.setNeutralMode(NeutralMode.Brake);
+      armMotor.configNeutralDeadband(.001);
+      armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
+      armMotor.setInverted(true);
+
+      armMotor.configForwardSoftLimitEnable(true);
+      armMotor.configForwardSoftLimitThreshold(30000);
+      armMotor.configReverseSoftLimitEnable(true);
+      armMotor.configReverseSoftLimitThreshold(-9000);
     }
     mainMotor.configFactoryDefault();
     followerMotor.configFactoryDefault();
@@ -53,19 +70,8 @@ public class Elevator extends SubsystemBase {
     followerMotor.setNeutralMode(NeutralMode.Brake);
     mainMotor.configNeutralDeadband(0.001);
 
-    SupplyCurrentLimitConfiguration elevatorSupplyLimit = new SupplyCurrentLimitConfiguration(
-      true,
-      25,
-      40,
-      .1
-    );
-
     mainMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
     followerMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
-    armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
-
-    armMotor.setNeutralMode(NeutralMode.Brake);
-    armMotor.configNeutralDeadband(.001);
 
     /* Set relevant frame periods to be at least as fast as periodic rate */
     mainMotor.setStatusFramePeriod(
@@ -102,6 +108,11 @@ public class Elevator extends SubsystemBase {
       Constants.kPIDLoopIdx,
       Constants.kTimeoutMs
     );
+
+    mainMotor.configForwardSoftLimitEnable(true);
+    mainMotor.configForwardSoftLimitThreshold(200000);
+    mainMotor.configReverseSoftLimitEnable(true);
+    mainMotor.configReverseSoftLimitThreshold(0);
   }
 
   // public void runUp() {
@@ -194,5 +205,12 @@ public class Elevator extends SubsystemBase {
     }
     count = count + 1;
     _sb.setLength(0);
+
+    if (!Constants.mantis) {
+      SmartDashboard.putNumber(
+        "arm encoder",
+        armMotor.getSelectedSensorPosition()
+      );
+    }
   }
 }
