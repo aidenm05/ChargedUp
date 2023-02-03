@@ -22,7 +22,7 @@ public class RobotContainer {
 
   /* Controllers */
   private final Joystick driver1 = new Joystick(0);
-  // private final Joystick driver2 = new Joystick(1);
+  private final Joystick driver2 = new Joystick(1);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -54,27 +54,47 @@ public class RobotContainer {
     driver1,
     XboxController.Button.kX.value
   );
-  private final JoystickButton startSelect1 = new JoystickButton(
+  private final JoystickButton start1 = new JoystickButton(
     driver1,
     XboxController.Button.kStart.value
   );
 
-  // private final JoystickButton aButton2 = new JoystickButton(
-  //   driver2,
-  //   XboxController.Button.kA.value
-  // );
-  // private final JoystickButton bButton2 = new JoystickButton(
-  //   driver2,
-  //   XboxController.Button.kB.value
-  // );
-  // private final JoystickButton xButton2 = new JoystickButton(
-  //   driver2,
-  //   XboxController.Button.kX.value
-  // );
-  // private final JoystickButton yButton2 = new JoystickButton(
-  //   driver2,
-  //   XboxController.Button.kY.value
-  // );
+  private final JoystickButton aButton2 = new JoystickButton(
+    driver2,
+    XboxController.Button.kA.value
+  );
+  private final JoystickButton bButton2 = new JoystickButton(
+    driver2,
+    XboxController.Button.kB.value
+  );
+  private final JoystickButton xButton2 = new JoystickButton(
+    driver2,
+    XboxController.Button.kX.value
+  );
+  private final JoystickButton yButton2 = new JoystickButton(
+    driver2,
+    XboxController.Button.kY.value
+  );
+
+  private final JoystickButton leftBumper2 = new JoystickButton(
+    driver2,
+    XboxController.Button.kLeftBumper.value
+  );
+
+  private final JoystickButton rightBumper2 = new JoystickButton(
+    driver2,
+    XboxController.Button.kRightBumper.value
+  );
+
+  private final JoystickButton start2 = new JoystickButton(
+    driver2,
+    XboxController.Button.kStart.value
+  );
+
+  private final JoystickButton back2 = new JoystickButton(
+    driver2,
+    XboxController.Button.kBack.value
+  );
 
   /* Subsystems */
   private final Limelight m_Limelight = new Limelight();
@@ -107,12 +127,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    startSelect1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     //runUp.whileTrue(new RunCommand(() -> m_Elevator.increasePosition()));
     //runDown.whileTrue(new RunCommand(() -> m_Elevator.decreasePosition()));
 
-    aButton1.whileTrue(m_Elevator.runUp());
-    bButton1.whileTrue(m_Elevator.runDown());
+    aButton2.whileTrue(m_Elevator.runUp());
+    bButton2.whileTrue(m_Elevator.runDown());
 
     // rightBumper1.onTrue(s_Swerve.alignToBase());
 
@@ -121,12 +141,12 @@ public class RobotContainer {
     // bButton1.onTrue(new InstantCommand(() -> m_Elevator.runDown()));
     // bButton1.onFalse(new InstantCommand(() -> m_Elevator.stop()));
     // rightBumper1.onTrue(new InstantCommand(() -> m_Elevator.reset()));
-    xButton1.whileTrue(m_Elevator.armUp());
-    yButton1.whileTrue(m_Elevator.armDown());
-    // moveToGoalAprilTags.onTrue(s_Swerve.moveToGoalAprilTags());
-    // moveToGoalRetro.onTrue(s_Swerve.moveToGoalRetroreflective());
-    leftBumper1.onTrue(m_Claw.close());
-    rightBumper1.onTrue(m_Claw.open());
+    xButton2.whileTrue(m_Elevator.armUp());
+    yButton2.whileTrue(m_Elevator.armDown());
+    start2.onTrue(m_Elevator.resetElevatorEncoder());
+    back2.onTrue(m_Elevator.resetArmEncoder());
+    leftBumper2.onTrue(m_Claw.close());
+    rightBumper2.onTrue(m_Claw.open());
   }
 
   /**

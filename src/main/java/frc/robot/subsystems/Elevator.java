@@ -49,9 +49,9 @@ public class Elevator extends SubsystemBase {
       armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
       armMotor.setInverted(true);
 
-      armMotor.configForwardSoftLimitEnable(true);
+      armMotor.configForwardSoftLimitEnable(false);
       armMotor.configForwardSoftLimitThreshold(30000);
-      armMotor.configReverseSoftLimitEnable(true);
+      armMotor.configReverseSoftLimitEnable(false);
       armMotor.configReverseSoftLimitThreshold(-9000);
     }
     mainMotor.configFactoryDefault();
@@ -128,6 +128,15 @@ public class Elevator extends SubsystemBase {
   // }
 
   //nice run up and down commands
+
+  public CommandBase resetElevatorEncoder() {
+    return run(() -> mainMotor.setSelectedSensorPosition(0));
+  }
+
+  public CommandBase resetArmEncoder() {
+    return run(() -> armMotor.setSelectedSensorPosition(0));
+  }
+
   public CommandBase runDown() {
     return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.3))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
@@ -135,7 +144,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public CommandBase runUp() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, 1))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .3))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("runUp");
   }
