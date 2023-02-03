@@ -44,15 +44,14 @@ public class Elevator extends SubsystemBase {
       followerMotor = new WPI_TalonFX(2, "torch"); // add "torch as second parameter when on canivore"
       armMotor = new WPI_TalonFX(3, "torch");
 
-    
       armMotor.setNeutralMode(NeutralMode.Brake);
       armMotor.configNeutralDeadband(.001);
       armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
       armMotor.setInverted(true);
 
-      armMotor.configForwardSoftLimitEnable(true);
+      armMotor.configForwardSoftLimitEnable(false);
       armMotor.configForwardSoftLimitThreshold(30000);
-      armMotor.configReverseSoftLimitEnable(true);
+      armMotor.configReverseSoftLimitEnable(false);
       armMotor.configReverseSoftLimitThreshold(-9000);
     }
     mainMotor.configFactoryDefault();
@@ -95,20 +94,20 @@ public class Elevator extends SubsystemBase {
     /* Set Motion Magic gains in slot0 - see documentation */
     mainMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
     mainMotor.config_kF(Constants.kSlotIdx, 0.0471, Constants.kTimeoutMs);
-    mainMotor.config_kP(Constants.kSlotIdx, 0.0, Constants.kTimeoutMs);
-    mainMotor.config_kI(Constants.kSlotIdx, 0.0, Constants.kTimeoutMs);
-    mainMotor.config_kD(Constants.kSlotIdx, 0.0, Constants.kTimeoutMs);
+    mainMotor.config_kP(Constants.kSlotIdx, 0.03, Constants.kTimeoutMs);
+    mainMotor.config_kI(Constants.kSlotIdx, 0.001, Constants.kTimeoutMs);
+    mainMotor.config_kD(Constants.kSlotIdx, 0.3, Constants.kTimeoutMs);
 
     /* Set acceleration and vcruise velocity - see documentation */
     mainMotor.configMotionCruiseVelocity(16275, Constants.kTimeoutMs);
     mainMotor.configMotionAcceleration(16275, Constants.kTimeoutMs);
 
-    /* Zero the sensor once on robot boot up not forever */
-    mainMotor.setSelectedSensorPosition(
-      0,
-      Constants.kPIDLoopIdx,
-      Constants.kTimeoutMs
-    );
+    // /* Zero the sensor once on robot boot up not forever */
+    // mainMotor.setSelectedSensorPosition(
+    //   0,
+    //   Constants.kPIDLoopIdx,
+    //   Constants.kTimeoutMs
+    // );
 
     mainMotor.configForwardSoftLimitEnable(false);
     mainMotor.configForwardSoftLimitThreshold(100000);
@@ -117,14 +116,23 @@ public class Elevator extends SubsystemBase {
   }
 
   //nice run up and down commands
+
+  public CommandBase resetElevatorEncoder() {
+    return run(() -> mainMotor.setSelectedSensorPosition(0));
+  }
+
+  public CommandBase resetArmEncoder() {
+    return run(() -> armMotor.setSelectedSensorPosition(0));
+  }
+
   public CommandBase runDown() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.3))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.2))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("runDown");
   }
 
   public CommandBase runUp() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, 1))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .2))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("runUp");
   }
@@ -158,28 +166,31 @@ public class Elevator extends SubsystemBase {
   }
 
   //motion magic shenanigans
-  public void setupPosition() {
-    mainMotor.set(TalonFXControlMode.MotionMagic, upTargetPos);
+  // public void setupPosition() {
+  //   mainMotor.set(TalonFXControlMode.MotionMagic, 120000);
+  // }
+
+  public CommandBase setUpPosition() {
+    return run(() -> mainMotor.set(TalonFXControlMode.MotionMagic, 120000));
   }
 
-  public void setDownPosition() {
-    mainMotor.set(TalonFXControlMode.MotionMagic, downTargetPosition);
+  public CommandBase setDownPosition() {
+    return run(() -> mainMotor.set(TalonFXControlMode.MotionMagic, 500));
   }
 
-  public void resetElevatorEncoder() {
-    mainMotor.setSelectedSensorPosition(0);
-  }
+  //public void setDownPosition() {
+  //  mainMotor.set(TalonFXControlMode.MotionMagic, 300);
+  //}
 
-  public void resetArmEncoder() {
-    mainMotor.setSelectedSensorPosition(0);
-  }
+  // public void resetelevatorencoder() {
+  //   mainMotor.setSelectedSensorPosition(0);
+  // }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Elevator", mainMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("Percent Output", calculatedPOutput);
     double motorOutput = mainMotor.getMotorOutputPercent();
-    SmartDashboard.putNumber("Arm Encoder", armMotor.getSelectedSensorPosition());
 
     _sb.append("\nOut%");
     _sb.append(motorOutput);

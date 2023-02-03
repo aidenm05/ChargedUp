@@ -132,17 +132,13 @@ public class RobotContainer {
     aButton2.whileTrue(m_Elevator.runUp());
     bButton2.whileTrue(m_Elevator.runDown());
 
-    // rightBumper1.onTrue(s_Swerve.alignToBase());
+    // aButton2.whileTrue(m_Elevator.setUpPosition());
+    // bButton2.whileTrue(m_Elevator.setDownPosition());
 
-    // aButton1.onTrue(new InstantCommand(() -> m_Elevator.runUp()));
-    // aButton1.onFalse(new InstantCommand(() -> m_Elevator.stop()));
-    // bButton1.onTrue(new InstantCommand(() -> m_Elevator.runDown()));
-    // bButton1.onFalse(new InstantCommand(() -> m_Elevator.stop()));
-    // rightBumper1.onTrue(new InstantCommand(() -> m_Elevator.reset()));
     xButton2.whileTrue(m_Elevator.armUp());
     yButton2.whileTrue(m_Elevator.armDown());
-    start2.onTrue(new InstantCommand(() -> m_Elevator.resetElevatorEncoder()));
-    back2.onTrue(new InstantCommand(() -> m_Elevator.resetArmEncoder()));
+    start2.onTrue(m_Elevator.resetElevatorEncoder()); //I don't think it has to be an instantcommand because it returns a command.
+    back2.onTrue(m_Elevator.resetArmEncoder());
     leftBumper2.onTrue(m_Claw.close());
     rightBumper2.onTrue(m_Claw.open());
   }
