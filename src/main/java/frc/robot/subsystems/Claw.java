@@ -17,10 +17,10 @@ public class Claw extends SubsystemBase {
   }
 
   public CommandBase close() {
-    return run(() -> clawPiston.set(true));
+    return run(() -> clawPiston.set(false));
   }
 
   public CommandBase open() {
-    return run(() -> clawPiston.set(false));
+    return run(() -> clawPiston.set(true));
   }
 }

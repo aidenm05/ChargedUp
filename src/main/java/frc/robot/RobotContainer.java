@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -95,16 +96,24 @@ public class RobotContainer {
     driver2,
     XboxController.Button.kBack.value
   );
+  private final LeftTriggerPressed leftTrig = new LeftTriggerPressed(
+    driver1,
+    1
+  );
+  private final RightTriggerPressed rightTrig = new RightTriggerPressed();
+
+  // private final JoystickAxis rightTrigButton = new JoystickButton(driver1, XboxController.Axis.kRightTrigger)
 
   /* Subsystems */
   private final Limelight m_Limelight = new Limelight();
   private final Swerve s_Swerve = new Swerve(m_Limelight);
   private final Elevator m_Elevator = new Elevator();
-
+  private final Arm m_Arm = new Arm();
   private final Claw m_Claw = new Claw();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    s_Swerve.resetModulesToAbsolute();
     s_Swerve.setDefaultCommand(
       new TeleopSwerve(
         s_Swerve,
@@ -129,18 +138,21 @@ public class RobotContainer {
     /* Driver Buttons */
     start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
 
-    aButton2.whileTrue(m_Elevator.runUp());
-    bButton2.whileTrue(m_Elevator.runDown());
-
+    aButton1.onTrue(m_Claw.close());
+    bButton1.onTrue(m_Claw.open());
+    //rightBumper2.onTrue(m_Elevator.setPosition(150000));
+    //leftBumper2.onTrue(m_Elevator.setPosition(10000));
     // aButton2.whileTrue(m_Elevator.setUpPosition());
     // bButton2.whileTrue(m_Elevator.setDownPosition());
 
-    xButton2.whileTrue(m_Elevator.armUp());
-    yButton2.whileTrue(m_Elevator.armDown());
-    start2.onTrue(m_Elevator.resetElevatorEncoder()); //I don't think it has to be an instantcommand because it returns a command.
-    back2.onTrue(m_Elevator.resetArmEncoder());
-    leftBumper2.onTrue(m_Claw.close());
-    rightBumper2.onTrue(m_Claw.open());
+    yButton1.whileTrue(m_Arm.armUp());
+    xButton1.whileTrue(m_Arm.armDown());
+    // start2.onTrue(m_Elevator.resetElevatorEncoder()); //I don't think it has to be an instantcommand because it returns a command.
+    // back2.onTrue(m_Arm.resetArmEncoder());
+    leftBumper1.whileTrue(m_Elevator.runDown());
+    rightBumper1.whileTrue(m_Elevator.runUp());
+    // leftTrig.whileTrue(m_Elevator.runUp());
+    // rightTrig.whileTrue(m_Elevator.runDown());
   }
 
   /**
@@ -151,5 +163,28 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return new exampleAuto(s_Swerve);
+  }
+
+  public class LeftTriggerPressed extends JoystickButton {
+
+    public LeftTriggerPressed(GenericHID joystick, int buttonNumber) {
+      super(joystick, buttonNumber);
+      //TODO Auto-generated constructor stub
+    }
+
+    @Override
+    public boolean getAsBoolean() {
+      return driver1.getRawAxis(2) < -0.5;
+      // This returns whether the trigger is active
+    }
+  }
+
+  public class RightTriggerPressed extends Trigger {
+
+    @Override
+    public boolean getAsBoolean() {
+      return driver1.getRawAxis(2) > 0.5;
+      // This returns whether the trigger is active
+    }
   }
 }

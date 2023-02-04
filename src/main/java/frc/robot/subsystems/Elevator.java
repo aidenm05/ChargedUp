@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,7 +20,7 @@ public class Elevator extends SubsystemBase {
 
   public WPI_TalonFX mainMotor;
   public WPI_TalonFX followerMotor;
-  public WPI_TalonFX armMotor;
+  //public WPI_TalonFX armMotor;
   public double calculatedPOutput = 0;
   public double motorPosition;
   StringBuilder _sb = new StringBuilder();
@@ -42,7 +43,7 @@ public class Elevator extends SubsystemBase {
     } else {
       mainMotor = new WPI_TalonFX(1, "torch"); // add "torch as second parameter when on canivore"
       followerMotor = new WPI_TalonFX(2, "torch"); // add "torch as second parameter when on canivore"
-      armMotor = new WPI_TalonFX(3, "torch");
+      /*armMotor = new WPI_TalonFX(3, "torch");
 
       armMotor.setNeutralMode(NeutralMode.Brake);
       armMotor.configNeutralDeadband(.001);
@@ -52,10 +53,11 @@ public class Elevator extends SubsystemBase {
       armMotor.configForwardSoftLimitEnable(false);
       armMotor.configForwardSoftLimitThreshold(30000);
       armMotor.configReverseSoftLimitEnable(false);
-      armMotor.configReverseSoftLimitThreshold(-9000);
+      armMotor.configReverseSoftLimitThreshold(-9000);*/
     }
-    mainMotor.configFactoryDefault();
-    followerMotor.configFactoryDefault();
+    /*mainMotor.configFactoryDefault();
+    followerMotor.configFactoryDefault();*/
+
     mainMotor.configSelectedFeedbackSensor(
       TalonFXFeedbackDevice.IntegratedSensor,
       0,
@@ -109,10 +111,10 @@ public class Elevator extends SubsystemBase {
     //   Constants.kTimeoutMs
     // );
 
-    mainMotor.configForwardSoftLimitEnable(false);
-    mainMotor.configForwardSoftLimitThreshold(100000);
-    mainMotor.configReverseSoftLimitEnable(false);
-    mainMotor.configReverseSoftLimitThreshold(0);
+    mainMotor.configForwardSoftLimitEnable(true);
+    mainMotor.configForwardSoftLimitThreshold(220000);
+    mainMotor.configReverseSoftLimitEnable(true);
+    mainMotor.configReverseSoftLimitThreshold(500);
   }
 
   //nice run up and down commands
@@ -121,9 +123,9 @@ public class Elevator extends SubsystemBase {
     return run(() -> mainMotor.setSelectedSensorPosition(0));
   }
 
-  public CommandBase resetArmEncoder() {
+  /*  public CommandBase resetArmEncoder() {
     return run(() -> armMotor.setSelectedSensorPosition(0));
-  }
+  }*/
 
   public CommandBase runDown() {
     return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.2))
@@ -138,7 +140,7 @@ public class Elevator extends SubsystemBase {
   }
 
   //basic percent outputs for arm
-  public CommandBase armDown() {
+  /*  public CommandBase armDown() {
     return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -.2))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armDown");
@@ -148,7 +150,7 @@ public class Elevator extends SubsystemBase {
     return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, .2))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armUp");
-  }
+  }*/
 
   //methods to find percent outputs needed for feedforward etc etc
   public void increasePercentOutput() {
@@ -170,12 +172,8 @@ public class Elevator extends SubsystemBase {
   //   mainMotor.set(TalonFXControlMode.MotionMagic, 120000);
   // }
 
-  public CommandBase setUpPosition() {
-    return run(() -> mainMotor.set(TalonFXControlMode.MotionMagic, 120000));
-  }
-
-  public CommandBase setDownPosition() {
-    return run(() -> mainMotor.set(TalonFXControlMode.MotionMagic, 500));
+  public CommandBase setPosition(int position) {
+    return run(() -> mainMotor.set(TalonFXControlMode.MotionMagic, position));
   }
 
   //public void setDownPosition() {
@@ -191,6 +189,10 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator", mainMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("Percent Output", calculatedPOutput);
     double motorOutput = mainMotor.getMotorOutputPercent();
+    SmartDashboard.putNumber(
+      "absolut position",
+      mainMotor.getSensorCollection().getIntegratedSensorAbsolutePosition()
+    );
 
     _sb.append("\nOut%");
     _sb.append(motorOutput);
@@ -210,12 +212,11 @@ public class Elevator extends SubsystemBase {
     }
     count = count + 1;
     _sb.setLength(0);
-
-    if (!Constants.mantis) {
+    /*  if (!Constants.mantis) {
       SmartDashboard.putNumber(
         "arm encoder",
         armMotor.getSelectedSensorPosition()
       );
-    }
+    }*/
   }
 }
