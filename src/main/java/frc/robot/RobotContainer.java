@@ -23,14 +23,18 @@ public class RobotContainer {
 
   /* Controllers */
   private final Joystick driver2 = new Joystick(0);
-  private final Joystick driver1 = new Joystick(1);
-
+  private final XboxController driver1 = new XboxController(1);
+  Trigger exampleTrigger = new Trigger(() -> driver1.getLeftTriggerAxis() > 0.5);
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
   private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   /* Driver Buttons */
+  private final JoystickButton back1 = new JoystickButton(
+    driver1,
+    XboxController.Button.kBack.value
+  );
   private final JoystickButton yButton1 = new JoystickButton(
     driver1,
     XboxController.Button.kY.value
@@ -113,14 +117,13 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    s_Swerve.resetModulesToAbsolute();
     s_Swerve.setDefaultCommand(
       new TeleopSwerve(
         s_Swerve,
         () -> -driver1.getRawAxis(translationAxis),
         () -> -driver1.getRawAxis(strafeAxis),
         () -> -driver1.getRawAxis(rotationAxis),
-        () -> leftBumper1.getAsBoolean()
+        () -> back1.getAsBoolean()
       )
     );
 
@@ -137,7 +140,9 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    // back1.onTrue()
 
+    driver1.a(null)
     aButton1.onTrue(m_Claw.close());
     bButton1.onTrue(m_Claw.open());
     //rightBumper2.onTrue(m_Elevator.setPosition(150000));
@@ -153,6 +158,7 @@ public class RobotContainer {
     rightBumper1.whileTrue(m_Elevator.runUp());
     // leftTrig.whileTrue(m_Elevator.runUp());
     // rightTrig.whileTrue(m_Elevator.runDown());
+    exampleTrigger.whileTrue(m_Elevator.runDown());
   }
 
   /**
