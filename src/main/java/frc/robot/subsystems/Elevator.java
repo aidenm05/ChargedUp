@@ -20,6 +20,7 @@ public class Elevator extends SubsystemBase {
 
   public WPI_TalonFX mainMotor;
   public WPI_TalonFX followerMotor;
+  public WPI_TalonFX armMotor;
   //public WPI_TalonFX armMotor;
   public double calculatedPOutput = 0;
   public double motorPosition;
@@ -43,7 +44,7 @@ public class Elevator extends SubsystemBase {
     } else {
       mainMotor = new WPI_TalonFX(1, "torch"); // add "torch as second parameter when on canivore"
       followerMotor = new WPI_TalonFX(2, "torch"); // add "torch as second parameter when on canivore"
-      /*armMotor = new WPI_TalonFX(3, "torch");
+      armMotor = new WPI_TalonFX(3, "torch");
 
       armMotor.setNeutralMode(NeutralMode.Brake);
       armMotor.configNeutralDeadband(.001);
@@ -53,7 +54,8 @@ public class Elevator extends SubsystemBase {
       armMotor.configForwardSoftLimitEnable(false);
       armMotor.configForwardSoftLimitThreshold(30000);
       armMotor.configReverseSoftLimitEnable(false);
-      armMotor.configReverseSoftLimitThreshold(-9000);*/
+      armMotor.configReverseSoftLimitThreshold(-9000);
+      armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
     }
     /*mainMotor.configFactoryDefault();
     followerMotor.configFactoryDefault();*/
@@ -95,7 +97,7 @@ public class Elevator extends SubsystemBase {
 
     /* Set Motion Magic gains in slot0 - see documentation */
     mainMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
-    mainMotor.config_kF(Constants.kSlotIdx, 0.0471, Constants.kTimeoutMs);
+    mainMotor.config_kF(Constants.kSlotIdx, 0.0471, Constants.kTimeoutMs); //hi
     mainMotor.config_kP(Constants.kSlotIdx, 0.03, Constants.kTimeoutMs);
     mainMotor.config_kI(Constants.kSlotIdx, 0.001, Constants.kTimeoutMs);
     mainMotor.config_kD(Constants.kSlotIdx, 0.3, Constants.kTimeoutMs);
@@ -123,6 +125,10 @@ public class Elevator extends SubsystemBase {
     return run(() -> mainMotor.setSelectedSensorPosition(0));
   }
 
+  public CommandBase resetArmEncoder() {
+    return run(() -> armMotor.setSelectedSensorPosition(0));
+  }
+
   /*  public CommandBase resetArmEncoder() {
     return run(() -> armMotor.setSelectedSensorPosition(0));
   }*/
@@ -139,8 +145,7 @@ public class Elevator extends SubsystemBase {
       .withName("runUp");
   }
 
-  //basic percent outputs for arm
-  /*  public CommandBase armDown() {
+  public CommandBase armDown() {
     return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -.2))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armDown");
@@ -150,7 +155,7 @@ public class Elevator extends SubsystemBase {
     return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, .2))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armUp");
-  }*/
+  }
 
   //methods to find percent outputs needed for feedforward etc etc
   public void increasePercentOutput() {
