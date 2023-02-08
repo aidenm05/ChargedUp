@@ -20,7 +20,6 @@ public class Elevator extends SubsystemBase {
 
   public WPI_TalonFX mainMotor;
   public WPI_TalonFX followerMotor;
-  public WPI_TalonFX armMotor;
   //public WPI_TalonFX armMotor;
   public double calculatedPOutput = 0;
   public double motorPosition;

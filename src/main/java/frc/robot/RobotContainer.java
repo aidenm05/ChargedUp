@@ -113,7 +113,6 @@ public class RobotContainer {
   private final Limelight m_Limelight = new Limelight();
   private final Swerve s_Swerve = new Swerve(m_Limelight);
   private final Elevator m_Elevator = new Elevator();
-  // private final Arm m_Arm = new Arm();
   private final Claw m_Claw = new Claw();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
