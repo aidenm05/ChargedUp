@@ -24,7 +24,8 @@ public class RobotContainer {
   /* Controllers */
   private final Joystick driver2 = new Joystick(0);
   private final XboxController driver1 = new XboxController(1);
-  Trigger exampleTrigger = new Trigger(() -> driver1.getLeftTriggerAxis() > 0.5);
+  Trigger exampleTrigger = new Trigger(() -> driver1.getLeftTriggerAxis() > 0.5
+  );
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
   private final int strafeAxis = XboxController.Axis.kLeftX.value;
@@ -112,7 +113,6 @@ public class RobotContainer {
   private final Limelight m_Limelight = new Limelight();
   private final Swerve s_Swerve = new Swerve(m_Limelight);
   private final Elevator m_Elevator = new Elevator();
-  private final Arm m_Arm = new Arm();
   private final Claw m_Claw = new Claw();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -142,7 +142,7 @@ public class RobotContainer {
     start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     // back1.onTrue()
 
-    driver1.a(null)
+    driver1.a(null);
     aButton1.onTrue(m_Claw.close());
     bButton1.onTrue(m_Claw.open());
     //rightBumper2.onTrue(m_Elevator.setPosition(150000));
@@ -150,8 +150,8 @@ public class RobotContainer {
     // aButton2.whileTrue(m_Elevator.setUpPosition());
     // bButton2.whileTrue(m_Elevator.setDownPosition());
 
-    yButton1.whileTrue(m_Arm.armUp());
-    xButton1.whileTrue(m_Arm.armDown());
+    yButton1.whileTrue(m_Elevator.armUp());
+    xButton1.whileTrue(m_Elevator.armDown());
     // start2.onTrue(m_Elevator.resetElevatorEncoder()); //I don't think it has to be an instantcommand because it returns a command.
     // back2.onTrue(m_Arm.resetArmEncoder());
     leftBumper1.whileTrue(m_Elevator.runDown());

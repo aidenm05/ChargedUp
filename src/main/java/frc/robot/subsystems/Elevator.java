@@ -20,7 +20,7 @@ public class Elevator extends SubsystemBase {
 
   public WPI_TalonFX mainMotor;
   public WPI_TalonFX followerMotor;
-  //public WPI_TalonFX armMotor;
+  public WPI_TalonFX armMotor;
   public double calculatedPOutput = 0;
   public double motorPosition;
   StringBuilder _sb = new StringBuilder();
@@ -43,7 +43,7 @@ public class Elevator extends SubsystemBase {
     } else {
       mainMotor = new WPI_TalonFX(1, "torch"); // add "torch as second parameter when on canivore"
       followerMotor = new WPI_TalonFX(2, "torch"); // add "torch as second parameter when on canivore"
-      /*armMotor = new WPI_TalonFX(3, "torch");
+      armMotor = new WPI_TalonFX(3, "torch");
 
       armMotor.setNeutralMode(NeutralMode.Brake);
       armMotor.configNeutralDeadband(.001);
@@ -53,7 +53,8 @@ public class Elevator extends SubsystemBase {
       armMotor.configForwardSoftLimitEnable(false);
       armMotor.configForwardSoftLimitThreshold(30000);
       armMotor.configReverseSoftLimitEnable(false);
-      armMotor.configReverseSoftLimitThreshold(-9000);*/
+      armMotor.configReverseSoftLimitThreshold(-9000);
+      armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
     }
     /*mainMotor.configFactoryDefault();
     followerMotor.configFactoryDefault();*/
