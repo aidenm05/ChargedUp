@@ -37,25 +37,21 @@ public class Elevator extends SubsystemBase {
       .1
     );
 
-    if (Constants.mantis) {
-      mainMotor = new WPI_TalonFX(1); // add "torch as second parameter when on canivore"
-      followerMotor = new WPI_TalonFX(2); // add "torch as second parameter when on canivore"
-    } else {
-      mainMotor = new WPI_TalonFX(1, "torch"); // add "torch as second parameter when on canivore"
-      followerMotor = new WPI_TalonFX(2, "torch"); // add "torch as second parameter when on canivore"
-      armMotor = new WPI_TalonFX(3, "torch");
+    mainMotor = new WPI_TalonFX(1, "torch"); // add "torch as second parameter when on canivore"
+    followerMotor = new WPI_TalonFX(2, "torch"); // add "torch as second parameter when on canivore"
+    armMotor = new WPI_TalonFX(3, "torch");
 
-      armMotor.setNeutralMode(NeutralMode.Brake);
-      armMotor.configNeutralDeadband(.001);
-      armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
-      armMotor.setInverted(true);
+    armMotor.setNeutralMode(NeutralMode.Brake);
+    armMotor.configNeutralDeadband(.001);
+    armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
+    armMotor.setInverted(true);
 
-      armMotor.configForwardSoftLimitEnable(false);
-      armMotor.configForwardSoftLimitThreshold(30000);
-      armMotor.configReverseSoftLimitEnable(false);
-      armMotor.configReverseSoftLimitThreshold(-9000);
-      armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
-    }
+    armMotor.configForwardSoftLimitEnable(true);
+    armMotor.configForwardSoftLimitThreshold(1750);
+    armMotor.configReverseSoftLimitEnable(true);
+    armMotor.configReverseSoftLimitThreshold(0);
+    armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
+
     /*mainMotor.configFactoryDefault();
     followerMotor.configFactoryDefault();*/
 
@@ -96,7 +92,7 @@ public class Elevator extends SubsystemBase {
 
     /* Set Motion Magic gains in slot0 - see documentation */
     mainMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
-    mainMotor.config_kF(Constants.kSlotIdx, 0.0471, Constants.kTimeoutMs); //hi
+    mainMotor.config_kF(Constants.kSlotIdx, 0.0471, Constants.kTimeoutMs);
     mainMotor.config_kP(Constants.kSlotIdx, 0.03, Constants.kTimeoutMs);
     mainMotor.config_kI(Constants.kSlotIdx, 0.001, Constants.kTimeoutMs);
     mainMotor.config_kD(Constants.kSlotIdx, 0.3, Constants.kTimeoutMs);
@@ -115,7 +111,7 @@ public class Elevator extends SubsystemBase {
     mainMotor.configForwardSoftLimitEnable(true);
     mainMotor.configForwardSoftLimitThreshold(220000);
     mainMotor.configReverseSoftLimitEnable(true);
-    mainMotor.configReverseSoftLimitThreshold(500);
+    mainMotor.configReverseSoftLimitThreshold(-800);
   }
 
   //nice run up and down commands
@@ -127,10 +123,6 @@ public class Elevator extends SubsystemBase {
   public CommandBase resetArmEncoder() {
     return run(() -> armMotor.setSelectedSensorPosition(0));
   }
-
-  /*  public CommandBase resetArmEncoder() {
-    return run(() -> armMotor.setSelectedSensorPosition(0));
-  }*/
 
   public CommandBase runDown() {
     return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.2))
@@ -145,13 +137,13 @@ public class Elevator extends SubsystemBase {
   }
 
   public CommandBase armDown() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -.2))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -0.2))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armDown");
   }
 
   public CommandBase armUp() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, .2))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, 0.2))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armUp");
   }
@@ -190,37 +182,42 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Elevator", mainMotor.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Percent Output", calculatedPOutput);
-    double motorOutput = mainMotor.getMotorOutputPercent();
-    SmartDashboard.putNumber(
-      "absolut position",
-      mainMotor.getSensorCollection().getIntegratedSensorAbsolutePosition()
-    );
-
-    _sb.append("\nOut%");
-    _sb.append(motorOutput);
-    _sb.append("\t Vel");
-    _sb.append(mainMotor.getSelectedSensorVelocity(Constants.kPIDLoopIdx));
-
-    _sb.append("\t Position:");
-    _sb.append(mainMotor.getSelectedSensorPosition());
-
-    _sb.append("\t err;");
-    _sb.append(mainMotor.getClosedLoopError(Constants.kPIDLoopIdx));
-    _sb.append("\t trg:");
-    _sb.append(upTargetPos);
-    if (count % 20 == 0) {
-      count = 0;
-      System.out.println(_sb.toString());
-    }
-    count = count + 1;
-    _sb.setLength(0);
-    /*  if (!Constants.mantis) {
+    if (!Constants.mantis) {
       SmartDashboard.putNumber(
-        "arm encoder",
-        armMotor.getSelectedSensorPosition()
+        "Elevator",
+        mainMotor.getSelectedSensorPosition()
       );
-    }*/
+      SmartDashboard.putNumber("Percent Output", calculatedPOutput);
+      double motorOutput = mainMotor.getMotorOutputPercent();
+      SmartDashboard.putNumber(
+        "absolut position",
+        mainMotor.getSensorCollection().getIntegratedSensorAbsolutePosition()
+      );
+
+      _sb.append("\nOut%");
+      _sb.append(motorOutput);
+      _sb.append("\t Vel");
+      _sb.append(mainMotor.getSelectedSensorVelocity(Constants.kPIDLoopIdx));
+
+      _sb.append("\t Position:");
+      _sb.append(mainMotor.getSelectedSensorPosition());
+
+      _sb.append("\t err;");
+      _sb.append(mainMotor.getClosedLoopError(Constants.kPIDLoopIdx));
+      _sb.append("\t trg:");
+      _sb.append(upTargetPos);
+      if (count % 20 == 0) {
+        count = 0;
+        System.out.println(_sb.toString());
+      }
+      count = count + 1;
+      _sb.setLength(0);
+      if (!Constants.mantis) {
+        SmartDashboard.putNumber(
+          "arm encoder",
+          armMotor.getSelectedSensorPosition()
+        );
+      }
+    }
   }
 }

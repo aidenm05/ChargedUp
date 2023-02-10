@@ -199,7 +199,7 @@ public final class Constants {
     if (mantis) {
       Swerve.trackWidth = Units.inchesToMeters(21.25);
       Swerve.wheelBase = Units.inchesToMeters(21.25);
-      Swerve.pigeonID = 0;
+      Swerve.pigeonID = 1;
       kTimeoutMs = 10;
       Swerve.wheelCircumference = Swerve.chosenModule.wheelCircumference;
       Swerve.swerveKinematics =
