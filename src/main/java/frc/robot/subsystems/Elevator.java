@@ -211,7 +211,19 @@ public class Elevator extends SubsystemBase {
   //   mainMotor.set(TalonFXControlMode.MotionMagic, 120000);
   // }
 
-  public CommandBase setPosition(int position) {
+  public CommandBase setPosition(int position, boolean isElevator) {
+    double elevatorPosition = mainMotor.getSelectedSensorPosition();
+    double armPosition = armMotor.getSelectedSensorPosition();
+    //if isElevator, check if arm is past limit
+    //  move arm then elevator
+    //else
+    //  move elevator to position
+
+    //if moving arm and elevator can't support
+    //  move elevator, then arm
+    //else
+    //  move arm
+    
     return run(() -> mainMotor.set(TalonFXControlMode.MotionMagic, position));
   }
 
@@ -224,5 +236,8 @@ public class Elevator extends SubsystemBase {
   // }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    SmartDashboard.putNumber("elevatorEncoderVal", mainMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("armEncoderVal", armMotor.getSelectedSensorPosition());
+  }
 }
