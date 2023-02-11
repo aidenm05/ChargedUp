@@ -32,7 +32,7 @@ public final class Constants {
   //    * Gains(kp, ki, kd, kf, izone, peak output);
   //    */
 
-  public static final double stickDeadband = 0.15;
+  public static final double stickDeadband = 0.1;
 
   public static final class Swerve {
 

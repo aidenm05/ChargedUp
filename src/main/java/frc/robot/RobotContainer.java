@@ -112,7 +112,7 @@ public class RobotContainer {
   /* Subsystems */
   private final Limelight m_Limelight = new Limelight();
   private final Swerve s_Swerve = new Swerve(m_Limelight);
-  private final Elevator m_Elevator = new Elevator();
+  // private final Elevator m_Elevator = new Elevator();
   private final Claw m_Claw = new Claw();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -139,7 +139,7 @@ public class RobotContainer {
         )
       );
     }
-   m_Elevator.armAndElevator();
+    // m_Elevator.armAndElevator();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -155,7 +155,7 @@ public class RobotContainer {
     /* Driver Buttons */
     start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     if (!Constants.mantis) {
-      aButton1.onTrue(m_Elevator.armMM1());
+      // aButton1.onTrue(m_Elevator.armMM1());
       // bButton1.onTrue(m_Elevator.armMM2());
       // aButton1.onTrue(m_Claw.close());
       // bButton1.onTrue(m_Claw.open());
@@ -165,15 +165,18 @@ public class RobotContainer {
       // yButton1.onTrue(m_Elevator.setPositions(150000, 1300));
       // xButton1.onTrue(m_Elevator.setPositions(80000, 1000));
 
-      yButton1.whileTrue(m_Elevator.armUp());
-      xButton1.whileTrue(m_Elevator.armDown());
+      // yButton1.whileTrue(m_Elevator.armUp());
+      // xButton1.whileTrue(m_Elevator.armDown());
 
       // start2.onTrue(m_Elevator.resetElevatorEncoder());
       // back2.onTrue(m_Arm.resetArmEncoder());
-      leftBumper1.whileTrue(m_Elevator.runDown());
-      rightBumper1.whileTrue(m_Elevator.runUp());
+      // leftBumper1.whileTrue(m_Elevator.runDown());
+      // rightBumper1.whileTrue(m_Elevator.runUp());
 
-      
+      bButton1.onTrue(s_Swerve.drive1m());
+      xButton1.onTrue(
+        new InstantCommand(() -> s_Swerve.resetModulesToAbsolute())
+      );
     }
   }
 
