@@ -146,6 +146,9 @@ public class Elevator extends SubsystemBase {
       mainMotor.configForwardSoftLimitThreshold(220000);
       mainMotor.configReverseSoftLimitEnable(false);
       mainMotor.configReverseSoftLimitThreshold(-800);
+
+      armMotor.configForwardSoftLimitEnable(true);
+      armMotor.configForwardSoftLimitThreshold(1300);
     }
   }
 
@@ -225,6 +228,25 @@ public class Elevator extends SubsystemBase {
     //  move arm
     
     return run(() -> mainMotor.set(TalonFXControlMode.MotionMagic, position));
+  }
+
+  public CommandBase setPositions(final int elevatorPosition, int armPosition) {
+    int elevatorLimit = 60000;
+    int armLimit = 800;
+
+    if(elevatorPosition < elevatorLimit) {
+      if(armPosition < armLimit) {
+        return runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armLimit)).andThen(runOnce(() -> mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)));
+      }
+      return runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition)).andThen(runOnce(() -> mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)));
+    }
+    else if(armPosition < armLimit) {
+      if(elevatorPosition < elevatorLimit) {
+        return runOnce(() -> mainMotor.set(TalonFXControlMode.MotionMagic, elevatorLimit)).andThen(runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition)));
+      }
+    }
+    return runOnce(() -> mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)).andThen(runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition)));
+    
   }
 
   //public void setDownPosition() {

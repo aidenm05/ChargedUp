@@ -149,12 +149,18 @@ public class RobotContainer {
       //rightBumper2.onTrue(m_Elevator.setPosition(150000));
       //leftBumper2.onTrue(m_Elevator.setPosition(10000));
 
+      // yButton1.onTrue(m_Elevator.setPositions(150000, 1300));
+      // xButton1.onTrue(m_Elevator.setPositions(80000, 1000));
+
       yButton1.whileTrue(m_Elevator.armUp());
       xButton1.whileTrue(m_Elevator.armDown());
+
       // start2.onTrue(m_Elevator.resetElevatorEncoder());
       // back2.onTrue(m_Arm.resetArmEncoder());
       leftBumper1.whileTrue(m_Elevator.runDown());
       rightBumper1.whileTrue(m_Elevator.runUp());
+
+      
     }
   }
 
