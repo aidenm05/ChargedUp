@@ -139,6 +139,7 @@ public class RobotContainer {
         )
       );
     }
+   m_Elevator.armAndElevator();
 
     // Configure the button bindings
     configureButtonBindings();

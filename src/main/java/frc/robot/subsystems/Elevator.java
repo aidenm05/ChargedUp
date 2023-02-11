@@ -149,6 +149,11 @@ public class Elevator extends SubsystemBase {
 
       armMotor.configForwardSoftLimitEnable(true);
       armMotor.configForwardSoftLimitThreshold(1300);
+
+      //DISABLE MOTION MAGIC
+
+      armMotor.set(ControlMode.PercentOutput, 0.0);
+      mainMotor.set(ControlMode.PercentOutput, 0.0);
     }
   }
 
@@ -175,15 +180,20 @@ public class Elevator extends SubsystemBase {
   }
 
   public CommandBase armDown() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -1))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -0.3))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armDown");
   }
 
   public CommandBase armUp() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, 1))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, 0.3))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armUp");
+  }
+
+  public void armAndElevator() {
+    armMotor.set(TalonFXControlMode.PercentOutput, 0);
+    mainMotor.set(TalonFXControlMode.PercentOutput, 0);
   }
 
   public CommandBase armMM1() {
