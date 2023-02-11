@@ -44,11 +44,7 @@ public class Swerve extends SubsystemBase {
 
   public Swerve(Limelight limelight) {
     m_Limelight = limelight;
-    if (Constants.mantis) {
-      gyro = new Pigeon2(Constants.Swerve.pigeonID);
-    } else {
-      gyro = new Pigeon2(Constants.Swerve.pigeonID, "torch");
-    }
+    gyro = new Pigeon2(Constants.Swerve.pigeonID, "torch");
 
     gyro.configFactoryDefault();
     zeroGyro();

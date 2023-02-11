@@ -33,9 +33,9 @@ public class SwerveModule {
     this.angleOffset = moduleConstants.angleOffset;
 
     if (Constants.mantis) {
-      angleEncoder = new CANCoder(moduleConstants.cancoderID);
-      mAngleMotor = new TalonFX(moduleConstants.angleMotorID);
-      mDriveMotor = new TalonFX(moduleConstants.driveMotorID);
+      angleEncoder = new CANCoder(moduleConstants.cancoderID, "torch");
+      mAngleMotor = new TalonFX(moduleConstants.angleMotorID, "torch");
+      mDriveMotor = new TalonFX(moduleConstants.driveMotorID, "torch");
     } else {
       angleEncoder = new CANCoder(moduleConstants.cancoderID, "torch");
       mAngleMotor = new TalonFX(moduleConstants.angleMotorID, "torch");

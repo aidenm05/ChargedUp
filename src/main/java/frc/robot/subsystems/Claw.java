@@ -20,9 +20,8 @@ public class Claw extends SubsystemBase {
     if (!Constants.mantis) {
       clawPiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 2);
       // clawMotor = new TalonFX(4, "torch");
+      clawPiston.set(Value.kOff);
     }
-
-    clawPiston.set(Value.kOff);
   }
 
   public CommandBase close() {
