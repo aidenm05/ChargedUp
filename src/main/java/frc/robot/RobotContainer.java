@@ -140,7 +140,6 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    // back1.onTrue()
     if (!Constants.mantis) {
       aButton1.onTrue(m_Elevator.armMM1());
       // bButton1.onTrue(m_Elevator.armMM2());

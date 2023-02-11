@@ -155,9 +155,9 @@ public class Elevator extends SubsystemBase {
     return run(() -> mainMotor.setSelectedSensorPosition(0));
   }
 
-  public CommandBase resetArmEncoder() {
-    return run(() -> armMotor.setSelectedSensorPosition(0));
-  }
+  // public CommandBase resetArmEncoder() {
+  //   return run(() -> armMotor.setSelectedSensorPosition(0));
+  // }
 
   public CommandBase runDown() {
     return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.2))

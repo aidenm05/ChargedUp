@@ -136,7 +136,6 @@ public class Swerve extends SubsystemBase {
   // }
 
   public CommandBase moveToGoalAprilTags() {
-    // TODO: We probably need to add a wait here so that the pipeline has time to update
     return runOnce(() -> m_Limelight.setToAprilTags())
       .andThen(() -> Timer.delay(.5))
       .andThen(
@@ -146,7 +145,6 @@ public class Swerve extends SubsystemBase {
   }
 
   public CommandBase moveToGoalRetroreflective() {
-    // TODO: We probably need to add a wait here so that the pipeline has time to update
     return runOnce(() -> m_Limelight.setToRetroreflectiveTape())
       .andThen(() -> Timer.delay(.5))
       .andThen(
