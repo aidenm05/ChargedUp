@@ -16,6 +16,27 @@ public final class Constants {
   public static final double LIMELIGHT_DEADBAND = 1;
   public static final double MIN_STEER_K = .4;
 
+
+  // elevator constants
+  public static final int elevatorUpperLimit = 220000;
+  // this is used to set a threshold where the arm position needs to be considered
+  public static final int elevatorLowerThreshold = 60000;
+  // set height for elevator pos 1
+  public static final int elevatorPos1 = 60000;
+  // set height for elevator pos 2
+  public static final int elevatorPos2 = 60000;
+
+
+  // arm constants
+  public static final int armUpperLimit = 1300;
+  // this is used to set a threshold of where the elevator postion needs to be considered
+  public static final int armLowerThreshold = 800;
+  // set height for arm pos 1
+  public static final int armPos1 = 1000;
+  // set height for arm pos 2
+  public static final int armPos2 = 1000;
+
+
   // weird motion magic
   /**
    * Which PID slot to pull gains from. Starting 2018, you can choose from
