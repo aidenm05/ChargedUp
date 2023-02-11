@@ -230,6 +230,8 @@ public class Swerve extends SubsystemBase {
         "Mod " + mod.moduleNumber + " Velocity",
         mod.getState().speedMetersPerSecond
       );
+      SmartDashboard.putNumber("X pose", this.getPose().getX());
+      SmartDashboard.putNumber("Y pose", this.getPose().getY());
     }
   }
 
@@ -250,11 +252,11 @@ public class Swerve extends SubsystemBase {
   }
 
   public CommandBase drive1m() {
-    PathPlannerTrajectory drive1m = PathPlanner.loadPath("Drive1m", 4, 3);
+    PathPlannerTrajectory drive1m2 = PathPlanner.loadPath("Drive1m", 4, 3);
     return runOnce(() -> {
-        resetOdometry(drive1m.getInitialPose());
+        resetOdometry(drive1m2.getInitialPose());
       })
-      .andThen(createCommandForTrajectory(drive1m))
+      .andThen(createCommandForTrajectory(drive1m2))
       .andThen(() -> drive(new Translation2d(0, 0), 0, true, false));
   }
 }
