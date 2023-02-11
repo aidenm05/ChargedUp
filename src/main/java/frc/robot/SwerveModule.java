@@ -32,15 +32,9 @@ public class SwerveModule {
     this.moduleNumber = moduleNumber;
     this.angleOffset = moduleConstants.angleOffset;
 
-    if (Constants.mantis) {
-      angleEncoder = new CANCoder(moduleConstants.cancoderID, "torch");
-      mAngleMotor = new TalonFX(moduleConstants.angleMotorID, "torch");
-      mDriveMotor = new TalonFX(moduleConstants.driveMotorID, "torch");
-    } else {
-      angleEncoder = new CANCoder(moduleConstants.cancoderID, "torch");
-      mAngleMotor = new TalonFX(moduleConstants.angleMotorID, "torch");
-      mDriveMotor = new TalonFX(moduleConstants.driveMotorID, "torch");
-    }
+    angleEncoder = new CANCoder(moduleConstants.cancoderID, "torch");
+    mAngleMotor = new TalonFX(moduleConstants.angleMotorID, "torch");
+    mDriveMotor = new TalonFX(moduleConstants.driveMotorID, "torch");
 
     configAngleEncoder();/* Angle Encoder Config */
     configAngleMotor();/* Angle Motor Config */

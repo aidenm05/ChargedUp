@@ -142,25 +142,19 @@ public class RobotContainer {
     start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     // back1.onTrue()
     if (!Constants.mantis) {
-      // driver1.a(null);
       aButton1.onTrue(m_Elevator.armMM1());
-      bButton1.onTrue(m_Elevator.armMM2());
+      // bButton1.onTrue(m_Elevator.armMM2());
       // aButton1.onTrue(m_Claw.close());
       // bButton1.onTrue(m_Claw.open());
       //rightBumper2.onTrue(m_Elevator.setPosition(150000));
       //leftBumper2.onTrue(m_Elevator.setPosition(10000));
-      // aButton2.whileTrue(m_Elevator.setUpPosition());
-      // bButton2.whileTrue(m_Elevator.setDownPosition());
 
       yButton1.whileTrue(m_Elevator.armUp());
       xButton1.whileTrue(m_Elevator.armDown());
-      // start2.onTrue(m_Elevator.resetElevatorEncoder()); //I don't think it has to be an instantcommand because it returns a command.
+      // start2.onTrue(m_Elevator.resetElevatorEncoder());
       // back2.onTrue(m_Arm.resetArmEncoder());
       leftBumper1.whileTrue(m_Elevator.runDown());
       rightBumper1.whileTrue(m_Elevator.runUp());
-      // leftTrig.whileTrue(m_Elevator.runUp());
-      // rightTrig.whileTrue(m_Elevator.runDown());
-      exampleTrigger.whileTrue(m_Elevator.runDown());
     }
   }
 
