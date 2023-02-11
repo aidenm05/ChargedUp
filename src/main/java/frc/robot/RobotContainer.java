@@ -143,8 +143,10 @@ public class RobotContainer {
     // back1.onTrue()
 
     // driver1.a(null);
-    aButton1.onTrue(m_Claw.close());
-    bButton1.onTrue(m_Claw.open());
+    aButton1.onTrue(m_Elevator.armMM1());
+    bButton1.onTrue(m_Elevator.armMM2());
+    // aButton1.onTrue(m_Claw.close());
+    // bButton1.onTrue(m_Claw.open());
     //rightBumper2.onTrue(m_Elevator.setPosition(150000));
     //leftBumper2.onTrue(m_Elevator.setPosition(10000));
     // aButton2.whileTrue(m_Elevator.setUpPosition());

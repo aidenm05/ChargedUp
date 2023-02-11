@@ -23,7 +23,6 @@ public class Elevator extends SubsystemBase {
   public WPI_TalonFX armMotor;
   public double calculatedPOutput = 0;
   public double motorPosition;
-  StringBuilder _sb = new StringBuilder();
   public int smoothing = 0;
   int upTargetPos = 10000;
   int downTargetPosition = 100;
@@ -57,6 +56,12 @@ public class Elevator extends SubsystemBase {
 
     mainMotor.configSelectedFeedbackSensor(
       TalonFXFeedbackDevice.IntegratedSensor,
+      0,
+      30
+    );
+
+    armMotor.configSelectedFeedbackSensor(
+      TalonFXFeedbackDevice.RemoteSensor0,
       0,
       30
     );
@@ -100,6 +105,34 @@ public class Elevator extends SubsystemBase {
     /* Set acceleration and vcruise velocity - see documentation */
     mainMotor.configMotionCruiseVelocity(16275, Constants.kTimeoutMs);
     mainMotor.configMotionAcceleration(16275, Constants.kTimeoutMs);
+
+    armMotor.setStatusFramePeriod(
+      StatusFrameEnhanced.Status_13_Base_PIDF0,
+      10,
+      Constants.kTimeoutMs
+    );
+    armMotor.setStatusFramePeriod(
+      StatusFrameEnhanced.Status_10_MotionMagic,
+      10,
+      Constants.kTimeoutMs
+    );
+
+    /* Set the peak and nominal outputs */
+    armMotor.configNominalOutputForward(0, Constants.kTimeoutMs);
+    armMotor.configNominalOutputReverse(0, Constants.kTimeoutMs);
+    armMotor.configPeakOutputForward(1, Constants.kTimeoutMs);
+    armMotor.configPeakOutputReverse(-1, Constants.kTimeoutMs);
+
+    /* Set Motion Magic gains in slot0 - see documentation */
+    armMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
+    armMotor.config_kF(Constants.kSlotIdx, 2.803, Constants.kTimeoutMs);
+    armMotor.config_kP(Constants.kSlotIdx, 4, Constants.kTimeoutMs);
+    armMotor.config_kI(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
+    armMotor.config_kD(Constants.kSlotIdx, 40, Constants.kTimeoutMs);
+
+    /* Set acceleration and vcruise velocity - see documentation */
+    armMotor.configMotionCruiseVelocity(274, Constants.kTimeoutMs);
+    armMotor.configMotionAcceleration(274, Constants.kTimeoutMs);
 
     // /* Zero the sensor once on robot boot up not forever */
     // mainMotor.setSelectedSensorPosition(
@@ -148,6 +181,14 @@ public class Elevator extends SubsystemBase {
       .withName("armUp");
   }
 
+  public CommandBase armMM1() {
+    return run(() -> armMotor.set(TalonFXControlMode.MotionMagic, 400));
+  }
+
+  public CommandBase armMM2() {
+    return run(() -> armMotor.set(TalonFXControlMode.MotionMagic, 1200));
+  }
+
   //methods to find percent outputs needed for feedforward etc etc
   public void increasePercentOutput() {
     calculatedPOutput = calculatedPOutput + .05;
@@ -181,43 +222,5 @@ public class Elevator extends SubsystemBase {
   // }
 
   @Override
-  public void periodic() {
-    if (!Constants.mantis) {
-      SmartDashboard.putNumber(
-        "Elevator",
-        mainMotor.getSelectedSensorPosition()
-      );
-      SmartDashboard.putNumber("Percent Output", calculatedPOutput);
-      double motorOutput = mainMotor.getMotorOutputPercent();
-      SmartDashboard.putNumber(
-        "absolut position",
-        mainMotor.getSensorCollection().getIntegratedSensorAbsolutePosition()
-      );
-
-      _sb.append("\nOut%");
-      _sb.append(motorOutput);
-      _sb.append("\t Vel");
-      _sb.append(mainMotor.getSelectedSensorVelocity(Constants.kPIDLoopIdx));
-
-      _sb.append("\t Position:");
-      _sb.append(mainMotor.getSelectedSensorPosition());
-
-      _sb.append("\t err;");
-      _sb.append(mainMotor.getClosedLoopError(Constants.kPIDLoopIdx));
-      _sb.append("\t trg:");
-      _sb.append(upTargetPos);
-      if (count % 20 == 0) {
-        count = 0;
-        System.out.println(_sb.toString());
-      }
-      count = count + 1;
-      _sb.setLength(0);
-      if (!Constants.mantis) {
-        SmartDashboard.putNumber(
-          "arm encoder",
-          armMotor.getSelectedSensorPosition()
-        );
-      }
-    }
-  }
+  public void periodic() {}
 }
