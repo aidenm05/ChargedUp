@@ -44,10 +44,10 @@ public class Elevator extends SubsystemBase {
     armMotor.setNeutralMode(NeutralMode.Brake);
     armMotor.configNeutralDeadband(.001);
     armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
-    armMotor.setInverted(true);
+    armMotor.setInverted(false);
 
     armMotor.configForwardSoftLimitEnable(true);
-    armMotor.configForwardSoftLimitThreshold(1750);
+    armMotor.configForwardSoftLimitThreshold(1540);
     armMotor.configReverseSoftLimitEnable(true);
     armMotor.configReverseSoftLimitThreshold(0);
     armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
@@ -110,7 +110,7 @@ public class Elevator extends SubsystemBase {
 
     mainMotor.configForwardSoftLimitEnable(true);
     mainMotor.configForwardSoftLimitThreshold(220000);
-    mainMotor.configReverseSoftLimitEnable(true);
+    mainMotor.configReverseSoftLimitEnable(false);
     mainMotor.configReverseSoftLimitThreshold(-800);
   }
 
@@ -137,13 +137,13 @@ public class Elevator extends SubsystemBase {
   }
 
   public CommandBase armDown() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -0.2))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -1))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armDown");
   }
 
   public CommandBase armUp() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, 0.2))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, 1))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armUp");
   }
