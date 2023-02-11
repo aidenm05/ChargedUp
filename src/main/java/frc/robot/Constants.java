@@ -12,7 +12,7 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
-  public static final boolean mantis = true;
+  public static final boolean mantis = false;
   public static final double LIMELIGHT_DEADBAND = 1;
   public static final double MIN_STEER_K = .4;
 
@@ -32,7 +32,7 @@ public final class Constants {
   //    * Gains(kp, ki, kd, kf, izone, peak output);
   //    */
 
-  public static final double stickDeadband = 0.1;
+  public static final double stickDeadband = 0.15;
 
   public static final class Swerve {
 
@@ -100,9 +100,9 @@ public final class Constants {
 
     /* Drive Motor Characterization Values
      * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
-    public static final double driveKS = (0.32 / 12); //TODO: This must be tuned to specific robot
-    public static final double driveKV = (1.51 / 12);
-    public static final double driveKA = (0.27 / 12);
+    public static final double driveKS = (0.18882 / 12);
+    public static final double driveKV = (2.6515 / 12);
+    public static final double driveKA = (0.37384 / 12);
 
     /* Swerve Profiling Values */
     /** Meters per Second */
