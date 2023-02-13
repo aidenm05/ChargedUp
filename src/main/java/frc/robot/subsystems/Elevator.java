@@ -44,7 +44,7 @@ public class Elevator extends SubsystemBase {
       armMotor.setNeutralMode(NeutralMode.Brake);
       armMotor.configNeutralDeadband(.001);
       armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
-      armMotor.setInverted(false);
+      armMotor.setInverted(true);
 
       armMotor.configForwardSoftLimitEnable(true);
       armMotor.configForwardSoftLimitThreshold(1540);
@@ -127,6 +127,7 @@ public class Elevator extends SubsystemBase {
       armMotor.config_kP(Constants.kSlotIdx, 4, Constants.kTimeoutMs);
       armMotor.config_kI(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
       armMotor.config_kD(Constants.kSlotIdx, 40, Constants.kTimeoutMs);
+      armMotor.configAllowableClosedloopError(0, 15);
 
       /* Set acceleration and vcruise velocity - see documentation */
       armMotor.configMotionCruiseVelocity(274, Constants.kTimeoutMs);
@@ -169,13 +170,13 @@ public class Elevator extends SubsystemBase {
   }
 
   public CommandBase armDown() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -0.3))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -0.5))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armDown");
   }
 
   public CommandBase armUp() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, 0.3))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, 0.5))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armUp");
   }
@@ -220,38 +221,75 @@ public class Elevator extends SubsystemBase {
     //  move elevator, then arm
     //else
     //  move arm
-    
+
     return run(() -> mainMotor.set(TalonFXControlMode.MotionMagic, position));
   }
 
-  
   // used to set the arm and elevator to positions being set for the button board
   public CommandBase setPositions(final int elevatorPosition, int armPosition) {
     // check to see if the elevator position being set is lower then the threshold
-    if(elevatorPosition < Constants.elevatorLowerThreshold) {
+    if (elevatorPosition < Constants.elevatorLowerThreshold) {
       // make sure that if the elevator position is lower, theat the arm position will not break the robot
-      if(armPosition < Constants.armLowerThreshold) {
+      if (armPosition < Constants.armLowerThreshold) {
         // arm was set to a breaking position, so instead set it to the lowest possible setting then move elevator
-        return runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, Constants.armLowerThreshold)).andThen(runOnce(() -> mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)));
+        return runOnce(() ->
+            armMotor.set(
+              TalonFXControlMode.MotionMagic,
+              Constants.armLowerThreshold
+            )
+          )
+          .andThen(
+            runOnce(() ->
+              mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)
+            )
+          );
       }
       // arm was set in a good position move the arm then the elevator
-      return runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition)).andThen(runOnce(() -> mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)));
+      return runOnce(() ->
+          armMotor.set(TalonFXControlMode.MotionMagic, armPosition)
+        )
+        .andThen(
+          runOnce(() ->
+            mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)
+          )
+        );
     }
-    // check to see if the arm is being set lower then the threshold 
-    else if(armPosition < Constants.armLowerThreshold) {
+    // check to see if the arm is being set lower then the threshold
+    else if (armPosition < Constants.armLowerThreshold) {
       // make sure if the arm could break the robot that the elevator position sent is in the acceptable range
-      if(elevatorPosition < Constants.elevatorLowerThreshold) {
+      if (elevatorPosition < Constants.elevatorLowerThreshold) {
         // elevator range would break robot, so setit to the lowest position to not break the robot
-        return runOnce(() -> mainMotor.set(TalonFXControlMode.MotionMagic, Constants.elevatorUpperLimit)).andThen(runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition)));
+        return runOnce(() ->
+            mainMotor.set(
+              TalonFXControlMode.MotionMagic,
+              Constants.elevatorUpperLimit
+            )
+          )
+          .andThen(
+            runOnce(() ->
+              armMotor.set(TalonFXControlMode.MotionMagic, armPosition)
+            )
+          );
       }
     }
     // no thresholds were broken so move the elevator and then the arm
-    return runOnce(() -> mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)).andThen(runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition)));
+    return runOnce(() ->
+        mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)
+      )
+      .andThen(
+        runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition))
+      );
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("elevatorEncoderVal", mainMotor.getSelectedSensorPosition());
-    SmartDashboard.putNumber("armEncoderVal", armMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber(
+      "elevatorEncoderVal",
+      mainMotor.getSelectedSensorPosition()
+    );
+    SmartDashboard.putNumber(
+      "armEncoderVal",
+      armMotor.getSelectedSensorPosition()
+    );
   }
 }
