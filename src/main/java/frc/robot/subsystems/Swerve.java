@@ -37,7 +37,7 @@ import frc.robot.SwerveModule;
 public class Swerve extends SubsystemBase {
 
   public SwerveDriveOdometry swerveOdometry;
-  public SwerveModule[] mSwerveMods;
+  public static SwerveModule[] mSwerveMods;
   public Pigeon2 gyro;
   private GenericEntry gyroAngle;
   Limelight m_Limelight;
@@ -199,7 +199,7 @@ public class Swerve extends SubsystemBase {
       : Rotation2d.fromDegrees(gyro.getYaw());
   }
 
-  public void resetModulesToAbsolute() {
+  public static void resetModulesToAbsolute() {
     for (SwerveModule mod : mSwerveMods) {
       mod.resetToAbsolute();
     }
