@@ -37,9 +37,9 @@ public class Elevator extends SubsystemBase {
     );
 
     if (!Constants.mantis) {
-      mainMotor = new WPI_TalonFX(1, "torch"); // add "torch as second parameter when on canivore"
-      followerMotor = new WPI_TalonFX(2, "torch"); // add "torch as second parameter when on canivore"
-      armMotor = new WPI_TalonFX(3, "torch");
+      mainMotor = new WPI_TalonFX(1); // add "torch as second parameter when on canivore"
+      followerMotor = new WPI_TalonFX(2); // add "torch as second parameter when on canivore"
+      armMotor = new WPI_TalonFX(3);
 
       armMotor.setNeutralMode(NeutralMode.Brake);
       armMotor.configNeutralDeadband(.001);
@@ -170,13 +170,13 @@ public class Elevator extends SubsystemBase {
   }
 
   public CommandBase armDown() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -0.5))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -0.7))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armDown");
   }
 
   public CommandBase armUp() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, 0.5))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, 0.7))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armUp");
   }
