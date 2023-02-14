@@ -37,9 +37,9 @@ public class Elevator extends SubsystemBase {
     );
 
     if (!Constants.mantis) {
-      mainMotor = new WPI_TalonFX(1, "torch"); // add "torch as second parameter when on canivore"
-      followerMotor = new WPI_TalonFX(2, "torch"); // add "torch as second parameter when on canivore"
-      armMotor = new WPI_TalonFX(3, "torch");
+      mainMotor = new WPI_TalonFX(1); // add "torch as second parameter when on canivore"
+      followerMotor = new WPI_TalonFX(2); // add "torch as second parameter when on canivore"
+      armMotor = new WPI_TalonFX(3);
 
       armMotor.setNeutralMode(NeutralMode.Brake);
       armMotor.configNeutralDeadband(.001);

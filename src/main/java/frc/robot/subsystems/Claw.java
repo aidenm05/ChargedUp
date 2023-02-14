@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -19,9 +20,17 @@ public class Claw extends SubsystemBase {
   public Claw() {
     if (!Constants.mantis) {
       clawPiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 2);
-      // clawMotor = new TalonFX(4, "torch");
+      clawMotor = new TalonFX(4, "torch");
       clawPiston.set(Value.kOff);
     }
+  }
+
+  public CommandBase motorOn() {
+    return run(() -> clawMotor.set(ControlMode.PercentOutput, .2));
+  }
+
+  public CommandBase motorOff() {
+    return run(() -> clawMotor.set(ControlMode.PercentOutput, 0));
   }
 
   public CommandBase close() {
