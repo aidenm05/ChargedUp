@@ -114,14 +114,6 @@ public class RobotContainer {
   final JoystickButton b4 = new JoystickButton(buttonBoard, 4);
   final JoystickButton b5 = new JoystickButton(buttonBoard, 5);
   final JoystickButton b6 = new JoystickButton(buttonBoard, 6);
-
-  // public class BoardStickForward extends Trigger {
-
-  //   @Override
-  //   public boolean get() {
-  //     return buttonBoard.getRawAxis(1) > 0.7;
-  //   }
-  // }
   Trigger bbStickF = new Trigger(() -> buttonBoard.getRawAxis(1) > 0.7);
   Trigger bbStickB = new Trigger(() -> buttonBoard.getRawAxis(1) < -0.7);
 

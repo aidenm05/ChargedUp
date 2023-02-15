@@ -26,7 +26,7 @@ public final class Constants {
   public static final int elevatorPos2 = 60000;
 
   // arm constants
-  public static final int armUpperLimit = 1300;
+  public static final int armUpperLimit = 1450;
   // this is used to set a threshold of where the elevator postion needs to be considered
   public static final int armLowerThreshold = 800;
   // set height for arm pos 1
