@@ -110,6 +110,10 @@ public class RobotContainer {
 
   final JoystickButton b1 = new JoystickButton(buttonBoard, 1);
   final JoystickButton b2 = new JoystickButton(buttonBoard, 2);
+  final JoystickButton b3 = new JoystickButton(buttonBoard, 3);
+  final JoystickButton b4 = new JoystickButton(buttonBoard, 4);
+  final JoystickButton b5 = new JoystickButton(buttonBoard, 5);
+  final JoystickButton b6 = new JoystickButton(buttonBoard, 6);
 
   // private final JoystickAxis rightTrigButton = new JoystickButton(driver1, XboxController.Axis.kRightTrigger)
 
