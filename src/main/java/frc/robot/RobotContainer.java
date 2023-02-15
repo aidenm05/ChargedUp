@@ -24,7 +24,7 @@ public class RobotContainer {
   /* Controllers */
   private final Joystick driver2 = new Joystick(0);
   private final XboxController driver1 = new XboxController(1);
-  // private final Joystick buttonBoard = new Joystick(1); //maybe 2 idk fix the ports
+  private final Joystick buttonBoard = new Joystick(1); //maybe 2 idk fix the ports
   Trigger exampleTrigger = new Trigger(() -> driver1.getLeftTriggerAxis() > 0.5
   );
   /* Drive Controls */
@@ -107,6 +107,8 @@ public class RobotContainer {
     1
   );
   private final RightTriggerPressed rightTrig = new RightTriggerPressed();
+
+  final JoystickButton b1 = new JoystickButton(buttonBoard, 1);
 
   // private final JoystickAxis rightTrigButton = new JoystickButton(driver1, XboxController.Axis.kRightTrigger)
 
