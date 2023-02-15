@@ -109,6 +109,7 @@ public class RobotContainer {
   private final RightTriggerPressed rightTrig = new RightTriggerPressed();
 
   final JoystickButton b1 = new JoystickButton(buttonBoard, 1);
+  final JoystickButton b2 = new JoystickButton(buttonBoard, 2);
 
   // private final JoystickAxis rightTrigButton = new JoystickButton(driver1, XboxController.Axis.kRightTrigger)
 
