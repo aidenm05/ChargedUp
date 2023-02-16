@@ -242,6 +242,11 @@ public class Elevator extends SubsystemBase {
             runOnce(() ->
               mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)
             )
+          )
+          .andThen(
+            runOnce(() ->
+              armMotor.set(TalonFXControlMode.MotionMagic, armPosition)
+            )
           );
       }
       // arm was set in a good position move the arm then the elevator
