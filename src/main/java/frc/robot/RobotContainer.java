@@ -169,10 +169,15 @@ public class RobotContainer {
     if (!Constants.mantis) {
       //aButton1.onTrue(m_Elevator.armMM1());
       //bButton1.onTrue(m_Elevator.armMM2());
-      b1.onTrue(m_Claw.closeCube());
-      b3.onTrue(m_Claw.openCube());
-      b2.onTrue(m_Claw.openCone());
-      b4.onTrue(m_Claw.closeCone());
+
+      // b1.onTrue(m_Claw.closeCube());
+      // b3.onTrue(m_Claw.openCube());
+      // b2.onTrue(m_Claw.closeCube());
+      // b4.onTrue(m_Claw.closeCone());
+      b1.onTrue(m_Claw.LOPEN());
+      b3.onTrue(m_Claw.ROPEN());
+      b2.onTrue(m_Claw.LCLOSE());
+      b4.onTrue(m_Claw.RCLOSE());
       //rightBumper2.onTrue(m_Elevator.setPosition(150000));
       //leftBumper2.onTrue(m_Elevator.setPosition(10000));
 

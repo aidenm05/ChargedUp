@@ -24,7 +24,7 @@ public class Claw extends SubsystemBase {
       clawPiston2 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 3); //idk
       clawMotor = new TalonFX(4);
       clawPiston1.set(Value.kOff);
-      clawPiston2.set(Value.kOff);
+      clawPiston2.set(Value.kForward);
     }
   }
 
@@ -46,13 +46,24 @@ public class Claw extends SubsystemBase {
       .andThen(run(() -> clawPiston2.set(Value.kReverse)));
   }
 
-  public CommandBase openCone() {
-    return run(() -> clawPiston1.set(Value.kReverse))
-      .andThen(run(() -> clawPiston2.set(Value.kForward)));
-  }
-
   public CommandBase closeCone() {
     return run(() -> clawPiston1.set(Value.kForward))
       .andThen(run(() -> clawPiston2.set(Value.kForward)));
+  }
+
+  public CommandBase LOPEN() {
+    return run(() -> clawPiston1.set(Value.kForward)); //closes L
+  }
+
+  public CommandBase LCLOSE() {
+    return run(() -> clawPiston1.set(Value.kReverse));
+  }
+
+  public CommandBase ROPEN() {
+    return run(() -> clawPiston2.set(Value.kForward));
+  }
+
+  public CommandBase RCLOSE() {
+    return run(() -> clawPiston2.set(Value.kReverse));
   }
 }
