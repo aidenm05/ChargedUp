@@ -40,19 +40,40 @@ public class Claw extends SubsystemBase {
     return run(() -> clawMotor.set(ControlMode.PercentOutput, -.2));
   }
 
-  public CommandBase open1() {
+  public CommandBase open1In() {
     return runOnce(() -> clawPiston1.set(Value.kForward))
-      .andThen(runOnce(() -> clawPiston2.set(Value.kReverse)));
+      .andThen(runOnce(() -> clawPiston2.set(Value.kReverse)))
+      .andThen(runOnce(() -> clawMotor.set(ControlMode.PercentOutput, .2)));
   }
 
-  public CommandBase openAll() {
+  public CommandBase open1Hold() {
+    return runOnce(() -> clawPiston1.set(Value.kForward))
+      .andThen(runOnce(() -> clawPiston2.set(Value.kReverse)))
+      .andThen(runOnce(() -> clawMotor.set(ControlMode.PercentOutput, 0)));
+  }
+
+  public CommandBase openAllIn() {
     return runOnce(() -> clawPiston2.set(Value.kReverse))
-      .andThen(runOnce(() -> clawPiston1.set(Value.kReverse)));
+      .andThen(runOnce(() -> clawPiston1.set(Value.kReverse)))
+      .andThen(runOnce(() -> clawMotor.set(ControlMode.PercentOutput, .2)));
   }
 
-  public CommandBase closeAll() {
+  public CommandBase openAllHold() {
+    return runOnce(() -> clawPiston2.set(Value.kReverse))
+      .andThen(runOnce(() -> clawPiston1.set(Value.kReverse)))
+      .andThen(runOnce(() -> clawMotor.set(ControlMode.PercentOutput, 0)));
+  }
+
+  public CommandBase openAllOut() {
+    return runOnce(() -> clawPiston2.set(Value.kReverse))
+      .andThen(runOnce(() -> clawPiston1.set(Value.kReverse)))
+      .andThen(runOnce(() -> clawMotor.set(ControlMode.PercentOutput, -.2)));
+  }
+
+  public CommandBase closeAllHold() {
     return runOnce(() -> clawPiston1.set(Value.kForward))
-      .andThen(runOnce(() -> clawPiston2.set(Value.kForward)));
+      .andThen(runOnce(() -> clawPiston2.set(Value.kForward)))
+      .andThen(runOnce(() -> clawMotor.set(ControlMode.PercentOutput, 0)));
   }
   // public CommandBase LOPEN() {
   //   return run(() -> clawPiston1.set(Value.kForward)); //closes L

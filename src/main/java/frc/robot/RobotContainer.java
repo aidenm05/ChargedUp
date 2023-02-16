@@ -173,16 +173,17 @@ public class RobotContainer {
       //aButton1.onTrue(m_Elevator.armMM1());
       //bButton1.onTrue(m_Elevator.armMM2());g
 
-      leftBumper1.whileTrue(m_Claw.openAll());
-      leftBumper1.onFalse(m_Claw.open1());
-      rightBumper1.whileTrue(m_Claw.open1());
-      rightBumper1.onFalse(m_Claw.closeAll());
+      leftBumper1.whileTrue(m_Claw.openAllIn());
+      leftBumper1.onFalse(m_Claw.open1Hold());
+      rightBumper1.whileTrue(m_Claw.open1In());
+      rightBumper1.onFalse(m_Claw.closeAllHold());
 
       // aButton1.onTrue(m_Elevator.setPositions(205800, 976));
       // bButton1.onTrue(m_Elevator.setPositions(80000, 1000));
-      aButton1.onTrue(m_Claw.motorForward());
-      bButton1.onTrue(m_Claw.motorReverse());
-      back1.onTrue(m_Claw.motorOff());
+      aButton1.whileTrue(m_Claw.openAllOut());
+      aButton1.onFalse(m_Claw.motorOff());
+      // bButton1.onTrue(m_Claw.motorReverse());
+      // back1.onTrue(m_Claw.motorOff());
 
       yButton1.whileTrue(m_Elevator.armUp());
       xButton1.whileTrue(m_Elevator.armDown());
