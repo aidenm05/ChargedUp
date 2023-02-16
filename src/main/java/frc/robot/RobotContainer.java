@@ -115,6 +115,10 @@ public class RobotContainer {
   final JoystickButton b4 = new JoystickButton(buttonBoard, 4);
   final JoystickButton b5 = new JoystickButton(buttonBoard, 5);
   final JoystickButton b6 = new JoystickButton(buttonBoard, 6);
+  final JoystickButton b7 = new JoystickButton(buttonBoard, 7);
+  final JoystickButton b8 = new JoystickButton(buttonBoard, 8);
+  final JoystickButton b9 = new JoystickButton(buttonBoard, 9);
+  final JoystickButton b10 = new JoystickButton(buttonBoard, 10);
   Trigger bbStickF = new Trigger(() -> buttonBoard.getRawAxis(1) > 0.7);
   Trigger bbStickB = new Trigger(() -> buttonBoard.getRawAxis(1) < -0.7);
 
@@ -195,6 +199,11 @@ public class RobotContainer {
       b4.onTrue(
         m_Elevator.setPositions(Constants.elevatorPos4, Constants.armPos4)
       );
+
+      b7.whileTrue(m_Elevator.armUp());
+      b8.whileTrue(m_Elevator.armDown());
+      b9.whileTrue(m_Elevator.runUp());
+      b10.whileTrue(m_Elevator.runDown());
 
       start2.onTrue(m_Elevator.resetElevatorEncoder());
       //back2.onTrue(m_Arm.resetArmEncoder());
