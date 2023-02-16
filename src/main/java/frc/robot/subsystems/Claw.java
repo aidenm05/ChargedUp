@@ -20,8 +20,8 @@ public class Claw extends SubsystemBase {
 
   public Claw() {
     if (!Constants.mantis) {
-      clawPiston1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1, 2);
-      clawPiston2 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 3, 4); //idk
+      clawPiston1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
+      clawPiston2 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 3); //idk
       clawMotor = new TalonFX(4);
       clawPiston1.set(Value.kOff);
       clawPiston2.set(Value.kOff);

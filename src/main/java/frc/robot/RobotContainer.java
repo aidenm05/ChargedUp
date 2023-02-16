@@ -22,9 +22,9 @@ import java.lang.reflect.InaccessibleObjectException;
 public class RobotContainer {
 
   /* Controllers */
-  private final Joystick driver2 = new Joystick(0);
-  private final XboxController driver1 = new XboxController(1);
+  private final XboxController driver1 = new XboxController(0);
   private final Joystick buttonBoard = new Joystick(1); //maybe 2 idk fix the ports
+  private final Joystick driver2 = new Joystick(2);
   Trigger exampleTrigger = new Trigger(() -> driver1.getLeftTriggerAxis() > 0.5
   );
   /* Drive Controls */
@@ -102,11 +102,12 @@ public class RobotContainer {
     driver2,
     XboxController.Button.kBack.value
   );
-  private final LeftTriggerPressed leftTrig = new LeftTriggerPressed(
-    driver1,
-    1
-  );
-  private final RightTriggerPressed rightTrig = new RightTriggerPressed();
+  // private final Trigger rightTrigger1 = new Trigger(() ->
+  //   driver1.getRawAxis(3) > 0.7
+  // );
+  // private final Trigger leftTrigger1 = new Trigger(() ->
+  //   driver1.getRawAxis(2) < 0.7
+  // );
 
   final JoystickButton b1 = new JoystickButton(buttonBoard, 1);
   final JoystickButton b2 = new JoystickButton(buttonBoard, 2);
@@ -168,8 +169,10 @@ public class RobotContainer {
     if (!Constants.mantis) {
       //aButton1.onTrue(m_Elevator.armMM1());
       //bButton1.onTrue(m_Elevator.armMM2());
-      leftTrig.onTrue(m_Claw.closeCube());
-      rightTrig.onTrue(m_Claw.openCube());
+      b1.onTrue(m_Claw.closeCube());
+      b3.onTrue(m_Claw.openCube());
+      b2.onTrue(m_Claw.openCone());
+      b4.onTrue(m_Claw.closeCone());
       //rightBumper2.onTrue(m_Elevator.setPosition(150000));
       //leftBumper2.onTrue(m_Elevator.setPosition(10000));
 
@@ -183,8 +186,8 @@ public class RobotContainer {
 
       start2.onTrue(m_Elevator.resetElevatorEncoder());
       //back2.onTrue(m_Arm.resetArmEncoder());
-      leftBumper1.whileTrue(m_Elevator.runDown());
-      rightBumper1.whileTrue(m_Elevator.runUp());
+      // leftBumper1.whileTrue(m_Elevator.runDown());
+      // rightBumper1.whileTrue(m_Elevator.runUp());
       // bButton1.onTrue(s_Swerve.drive1m());
       back1.onTrue(new InstantCommand(() -> s_Swerve.resetModulesToAbsolute()));
     }
@@ -206,20 +209,18 @@ public class RobotContainer {
       super(joystick, buttonNumber);
       //TODO Auto-generated constructor stub
     }
-
-    @Override
-    public boolean getAsBoolean() {
-      return driver1.getRawAxis(2) < -0.5;
-      // This returns whether the trigger is active
-    }
+    // @Override
+    // public boolean getAsBoolean() {
+    //   return driver1.getRawAxis(2) < -0.5;
+    //   // This returns whether the trigger is active
+    // }
   }
+  // public class RightTriggerPressed extends Trigger {
 
-  public class RightTriggerPressed extends Trigger {
-
-    @Override
-    public boolean getAsBoolean() {
-      return driver1.getRawAxis(2) > 0.5;
-      // This returns whether the trigger is active
-    }
-  }
+  //   @Override
+  //   public boolean getAsBoolean() {
+  //     return driver1.getRawAxis(3) > 0.5;
+  //     // This returns whether the trigger is active
+  //   }
+  // }
 }
