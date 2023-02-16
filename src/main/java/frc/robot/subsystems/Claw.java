@@ -23,7 +23,7 @@ public class Claw extends SubsystemBase {
       clawPiston1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
       clawPiston2 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 3); //idk
       clawMotor = new TalonFX(4);
-      clawPiston1.set(Value.kOff);
+      clawPiston1.set(Value.kForward);
       clawPiston2.set(Value.kForward);
     }
   }
@@ -36,34 +36,33 @@ public class Claw extends SubsystemBase {
     return run(() -> clawMotor.set(ControlMode.PercentOutput, 0));
   }
 
-  public CommandBase closeCube() {
-    return run(() -> clawPiston1.set(Value.kForward))
-      .andThen(run(() -> clawPiston2.set(Value.kReverse)));
+  public CommandBase open1() {
+    return runOnce(() -> clawPiston1.set(Value.kForward))
+      .andThen(runOnce(() -> clawPiston2.set(Value.kReverse)));
   }
 
-  public CommandBase openCube() {
-    return run(() -> clawPiston1.set(Value.kReverse))
-      .andThen(run(() -> clawPiston2.set(Value.kReverse)));
+  public CommandBase openAll() {
+    return runOnce(() -> clawPiston2.set(Value.kReverse))
+      .andThen(runOnce(() -> clawPiston1.set(Value.kReverse)));
   }
 
-  public CommandBase closeCone() {
-    return run(() -> clawPiston1.set(Value.kForward))
-      .andThen(run(() -> clawPiston2.set(Value.kForward)));
+  public CommandBase closeAll() {
+    return runOnce(() -> clawPiston1.set(Value.kForward))
+      .andThen(runOnce(() -> clawPiston2.set(Value.kForward)));
   }
+  // public CommandBase LOPEN() {
+  //   return run(() -> clawPiston1.set(Value.kForward)); //closes L
+  // }
 
-  public CommandBase LOPEN() {
-    return run(() -> clawPiston1.set(Value.kForward)); //closes L
-  }
+  // public CommandBase LCLOSE() {
+  //   return run(() -> clawPiston1.set(Value.kReverse)); //opens L
+  // }
 
-  public CommandBase LCLOSE() {
-    return run(() -> clawPiston1.set(Value.kReverse));
-  }
+  // public CommandBase ROPEN() {
+  //   return run(() -> clawPiston2.set(Value.kForward)); //closes R
+  // }
 
-  public CommandBase ROPEN() {
-    return run(() -> clawPiston2.set(Value.kForward));
-  }
-
-  public CommandBase RCLOSE() {
-    return run(() -> clawPiston2.set(Value.kReverse));
-  }
+  // public CommandBase RCLOSE() {
+  //   return run(() -> clawPiston2.set(Value.kReverse)); //opens R
+  // }
 }

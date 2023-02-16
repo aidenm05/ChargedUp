@@ -165,21 +165,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     if (!Constants.mantis) {
       //aButton1.onTrue(m_Elevator.armMM1());
-      //bButton1.onTrue(m_Elevator.armMM2());
+      //bButton1.onTrue(m_Elevator.armMM2());g
 
-      // b1.onTrue(m_Claw.closeCube());
-      // b3.onTrue(m_Claw.openCube());
-      // b2.onTrue(m_Claw.closeCube());
-      // b4.onTrue(m_Claw.closeCone());
-      b1.onTrue(m_Claw.LOPEN());
-      b3.onTrue(m_Claw.ROPEN());
-      b2.onTrue(m_Claw.LCLOSE());
-      b4.onTrue(m_Claw.RCLOSE());
-      //rightBumper2.onTrue(m_Elevator.setPosition(150000));
-      //leftBumper2.onTrue(m_Elevator.setPosition(10000));
+      leftBumper1.whileTrue(m_Claw.openAll());
+      leftBumper1.onFalse(m_Claw.open1());
+      rightBumper1.whileTrue(m_Claw.open1());
+      rightBumper1.onFalse(m_Claw.closeAll());
 
       // aButton1.onTrue(m_Elevator.setPositions(205800, 976));
       // bButton1.onTrue(m_Elevator.setPositions(80000, 1000));
@@ -194,7 +187,6 @@ public class RobotContainer {
       // leftBumper1.whileTrue(m_Elevator.runDown());
       // rightBumper1.whileTrue(m_Elevator.runUp());
       // bButton1.onTrue(s_Swerve.drive1m());
-      back1.onTrue(new InstantCommand(() -> s_Swerve.resetModulesToAbsolute()));
     }
   }
 
