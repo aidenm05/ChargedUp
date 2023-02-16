@@ -176,16 +176,25 @@ public class RobotContainer {
 
       // aButton1.onTrue(m_Elevator.setPositions(205800, 976));
       // bButton1.onTrue(m_Elevator.setPositions(80000, 1000));
-      aButton1.onTrue(m_Claw.motorOn());
-      bButton1.onTrue(m_Claw.motorOff());
+      aButton1.onTrue(m_Claw.motorForward());
+      bButton1.onTrue(m_Claw.motorReverse());
+      back1.onTrue(m_Claw.motorOff());
 
       yButton1.whileTrue(m_Elevator.armUp());
       xButton1.whileTrue(m_Elevator.armDown());
 
-      b1.onTrue(m_Elevator.setPositions(Constants.elevatorPos1, Constants.armPos1));
-      b3.onTrue(m_Elevator.setPositions(Constants.elevatorPos2, Constants.armPos2));
-      b2.onTrue(m_Elevator.setPositions(Constants.elevatorPos3, Constants.armPos3));
-      b4.onTrue(m_Elevator.setPositions(Constants.elevatorPos4, Constants.armPos4));
+      b1.onTrue(
+        m_Elevator.setPositions(Constants.elevatorPos1, Constants.armPos1)
+      );
+      b3.onTrue(
+        m_Elevator.setPositions(Constants.elevatorPos2, Constants.armPos2)
+      );
+      b2.onTrue(
+        m_Elevator.setPositions(Constants.elevatorPos3, Constants.armPos3)
+      );
+      b4.onTrue(
+        m_Elevator.setPositions(Constants.elevatorPos4, Constants.armPos4)
+      );
 
       start2.onTrue(m_Elevator.resetElevatorEncoder());
       //back2.onTrue(m_Arm.resetArmEncoder());

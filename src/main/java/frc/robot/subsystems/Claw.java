@@ -28,12 +28,16 @@ public class Claw extends SubsystemBase {
     }
   }
 
-  public CommandBase motorOn() {
+  public CommandBase motorForward() {
     return run(() -> clawMotor.set(ControlMode.PercentOutput, .2));
   }
 
   public CommandBase motorOff() {
     return run(() -> clawMotor.set(ControlMode.PercentOutput, 0));
+  }
+
+  public CommandBase motorReverse() {
+    return run(() -> clawMotor.set(ControlMode.PercentOutput, -.2));
   }
 
   public CommandBase open1() {
