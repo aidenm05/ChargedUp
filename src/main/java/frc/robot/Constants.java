@@ -24,6 +24,8 @@ public final class Constants {
   public static final int elevatorPos1 = 60000;
   // set height for elevator pos 2
   public static final int elevatorPos2 = 60000;
+  public static final int elevatorPos3 = 60000;
+  public static final int elevatorPos4 = 60000;
 
   // arm constants
   public static final int armUpperLimit = 1450;
@@ -33,6 +35,8 @@ public final class Constants {
   public static final int armPos1 = 1000;
   // set height for arm pos 2
   public static final int armPos2 = 1000;
+  public static final int armPos3 = 1000;
+  public static final int armPos4 = 1000;
 
   // weird motion magic
   /**

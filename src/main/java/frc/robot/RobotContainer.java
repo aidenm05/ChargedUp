@@ -182,6 +182,11 @@ public class RobotContainer {
       yButton1.whileTrue(m_Elevator.armUp());
       xButton1.whileTrue(m_Elevator.armDown());
 
+      b1.onTrue(m_Elevator.setPositions(Constants.elevatorPos1, Constants.armPos1));
+      b3.onTrue(m_Elevator.setPositions(Constants.elevatorPos2, Constants.armPos2));
+      b2.onTrue(m_Elevator.setPositions(Constants.elevatorPos3, Constants.armPos3));
+      b4.onTrue(m_Elevator.setPositions(Constants.elevatorPos4, Constants.armPos4));
+
       start2.onTrue(m_Elevator.resetElevatorEncoder());
       //back2.onTrue(m_Arm.resetArmEncoder());
       // leftBumper1.whileTrue(m_Elevator.runDown());
