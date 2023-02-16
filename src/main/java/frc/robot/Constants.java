@@ -21,22 +21,26 @@ public final class Constants {
   // this is used to set a threshold where the arm position needs to be considered
   public static final int elevatorLowerThreshold = 60000;
   // set height for elevator pos 1
-  public static final int elevatorPos1 = 60000;
+  public static final int elevatorPos1 = 215550;
   // set height for elevator pos 2
   public static final int elevatorPos2 = 60000;
   public static final int elevatorPos3 = 60000;
   public static final int elevatorPos4 = 60000;
+  public static final int elevatorPos5 = 60000;
+  public static final int elevatorPos6 = 41777;
 
   // arm constants
   public static final int armUpperLimit = 1450;
   // this is used to set a threshold of where the elevator postion needs to be considered
   public static final int armLowerThreshold = 800;
   // set height for arm pos 1
-  public static final int armPos1 = 1000;
+  public static final int armPos1 = 1057;
   // set height for arm pos 2
   public static final int armPos2 = 1000;
   public static final int armPos3 = 1000;
   public static final int armPos4 = 1000;
+  public static final int armPos5 = 1000;
+  public static final int armPos6 = 386;
 
   // weird motion magic
   /**

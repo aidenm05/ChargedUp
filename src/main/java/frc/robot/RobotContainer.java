@@ -200,13 +200,19 @@ public class RobotContainer {
       b4.onTrue(
         m_Elevator.setPositions(Constants.elevatorPos4, Constants.armPos4)
       );
+      b5.onTrue(
+        m_Elevator.setPositions(Constants.elevatorPos5, Constants.armPos5)
+      );
+      b6.onTrue(
+        m_Elevator.setPositions(Constants.elevatorPos6, Constants.armPos6)
+      );
 
       b7.whileTrue(m_Elevator.armUp());
       b8.whileTrue(m_Elevator.armDown());
       b9.whileTrue(m_Elevator.runUp());
       b10.whileTrue(m_Elevator.runDown());
 
-      start2.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+      start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
       //back2.onTrue(m_Arm.resetArmEncoder());
       // leftBumper1.whileTrue(m_Elevator.runDown());
       // rightBumper1.whileTrue(m_Elevator.runUp());
