@@ -123,15 +123,15 @@ public class Elevator extends SubsystemBase {
 
       /* Set Motion Magic gains in slot0 - see documentation */
       armMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
-      armMotor.config_kF(Constants.kSlotIdx, 2.803, Constants.kTimeoutMs);
-      armMotor.config_kP(Constants.kSlotIdx, 4, Constants.kTimeoutMs);
+      armMotor.config_kF(Constants.kSlotIdx, 3.602, Constants.kTimeoutMs);
+      armMotor.config_kP(Constants.kSlotIdx, 20, Constants.kTimeoutMs);
       armMotor.config_kI(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
-      armMotor.config_kD(Constants.kSlotIdx, 40, Constants.kTimeoutMs);
+      armMotor.config_kD(Constants.kSlotIdx, 200, Constants.kTimeoutMs);
       armMotor.configAllowableClosedloopError(0, 15);
 
       /* Set acceleration and vcruise velocity - see documentation */
-      armMotor.configMotionCruiseVelocity(274, Constants.kTimeoutMs);
-      armMotor.configMotionAcceleration(274, Constants.kTimeoutMs);
+      armMotor.configMotionCruiseVelocity(213, Constants.kTimeoutMs);
+      armMotor.configMotionAcceleration(213, Constants.kTimeoutMs);
 
       // /* Zero the sensor once on robot boot up not forever */
       // mainMotor.setSelectedSensorPosition(
@@ -170,13 +170,13 @@ public class Elevator extends SubsystemBase {
   }
 
   public CommandBase armDown() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -0.4))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -.4))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armDown");
   }
 
   public CommandBase armUp() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, 0.4))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, .4))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armUp");
   }

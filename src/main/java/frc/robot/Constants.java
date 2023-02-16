@@ -23,7 +23,7 @@ public final class Constants {
   // set height for elevator pos 1
   public static final int elevatorPos1 = 215550;
   // set height for elevator pos 2
-  public static final int elevatorPos2 = 60000;
+  public static final int elevatorPos2 = 135400;
   public static final int elevatorPos3 = 60000;
   public static final int elevatorPos4 = 60000;
   public static final int elevatorPos5 = 60000;
@@ -36,7 +36,7 @@ public final class Constants {
   // set height for arm pos 1
   public static final int armPos1 = 1057;
   // set height for arm pos 2
-  public static final int armPos2 = 1000;
+  public static final int armPos2 = 1210;
   public static final int armPos3 = 1000;
   public static final int armPos4 = 1000;
   public static final int armPos5 = 1000;
