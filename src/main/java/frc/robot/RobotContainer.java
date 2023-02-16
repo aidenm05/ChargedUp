@@ -127,8 +127,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    s_Swerve.resetModulesToAbsolute();
-    s_Swerve.resetModulesToAbsolute();
+    Swerve.resetModulesToAbsolute();
+    Swerve.resetModulesToAbsolute();
     if (Constants.mantis) {
       s_Swerve.setDefaultCommand(
         new TeleopSwerve(
@@ -168,8 +168,8 @@ public class RobotContainer {
     if (!Constants.mantis) {
       //aButton1.onTrue(m_Elevator.armMM1());
       //bButton1.onTrue(m_Elevator.armMM2());
-      leftTrig.onTrue(m_Claw.close());
-      rightTrig.onTrue(m_Claw.open());
+      leftTrig.onTrue(m_Claw.closeCube());
+      rightTrig.onTrue(m_Claw.openCube());
       //rightBumper2.onTrue(m_Elevator.setPosition(150000));
       //leftBumper2.onTrue(m_Elevator.setPosition(10000));
 
