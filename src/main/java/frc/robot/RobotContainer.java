@@ -206,7 +206,7 @@ public class RobotContainer {
       b9.whileTrue(m_Elevator.runUp());
       b10.whileTrue(m_Elevator.runDown());
 
-      start2.onTrue(m_Elevator.resetElevatorEncoder());
+      start2.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
       //back2.onTrue(m_Arm.resetArmEncoder());
       // leftBumper1.whileTrue(m_Elevator.runDown());
       // rightBumper1.whileTrue(m_Elevator.runUp());
