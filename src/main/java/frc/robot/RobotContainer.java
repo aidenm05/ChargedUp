@@ -185,6 +185,8 @@ public class RobotContainer {
       // bButton1.onTrue(m_Claw.motorReverse());
       // back1.onTrue(m_Claw.motorOff());
 
+      // bButton1.onTrue(s_Swerve.driveCommand());
+
       yButton1.whileTrue(m_Elevator.armUp());
       xButton1.whileTrue(m_Elevator.armDown());
 
@@ -213,6 +215,7 @@ public class RobotContainer {
       b10.whileTrue(m_Elevator.runDown());
 
       start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+      back1.onTrue(new InstantCommand(() -> Swerve.resetModulesToAbsolute()));
       //back2.onTrue(m_Arm.resetArmEncoder());
       // leftBumper1.whileTrue(m_Elevator.runDown());
       // rightBumper1.whileTrue(m_Elevator.runUp());

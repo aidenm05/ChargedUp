@@ -6,6 +6,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -31,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
 
@@ -238,25 +240,47 @@ public class Swerve extends SubsystemBase {
   public CommandBase createCommandForTrajectory(
     PathPlannerTrajectory trajectory
   ) {
-    return new PPSwerveControllerCommand(
+    var thetaController = new ProfiledPIDController(
+      Constants.AutoConstants.kPThetaController,
+      0,
+      0,
+      Constants.AutoConstants.kThetaControllerConstraints
+    );
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+    return new SwerveControllerCommand(
       trajectory,
-      this::getPose, // Functional interface to feed supplier
+      this::getPose,
       Constants.Swerve.swerveKinematics,
-      // Position controllers
       new PIDController(Constants.AutoConstants.kPXController, 0, 0),
       new PIDController(Constants.AutoConstants.kPYController, 0, 0),
-      new PIDController(Constants.AutoConstants.kPThetaController, 0, 0),
+      thetaController,
       this::setModuleStates,
       this
     );
+    // return new PPSwerveControllerCommand(
+    //   trajectory,
+    //   this::getPose, // Functional interface to feed supplier
+    //   Constants.Swerve.swerveKinematics,
+    //   // Position controllers
+    //   new PIDController(0, 0, 0),
+    //   new PIDController(0, 0, 0),
+    //   new PIDController(0, 0, 0),
+    //   this::setModuleStates,
+    //   this
+    // );
   }
 
-  public CommandBase drive1m() {
-    PathPlannerTrajectory drive1m2 = PathPlanner.loadPath("Drive1m", 4, 3);
+  public CommandBase driveCommand() {
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath(
+      "Drive4Sesny",
+      1,
+      1
+    );
     return runOnce(() -> {
-        resetOdometry(drive1m2.getInitialPose());
+        resetOdometry(trajectory.getInitialPose());
       })
-      .andThen(createCommandForTrajectory(drive1m2))
+      .andThen(createCommandForTrajectory(trajectory))
       .andThen(() -> drive(new Translation2d(0, 0), 0, true, false));
   }
 }
