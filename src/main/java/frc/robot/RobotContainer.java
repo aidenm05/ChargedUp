@@ -185,7 +185,7 @@ public class RobotContainer {
       // bButton1.onTrue(m_Claw.motorReverse());
       // back1.onTrue(m_Claw.motorOff());
 
-      // bButton1.onTrue(s_Swerve.driveCommand());
+      bButton1.onTrue(s_Swerve.driveCommand());
 
       yButton1.whileTrue(m_Elevator.armUp());
       xButton1.whileTrue(m_Elevator.armDown());
