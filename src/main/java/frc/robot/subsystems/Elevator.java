@@ -232,6 +232,7 @@ public class Elevator extends SubsystemBase {
       // make sure that if the elevator position is lower, theat the arm position will not break the robot
       if (armPosition < Constants.armLowerThreshold) {
         // arm was set to a breaking position, so instead set it to the lowest possible setting then move elevator
+        //except it wasnt :( this doesn't work because some combonations where they are both lower than the threshold are necessary
         return runOnce(() ->
             armMotor.set(
               TalonFXControlMode.MotionMagic,
@@ -245,7 +246,7 @@ public class Elevator extends SubsystemBase {
           )
           .andThen(
             runOnce(() ->
-              armMotor.set(TalonFXControlMode.MotionMagic, armPosition)
+              armMotor.set(TalonFXControlMode.MotionMagic, armPosition) //so we put this here and we just have to be really careful not to send bad positions
             )
           );
       }
