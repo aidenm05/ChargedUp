@@ -98,11 +98,11 @@ public class Elevator extends SubsystemBase {
       /* Set Motion Magic gains in slot0 - see documentation */
       mainMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
       mainMotor.config_kF(Constants.kSlotIdx, 0.0479, Constants.kTimeoutMs);
-      mainMotor.config_kP(Constants.kSlotIdx, 0.03, Constants.kTimeoutMs);
+      mainMotor.config_kP(Constants.kSlotIdx, 0.07, Constants.kTimeoutMs);
       mainMotor.config_kI(Constants.kSlotIdx, 0.001, Constants.kTimeoutMs);
-      mainMotor.config_kD(Constants.kSlotIdx, 0.3, Constants.kTimeoutMs);
-      mainMotor.config_IntegralZone(0, 30);
-      mainMotor.configAllowableClosedloopError(0, 20);
+      mainMotor.config_kD(Constants.kSlotIdx, 0.6, Constants.kTimeoutMs);
+      mainMotor.config_IntegralZone(0, 50);
+      mainMotor.configAllowableClosedloopError(0, 100);
 
       /* Set acceleration and vcruise velocity - see documentation */
       mainMotor.configMotionCruiseVelocity(16000, Constants.kTimeoutMs);
@@ -128,10 +128,10 @@ public class Elevator extends SubsystemBase {
       /* Set Motion Magic gains in slot0 - see documentation */
       armMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
       armMotor.config_kF(Constants.kSlotIdx, 3.602, Constants.kTimeoutMs);
-      armMotor.config_kP(Constants.kSlotIdx, 20, Constants.kTimeoutMs);
-      armMotor.config_kI(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
-      armMotor.config_kD(Constants.kSlotIdx, 200, Constants.kTimeoutMs);
-      armMotor.configAllowableClosedloopError(0, 15);
+      armMotor.config_kP(Constants.kSlotIdx, 5, Constants.kTimeoutMs);
+      armMotor.config_kI(Constants.kSlotIdx, 0.001, Constants.kTimeoutMs);
+      armMotor.config_kD(Constants.kSlotIdx, 50, Constants.kTimeoutMs);
+      armMotor.configAllowableClosedloopError(0, 20);
 
       /* Set acceleration and vcruise velocity - see documentation */
       armMotor.configMotionCruiseVelocity(213, Constants.kTimeoutMs);

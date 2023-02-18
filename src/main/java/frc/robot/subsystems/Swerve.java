@@ -304,6 +304,7 @@ public class Swerve extends SubsystemBase {
       3,
       3
     );
+
     return runOnce(() -> {
         resetOdometry(trajectory.getInitialPose());
       })

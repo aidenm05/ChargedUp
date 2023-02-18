@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -12,9 +14,6 @@ import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import java.lang.reflect.InaccessibleObjectException;
-
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -188,11 +187,7 @@ public class RobotContainer {
       // bButton1.onTrue(m_Claw.motorReverse());
       // back1.onTrue(m_Claw.motorOff());
 
-      PathPlannerTrajectory traj = PathPlanner.loadPath(
-      "Drive4Sesny",
-      1,
-      1
-    );
+      PathPlannerTrajectory traj = PathPlanner.loadPath("Drive4Sesny", 2, 2);
       bButton1.onTrue(s_Swerve.followTrajectoryCommand(traj, true));
 
       yButton1.whileTrue(m_Elevator.armUp());
