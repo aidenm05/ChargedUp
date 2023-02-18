@@ -31,9 +31,9 @@ public class RobotContainer {
   Trigger exampleTrigger = new Trigger(() -> driver1.getLeftTriggerAxis() > 0.5
   );
   /* Drive Controls */
-  private final int translationAxis = XboxController.Axis.kLeftY.value^3;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value^3;
-  private final int rotationAxis = XboxController.Axis.kRightX.value^3;
+  private final int translationAxis = XboxController.Axis.kLeftY.value;
+  private final int strafeAxis = XboxController.Axis.kLeftX.value;
+  private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   /* Driver Buttons */
   private final JoystickButton back1 = new JoystickButton(
@@ -141,8 +141,8 @@ public class RobotContainer {
       s_Swerve.setDefaultCommand(
         new TeleopSwerve(
           s_Swerve,
-          () -> -driver1.getRawAxis(translationAxis),
-          () -> -driver1.getRawAxis(strafeAxis),
+          () -> driver1.getRawAxis(translationAxis),
+          () -> driver1.getRawAxis(strafeAxis),
           () -> driver1.getRawAxis(rotationAxis),
           () -> back1.getAsBoolean()
         )
@@ -151,12 +151,12 @@ public class RobotContainer {
       s_Swerve.setDefaultCommand(
         new TeleopSwerve(
           s_Swerve,
-          () -> -driver1.getRawAxis(translationAxis),
-          () -> -driver1.getRawAxis(strafeAxis),
-          () -> -driver1.getRawAxis(rotationAxis),
+          () -> -Math.pow(0.7*driver1.getRawAxis(translationAxis), 1),
+          () -> -Math.pow(0.7*driver1.getRawAxis(strafeAxis), 1),
+          () -> -Math.pow(driver1.getRawAxis(rotationAxis), 1),
           () -> back1.getAsBoolean()
         )
-      );
+      ); // 0.7 is the modification to default speed. The second number is the exponent. Increase for wider deadband. Do not increase beyond 3.
     }
     m_Elevator.armAndElevator();
 
@@ -195,22 +195,22 @@ public class RobotContainer {
       xButton1.whileTrue(m_Elevator.armDown());
 
       b1.onTrue(
-        m_Elevator.setPositions(Constants.elevatorPos1, Constants.armPos1)
-      );
-      b3.onTrue(
-        m_Elevator.setPositions(Constants.elevatorPos2, Constants.armPos2)
+        m_Elevator.parallelSetPositions(Constants.elevatorPos1, Constants.armPos1)
       );
       b2.onTrue(
-        m_Elevator.setPositions(Constants.elevatorPos3, Constants.armPos3)
+        m_Elevator.parallelSetPositions(Constants.elevatorPos2, Constants.armPos2)
+      );
+      b3.onTrue(
+        m_Elevator.parallelSetPositions(Constants.elevatorPos3, Constants.armPos3)
       );
       b4.onTrue(
-        m_Elevator.setPositions(Constants.elevatorPos4, Constants.armPos4)
+        m_Elevator.parallelSetPositions(Constants.elevatorPos4, Constants.armPos4)
       );
       b5.onTrue(
-        m_Elevator.setPositions(Constants.elevatorPos5, Constants.armPos5)
+        m_Elevator.parallelSetPositions(Constants.elevatorPos5, Constants.armPos5) //change this to setStow() with no arguements when ready to test.
       );
       b6.onTrue(
-        m_Elevator.setPositions(Constants.elevatorPos6, Constants.armPos6)
+        m_Elevator.parallelSetPositions(Constants.elevatorPos6, Constants.armPos6)
       );
 
       b7.whileTrue(m_Elevator.armUp());
@@ -250,12 +250,6 @@ public class RobotContainer {
     // }
   }
 
-  public void periodic() {
-    SmartDashboard.putNumber(
-        "translationAxis", translationAxis
-      );
-    SmartDashboard.putNumber("strafeAxis", strafeAxis);
-  }
   // public class RightTriggerPressed extends Trigger {
 
   //   @Override
