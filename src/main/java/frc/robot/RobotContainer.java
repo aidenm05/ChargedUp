@@ -5,6 +5,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -30,9 +31,9 @@ public class RobotContainer {
   Trigger exampleTrigger = new Trigger(() -> driver1.getLeftTriggerAxis() > 0.5
   );
   /* Drive Controls */
-  private final int translationAxis = XboxController.Axis.kLeftY.value;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value;
-  private final int rotationAxis = XboxController.Axis.kRightX.value;
+  private final int translationAxis = XboxController.Axis.kLeftY.value^3;
+  private final int strafeAxis = XboxController.Axis.kLeftX.value^3;
+  private final int rotationAxis = XboxController.Axis.kRightX.value^3;
 
   /* Driver Buttons */
   private final JoystickButton back1 = new JoystickButton(
@@ -247,6 +248,13 @@ public class RobotContainer {
     //   return driver1.getRawAxis(2) < -0.5;
     //   // This returns whether the trigger is active
     // }
+  }
+
+  public void periodic() {
+    SmartDashboard.putNumber(
+        "translationAxis", translationAxis
+      );
+    SmartDashboard.putNumber("strafeAxis", strafeAxis);
   }
   // public class RightTriggerPressed extends Trigger {
 

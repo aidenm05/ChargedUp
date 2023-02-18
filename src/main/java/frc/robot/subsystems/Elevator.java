@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -301,6 +302,18 @@ public class Elevator extends SubsystemBase {
       .andThen(
         runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition))
       );
+  }
+
+  public CommandBase parallelTest(final int elevatorPosition, int armPosition) {
+    return Commands.parallel(
+      runOnce(() -> 
+        armMotor.set(TalonFXControlMode.MotionMagic, Constants.armUpperLimit)
+      ),
+      Commands.waitUntil(null)
+      .andThen(runOnce(() ->mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition))),
+      Commands.waitUntil(null)
+      .andThen(runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition)))
+    );  
   }
 
   @Override
