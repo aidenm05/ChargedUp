@@ -13,7 +13,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
@@ -95,14 +97,16 @@ public class Elevator extends SubsystemBase {
 
       /* Set Motion Magic gains in slot0 - see documentation */
       mainMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
-      mainMotor.config_kF(Constants.kSlotIdx, 0.0471, Constants.kTimeoutMs);
+      mainMotor.config_kF(Constants.kSlotIdx, 0.0479, Constants.kTimeoutMs);
       mainMotor.config_kP(Constants.kSlotIdx, 0.03, Constants.kTimeoutMs);
       mainMotor.config_kI(Constants.kSlotIdx, 0.001, Constants.kTimeoutMs);
       mainMotor.config_kD(Constants.kSlotIdx, 0.3, Constants.kTimeoutMs);
+      mainMotor.config_IntegralZone(0, 30);
+      mainMotor.configAllowableClosedloopError(0, 20);
 
       /* Set acceleration and vcruise velocity - see documentation */
-      mainMotor.configMotionCruiseVelocity(16275, Constants.kTimeoutMs);
-      mainMotor.configMotionAcceleration(16275, Constants.kTimeoutMs);
+      mainMotor.configMotionCruiseVelocity(16000, Constants.kTimeoutMs);
+      mainMotor.configMotionAcceleration(16000, Constants.kTimeoutMs);
 
       armMotor.setStatusFramePeriod(
         StatusFrameEnhanced.Status_13_Base_PIDF0,
@@ -158,13 +162,13 @@ public class Elevator extends SubsystemBase {
   }
 
   public CommandBase runDown() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.2))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -0.2))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("runDown");
   }
 
   public CommandBase runUp() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, .2))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, 0.2))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("runUp");
   }
@@ -224,6 +228,18 @@ public class Elevator extends SubsystemBase {
 
     return run(() -> mainMotor.set(TalonFXControlMode.MotionMagic, position));
   }
+
+  // public CommandBase testposition() {
+  //   return runOnce(() ->
+  //   armMotor.set(
+  //     TalonFXControlMode.MotionMagic,
+  //     Constants.armLowerThreshold)
+  //   ).alongWith(WaitUntilCommand())
+
+  //Move arm to high threshold
+  //check if arm is to high thresheold
+  //move elevator to position
+  //move arm to position
 
   // used to set the arm and elevator to positions being set for the button board
   public CommandBase setPositions(final int elevatorPosition, int armPosition) {
@@ -296,6 +312,10 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber(
       "armEncoderVal",
       armMotor.getSelectedSensorPosition()
+    );
+    SmartDashboard.putNumber(
+      "Active Trajectory Position",
+      armMotor.getActiveTrajectoryPosition()
     );
   }
 }

@@ -272,35 +272,37 @@ public class Swerve extends SubsystemBase {
     // );
   }
 
-// Assuming this method is part of a drivetrain subsystem that provides the necessary methods
-public CommandBase followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
-  return new SequentialCommandGroup(
-       new InstantCommand(() -> {
-         // Reset odometry for the first path you run during auto
-         if(isFirstPath){
-             this.resetOdometry(traj.getInitialHolonomicPose());
-         }
-       }),
-       new PPSwerveControllerCommand(
-           traj, 
-           this::getPose, // Pose supplier
-           Constants.Swerve.swerveKinematics, // SwerveDriveKinematics
-           new PIDController(Constants.AutoConstants.kPXController, 0, 0),
-           new PIDController(Constants.AutoConstants.kPYController, 0, 0),
-           new PIDController(Constants.AutoConstants.kPThetaController, 0, 0),
-           this::setModuleStates, // Module states consumer
-           true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-           this // Requires this drive subsystem
-       )
-   );
-}
-
+  // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
+  public CommandBase followTrajectoryCommand(
+    PathPlannerTrajectory traj,
+    boolean isFirstPath
+  ) {
+    return new SequentialCommandGroup(
+      new InstantCommand(() -> {
+        // Reset odometry for the first path you run during auto
+        if (isFirstPath) {
+          this.resetOdometry(traj.getInitialHolonomicPose());
+        }
+      }),
+      new PPSwerveControllerCommand(
+        traj,
+        this::getPose, // Pose supplier
+        Constants.Swerve.swerveKinematics, // SwerveDriveKinematics
+        new PIDController(Constants.AutoConstants.kPXController, 0, 0),
+        new PIDController(Constants.AutoConstants.kPYController, 0, 0),
+        new PIDController(Constants.AutoConstants.kPThetaController, 0, 0),
+        this::setModuleStates, // Module states consumer
+        true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+        this // Requires this drive subsystem
+      )
+    );
+  }
 
   public CommandBase driveCommand() {
     PathPlannerTrajectory trajectory = PathPlanner.loadPath(
       "Drive4Sesny",
-      1,
-      1
+      3,
+      3
     );
     return runOnce(() -> {
         resetOdometry(trajectory.getInitialPose());
