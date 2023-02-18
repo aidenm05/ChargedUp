@@ -191,9 +191,13 @@ public class RobotContainer {
       PathPlannerTrajectory traj = PathPlanner.loadPath("Drive4Sesny", 2, 2);
       bButton1.onTrue(s_Swerve.followTrajectoryCommand(traj, true));
 
+      
+      //Manual Arm Positions
       yButton1.whileTrue(m_Elevator.armUp());
       xButton1.whileTrue(m_Elevator.armDown());
 
+
+      //Elevator Arm Presets
       b1.onTrue(
         m_Elevator.parallelSetPositions(Constants.elevatorPos1, Constants.armPos1)
       );
