@@ -13,6 +13,9 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import java.lang.reflect.InaccessibleObjectException;
 
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -185,7 +188,12 @@ public class RobotContainer {
       // bButton1.onTrue(m_Claw.motorReverse());
       // back1.onTrue(m_Claw.motorOff());
 
-      bButton1.onTrue(s_Swerve.driveCommand());
+      PathPlannerTrajectory traj = PathPlanner.loadPath(
+      "Drive4Sesny",
+      1,
+      1
+    );
+      bButton1.onTrue(s_Swerve.followTrajectoryCommand(traj, true));
 
       yButton1.whileTrue(m_Elevator.armUp());
       xButton1.whileTrue(m_Elevator.armDown());
