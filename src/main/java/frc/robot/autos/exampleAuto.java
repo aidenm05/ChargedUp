@@ -12,12 +12,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 import java.util.List;
 
 public class exampleAuto extends SequentialCommandGroup {
 
-  public exampleAuto(Swerve s_Swerve) {
+  public exampleAuto(Swerve s_Swerve, Elevator m_Elevator, Claw m_Claw) {
     TrajectoryConfig config = new TrajectoryConfig(
       Constants.AutoConstants.kMaxSpeedMetersPerSecond,
       Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared

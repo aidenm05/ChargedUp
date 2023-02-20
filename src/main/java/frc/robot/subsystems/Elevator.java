@@ -214,21 +214,21 @@ public class Elevator extends SubsystemBase {
     mainMotor.set(ControlMode.PercentOutput, calculatedPercentOutput);
   }
 
-  public CommandBase setPosition(int position, boolean isElevator) {
-    double elevatorPosition = mainMotor.getSelectedSensorPosition();
-    double armPosition = armMotor.getSelectedSensorPosition();
-    //if isElevator, check if arm is past limit
-    //  move arm then elevator
-    //else
-    //  move elevator to position
+  // public CommandBase setPosition(int position) {
+  //   double elevatorPosition = mainMotor.getSelectedSensorPosition();
+  //   double armPosition = armMotor.getSelectedSensorPosition();
+  //   //if isElevator, check if arm is past limit
+  //   //  move arm then elevator
+  //   //else
+  //   //  move elevator to position
 
-    //if moving arm and elevator can't support
-    //  move elevator, then arm
-    //else
-    //  move arm
+  //   //if moving arm and elevator can't support
+  //   //  move elevator, then arm
+  //   //else
+  //   //  move arm
 
-    return run(() -> mainMotor.set(TalonFXControlMode.MotionMagic, position));
-  }
+  //   return run(() -> mainMotor.set(TalonFXControlMode.MotionMagic, position));
+  // }
 
   // public CommandBase testposition() {
   //   return runOnce(() ->
@@ -243,7 +243,7 @@ public class Elevator extends SubsystemBase {
   //move arm to position
 
   // used to set the arm and elevator to positions being set for the button board
-  public CommandBase setPositions(final int elevatorPosition, int armPosition) {
+  public CommandBase setPosition(final int elevatorPosition, int armPosition) {
     // check to see if the elevator position being set is lower then the threshold
     if (elevatorPosition < Constants.elevatorLowerThreshold) {
       // make sure that if the elevator position is lower, theat the arm position will not break the robot
@@ -306,14 +306,24 @@ public class Elevator extends SubsystemBase {
 
   public CommandBase parallelTest(final int elevatorPosition, int armPosition) {
     return Commands.parallel(
-      runOnce(() -> 
+      runOnce(() ->
         armMotor.set(TalonFXControlMode.MotionMagic, Constants.armUpperLimit)
       ),
-      Commands.waitUntil(null)
-      .andThen(runOnce(() ->mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition))),
-      Commands.waitUntil(null)
-      .andThen(runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition)))
-    );  
+      Commands
+        .waitUntil(null)
+        .andThen(
+          runOnce(() ->
+            mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)
+          )
+        ),
+      Commands
+        .waitUntil(null)
+        .andThen(
+          runOnce(() ->
+            armMotor.set(TalonFXControlMode.MotionMagic, armPosition)
+          )
+        )
+    );
   }
 
   @Override

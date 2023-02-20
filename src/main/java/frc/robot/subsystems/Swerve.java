@@ -20,8 +20,10 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -35,12 +37,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.SwerveModule;
 
 public class Swerve extends SubsystemBase {
 
   public SwerveDriveOdometry swerveOdometry;
   public static SwerveModule[] mSwerveMods;
+  public XboxController driver = new XboxController(0);
+
+  // private final int translationAxis = XboxController.Axis.kLeftY.value ^ 3;
+  // private final int strafeAxis = XboxController.Axis.kLeftX.value ^ 3;
+  // private final int rotationAxis = XboxController.Axis.kRightX.value ^ 3;
+
   public Pigeon2 gyro;
   private GenericEntry gyroAngle;
   Limelight m_Limelight;
@@ -238,40 +247,6 @@ public class Swerve extends SubsystemBase {
     }
   }
 
-  public CommandBase createCommandForTrajectory(
-    PathPlannerTrajectory trajectory
-  ) {
-    var thetaController = new ProfiledPIDController(
-      Constants.AutoConstants.kPThetaController,
-      0,
-      0,
-      Constants.AutoConstants.kThetaControllerConstraints
-    );
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    return new SwerveControllerCommand(
-      trajectory,
-      this::getPose,
-      Constants.Swerve.swerveKinematics,
-      new PIDController(Constants.AutoConstants.kPXController, 0, 0),
-      new PIDController(Constants.AutoConstants.kPYController, 0, 0),
-      thetaController,
-      this::setModuleStates,
-      this
-    );
-    // return new PPSwerveControllerCommand(
-    //   trajectory,
-    //   this::getPose, // Functional interface to feed supplier
-    //   Constants.Swerve.swerveKinematics,
-    //   // Position controllers
-    //   new PIDController(0, 0, 0),
-    //   new PIDController(0, 0, 0),
-    //   new PIDController(0, 0, 0),
-    //   this::setModuleStates,
-    //   this
-    // );
-  }
-
   // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
   public CommandBase followTrajectoryCommand(
     PathPlannerTrajectory traj,
@@ -281,7 +256,11 @@ public class Swerve extends SubsystemBase {
       new InstantCommand(() -> {
         // Reset odometry for the first path you run during auto
         if (isFirstPath) {
-          this.resetOdometry(traj.getInitialHolonomicPose());
+          PathPlannerTrajectory transformed = PathPlannerTrajectory.transformTrajectoryForAlliance(
+            traj,
+            DriverStation.getAlliance()
+          );
+          resetOdometry(transformed.getInitialHolonomicPose());
         }
       }),
       new PPSwerveControllerCommand(
@@ -311,4 +290,28 @@ public class Swerve extends SubsystemBase {
       .andThen(followTrajectoryCommand(trajectory, true))
       .andThen(() -> drive(new Translation2d(0, 0), 0, true, false));
   }
+  //want to comment this bc it uses the same variables so just in case
+
+  // public CommandBase createCommandForTrajectory(
+  //   PathPlannerTrajectory trajectory
+  // ) {
+  //   var thetaController = new ProfiledPIDController(
+  //     Constants.AutoConstants.kPThetaController,
+  //     0,
+  //     0,
+  //     Constants.AutoConstants.kThetaControllerConstraints
+  //   );
+  //   thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+  //   return new SwerveControllerCommand(
+  //     trajectory,
+  //     this::getPose,
+  //     Constants.Swerve.swerveKinematics,
+  //     new PIDController(Constants.AutoConstants.kPXController, 0, 0),
+  //     new PIDController(Constants.AutoConstants.kPYController, 0, 0),
+  //     thetaController,
+  //     this::setModuleStates,
+  //     this
+  //   );
+  // }
 }

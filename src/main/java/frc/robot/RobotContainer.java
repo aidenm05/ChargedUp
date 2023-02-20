@@ -2,9 +2,11 @@ package frc.robot;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,15 +27,19 @@ import java.lang.reflect.InaccessibleObjectException;
 public class RobotContainer {
 
   /* Controllers */
-  private final XboxController driver1 = new XboxController(0);
+  public final XboxController driver1 = new XboxController(0);
   private final Joystick buttonBoard = new Joystick(1); //maybe 2 idk fix the ports
   private final Joystick driver2 = new Joystick(2);
   Trigger exampleTrigger = new Trigger(() -> driver1.getLeftTriggerAxis() > 0.5
   );
   /* Drive Controls */
-  private final int translationAxis = XboxController.Axis.kLeftY.value^3;
-  private final int strafeAxis = XboxController.Axis.kLeftX.value^3;
-  private final int rotationAxis = XboxController.Axis.kRightX.value^3;
+  private final int translationAxis = (int) (
+    1 * XboxController.Axis.kLeftY.value
+  );
+  private final int strafeAxis = (int) (1 * XboxController.Axis.kLeftX.value);
+  private final int rotationAxis = (int) (
+    1 * XboxController.Axis.kRightX.value
+  );
 
   /* Driver Buttons */
   private final JoystickButton back1 = new JoystickButton(
@@ -133,10 +139,23 @@ public class RobotContainer {
   private final Elevator m_Elevator = new Elevator();
   private final Claw m_Claw = new Claw();
 
+  private SendableChooser<Command> m_autoChooser = new SendableChooser<>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     Swerve.resetModulesToAbsolute();
     Swerve.resetModulesToAbsolute();
+
+    m_autoChooser.addOption(
+      "Test 1",
+      new pathPlannerAuto(s_Swerve, m_Elevator, m_Claw)
+    );
+
+    m_autoChooser.addOption(
+      "Test 2",
+      new exampleAuto(s_Swerve, m_Elevator, m_Claw)
+    ); //make this a different auto though
+
     if (Constants.mantis) {
       s_Swerve.setDefaultCommand(
         new TeleopSwerve(
@@ -151,9 +170,9 @@ public class RobotContainer {
       s_Swerve.setDefaultCommand(
         new TeleopSwerve(
           s_Swerve,
-          () -> -driver1.getRawAxis(translationAxis),
-          () -> -driver1.getRawAxis(strafeAxis),
-          () -> -driver1.getRawAxis(rotationAxis),
+          () -> Math.pow(-0.6 * driver1.getRawAxis(translationAxis), 1),
+          () -> Math.pow(-0.6 * driver1.getRawAxis(strafeAxis), 1),
+          () -> Math.pow(-1 * driver1.getRawAxis(rotationAxis), 1),
           () -> back1.getAsBoolean()
         )
       );
@@ -195,22 +214,22 @@ public class RobotContainer {
       xButton1.whileTrue(m_Elevator.armDown());
 
       b1.onTrue(
-        m_Elevator.setPositions(Constants.elevatorPos1, Constants.armPos1)
+        m_Elevator.setPosition(Constants.elevatorTopCone, Constants.armTopCone)
       );
       b3.onTrue(
-        m_Elevator.setPositions(Constants.elevatorPos2, Constants.armPos2)
+        m_Elevator.setPosition(Constants.elevatorMidCone, Constants.armMidCone)
       );
       b2.onTrue(
-        m_Elevator.setPositions(Constants.elevatorPos3, Constants.armPos3)
+        m_Elevator.setPosition(Constants.elevatorTopCube, Constants.armTopCube)
       );
       b4.onTrue(
-        m_Elevator.setPositions(Constants.elevatorPos4, Constants.armPos4)
+        m_Elevator.setPosition(Constants.elevatorMidCube, Constants.armMidCube)
       );
       b5.onTrue(
-        m_Elevator.setPositions(Constants.elevatorPos5, Constants.armPos5)
+        m_Elevator.setPosition(Constants.elevatorStow, Constants.armStow)
       );
       b6.onTrue(
-        m_Elevator.setPositions(Constants.elevatorPos6, Constants.armPos6)
+        m_Elevator.setPosition(Constants.elevatorFloor, Constants.armFloor)
       );
 
       b7.whileTrue(m_Elevator.armUp());
@@ -234,7 +253,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return new exampleAuto(s_Swerve);
+    return m_autoChooser.getSelected();
   }
 
   public class LeftTriggerPressed extends JoystickButton {
@@ -248,13 +267,6 @@ public class RobotContainer {
     //   return driver1.getRawAxis(2) < -0.5;
     //   // This returns whether the trigger is active
     // }
-  }
-
-  public void periodic() {
-    SmartDashboard.putNumber(
-        "translationAxis", translationAxis
-      );
-    SmartDashboard.putNumber("strafeAxis", strafeAxis);
   }
   // public class RightTriggerPressed extends Trigger {
 
