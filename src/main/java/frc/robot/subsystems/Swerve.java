@@ -5,6 +5,7 @@ import com.ctre.phoenix.sensors.Pigeon2;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -53,6 +54,7 @@ public class Swerve extends SubsystemBase {
   public Pigeon2 gyro;
   private GenericEntry gyroAngle;
   Limelight m_Limelight;
+  private PIDController m_balancePID = new PIDController(0, 0, 0); //actually get
 
   public Swerve(Limelight limelight) {
     m_Limelight = limelight;
@@ -115,6 +117,17 @@ public class Swerve extends SubsystemBase {
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
     }
+  }
+
+  public double getRoll() {
+    return gyro.getRoll();
+  }
+
+  public void autoBalance() {
+    m_balancePID.setTolerance(.001);
+    double pidOutput;
+    pidOutput = MathUtil.clamp(m_balancePID.calculate(getRoll(), 0), -0.4, 0.4);
+    drive(new Translation2d(-pidOutput, 0), 0.0, false, true);
   }
 
   public void alignToGoal() {

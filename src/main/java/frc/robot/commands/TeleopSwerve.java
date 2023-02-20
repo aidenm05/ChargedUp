@@ -2,6 +2,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
@@ -15,14 +18,24 @@ public class TeleopSwerve extends CommandBase {
   private DoubleSupplier strafeSup;
   private DoubleSupplier rotationSup;
   private BooleanSupplier robotCentricSup;
+  private DoubleSupplier thrustTrigger;
+  private SendableChooser speedChoice;
 
   public TeleopSwerve(
     Swerve s_Swerve,
     DoubleSupplier translationSup,
     DoubleSupplier strafeSup,
     DoubleSupplier rotationSup,
-    BooleanSupplier robotCentricSup
+    BooleanSupplier robotCentricSup,
+    DoubleSupplier thrustTrigger
   ) {
+    speedChoice = new SendableChooser<Double>();
+    speedChoice.addOption(".2", .2);
+    speedChoice.addOption(".5", .5);
+    speedChoice.addOption(".7", .7);
+    speedChoice.addOption("1", 1.0);
+    SmartDashboard.putData("Speed", speedChoice);
+
     this.s_Swerve = s_Swerve;
     addRequirements(s_Swerve);
 
@@ -30,6 +43,7 @@ public class TeleopSwerve extends CommandBase {
     this.strafeSup = strafeSup;
     this.rotationSup = rotationSup;
     this.robotCentricSup = robotCentricSup;
+    this.thrustTrigger = thrustTrigger;
   }
 
   @Override
@@ -48,6 +62,18 @@ public class TeleopSwerve extends CommandBase {
       Constants.stickDeadband
     );
 
+    double thrust = 1 - (double) speedChoice.getSelected();
+    double thrustVal =
+      1 - thrust + thrust * Math.abs(thrustTrigger.getAsDouble());
+    translationVal = translationVal * thrustVal;
+    strafeVal = strafeVal * thrustVal;
+    rotationVal = rotationVal * thrustVal;
+
+    //if (!fullSpeed.getAsBoolean()) {
+    // translationVal = translationVal * (double) speedChoice.getSelected();
+    //strafeVal = strafeVal * (double) speedChoice.getSelected();
+    //  rotationVal = rotationVal * (double) speedChoice.getSelected();
+    // }
     /* Drive */
     s_Swerve.drive(
       new Translation2d(translationVal, strafeVal)

@@ -326,7 +326,7 @@ public class Elevator extends SubsystemBase {
     );
   }
 
-  public CommandBase parallelSetPositions(
+  public CommandBase sequentialSetPositions(
     final int elevatorPosition,
     int armPosition
   ) {
@@ -379,32 +379,32 @@ public class Elevator extends SubsystemBase {
       ) // set to current upperlimit
       .andThen(
         runOnce(() ->
-          armMotor.configForwardSoftLimitThreshold(Constants.armPos5)
+          armMotor.configForwardSoftLimitThreshold(Constants.armStow)
         )
       ) // set soft limit to be stow position
       .andThen(
         runOnce(() ->
-          mainMotor.set(TalonFXControlMode.MotionMagic, Constants.elevatorPos5)
+          mainMotor.set(TalonFXControlMode.MotionMagic, Constants.elevatorStow)
         )
       ) // set elevator to 0
       .andThen(
         Commands.waitUntil(() ->
           mainMotor.getActiveTrajectoryPosition() <
-          Constants.elevatorPos5 +
+          Constants.elevatorStow +
           5000 &&
           mainMotor.getActiveTrajectoryPosition() >
-          Constants.elevatorPos5 -
+          Constants.elevatorStow -
           5000
         )
       )
       .andThen(
         runOnce(() ->
-          armMotor.set(TalonFXControlMode.MotionMagic, Constants.armPos5)
+          armMotor.set(TalonFXControlMode.MotionMagic, Constants.armStow)
         )
       ) //^wait until finished, set arm to stow
       .andThen(
         Commands.waitUntil(() ->
-          armMotor.getActiveTrajectoryPosition() > Constants.armPos5 - 30
+          armMotor.getActiveTrajectoryPosition() > Constants.armStow - 30
         )
       ) //wait until finished
       .andThen(

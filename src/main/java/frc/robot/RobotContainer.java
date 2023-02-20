@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
@@ -70,6 +72,13 @@ public class RobotContainer {
     driver1,
     XboxController.Button.kStart.value
   );
+  private final POVButton dUp1 = new POVButton(driver1, 0);
+
+  private final POVButton dRight1 = new POVButton(driver1, 90);
+
+  private final POVButton dDown1 = new POVButton(driver1, 180);
+
+  private final POVButton dLeft1 = new POVButton(driver1, 270);
 
   private final JoystickButton aButton2 = new JoystickButton(
     driver2,
@@ -107,6 +116,7 @@ public class RobotContainer {
     driver2,
     XboxController.Button.kBack.value
   );
+
   // private final Trigger rightTrigger1 = new Trigger(() ->
   //   driver1.getRawAxis(3) > 0.7
   // );
@@ -142,15 +152,31 @@ public class RobotContainer {
     Swerve.resetModulesToAbsolute();
     Swerve.resetModulesToAbsolute();
 
+    m_autoChooser.addOption("Nothing", new InstantCommand());
+
     m_autoChooser.addOption(
-      "Test 1",
-      new pathPlannerAuto(s_Swerve, m_Elevator, m_Claw)
+      "Leave Community",
+      new LeaveCommunityAuto(s_Swerve, m_Elevator, m_Claw)
     );
 
     m_autoChooser.addOption(
-      "Test 2",
-      new exampleAuto(s_Swerve, m_Elevator, m_Claw)
-    ); //make this a different auto though
+      "Top Cone",
+      new TopConeAuto(s_Swerve, m_Elevator, m_Claw)
+    );
+
+    m_autoChooser.addOption(
+      "Top Cone (Generated)",
+      new ExampleAuto(
+        s_Swerve,
+        m_Elevator,
+        m_Claw,
+        Constants.elevatorTopCone,
+        Constants.armTopCone,
+        "Leave"
+      )
+    );
+
+    SmartDashboard.putData("Auto Chooser", m_autoChooser);
 
     if (Constants.mantis) {
       s_Swerve.setDefaultCommand(
@@ -159,7 +185,8 @@ public class RobotContainer {
           () -> driver1.getRawAxis(translationAxis),
           () -> driver1.getRawAxis(strafeAxis),
           () -> driver1.getRawAxis(rotationAxis),
-          () -> back1.getAsBoolean()
+          () -> back1.getAsBoolean(),
+          () -> driver1.getLeftTriggerAxis()
         )
       );
     } else {
@@ -169,7 +196,8 @@ public class RobotContainer {
           () -> -Math.pow(0.7 * driver1.getRawAxis(translationAxis), 1),
           () -> -Math.pow(0.7 * driver1.getRawAxis(strafeAxis), 1),
           () -> -Math.pow(driver1.getRawAxis(rotationAxis), 1),
-          () -> back1.getAsBoolean()
+          () -> back1.getAsBoolean(),
+          () -> driver1.getLeftTriggerAxis()
         )
       ); // 0.7 is the modification to default speed. The second number is the exponent. Increase for wider deadband. Do not increase beyond 3.
     }
@@ -204,7 +232,7 @@ public class RobotContainer {
       // back1.onTrue(m_Claw.motorOff());
 
       PathPlannerTrajectory traj = PathPlanner.loadPath("Drive4Sesny", 2, 2);
-      bButton1.onTrue(s_Swerve.followTrajectoryCommand(traj, true));
+      // bButton1.onTrue(s_Swerve.followTrajectoryCommand(traj, true));
 
       //Manual Arm Positions
       yButton1.whileTrue(m_Elevator.armUp());
@@ -212,39 +240,39 @@ public class RobotContainer {
 
       //Elevator Arm Presets
       b1.onTrue(
-        m_Elevator.parallelSetPositions(
-          Constants.elevatorPos1,
-          Constants.armPos1
+        m_Elevator.sequentialSetPositions(
+          Constants.elevatorTopCone,
+          Constants.armTopCone
         )
       );
       b2.onTrue(
-        m_Elevator.parallelSetPositions(
-          Constants.elevatorPos2,
-          Constants.armPos2
+        m_Elevator.sequentialSetPositions(
+          Constants.elevatorMidCone,
+          Constants.armMidCone
         )
       );
       b3.onTrue(
-        m_Elevator.parallelSetPositions(
-          Constants.elevatorPos3,
-          Constants.armPos3
+        m_Elevator.sequentialSetPositions(
+          Constants.elevatorTopCube,
+          Constants.armTopCube
         )
       );
       b4.onTrue(
-        m_Elevator.parallelSetPositions(
-          Constants.elevatorPos4,
-          Constants.armPos4
+        m_Elevator.sequentialSetPositions(
+          Constants.elevatorMidCube,
+          Constants.armMidCube
         )
       );
       b5.onTrue(
-        m_Elevator.parallelSetPositions(
-          Constants.elevatorPos5,
-          Constants.armPos5
+        m_Elevator.sequentialSetPositions(
+          Constants.elevatorStow,
+          Constants.armStow
         ) //change this to setStow() with no arguements when ready to test.
       );
       b6.onTrue(
-        m_Elevator.parallelSetPositions(
-          Constants.elevatorPos6,
-          Constants.armPos6
+        m_Elevator.sequentialSetPositions(
+          Constants.elevatorFloor,
+          Constants.armFloor
         )
       );
 
@@ -259,6 +287,30 @@ public class RobotContainer {
       // leftBumper1.whileTrue(m_Elevator.runDown());
       // rightBumper1.whileTrue(m_Elevator.runUp());
       // bButton1.onTrue(s_Swerve.drive1m());
+
+      dUp1.whileTrue(
+        new InstantCommand(() ->
+          s_Swerve.drive(new Translation2d(0.2, 0), 0, true, false)
+        )
+      );
+
+      dRight1.whileTrue(
+        new InstantCommand(() ->
+          s_Swerve.drive(new Translation2d(0, 0.2), 0, true, false)
+        )
+      );
+
+      dDown1.whileTrue(
+        new InstantCommand(() ->
+          s_Swerve.drive(new Translation2d(-0.2, 0), 0, true, false)
+        )
+      );
+
+      dLeft1.whileTrue(
+        new InstantCommand(() ->
+          s_Swerve.drive(new Translation2d(0, -0.2), 0, true, false)
+        )
+      );
     }
   }
 

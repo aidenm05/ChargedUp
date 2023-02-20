@@ -14,26 +14,32 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 import java.util.List;
 
-public class exampleAuto extends SequentialCommandGroup {
+public class ExampleAuto extends SequentialCommandGroup {
 
-  public exampleAuto(Swerve s_Swerve, Elevator m_Elevator, Claw m_Claw) {
-    TrajectoryConfig config = new TrajectoryConfig(
-      Constants.AutoConstants.kMaxSpeedMetersPerSecond,
-      Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared
-    )
-      .setKinematics(Constants.Swerve.swerveKinematics);
-
-    PathPlannerTrajectory traj = PathPlanner.loadPath("Drive4Sesny", 2, 2);
-
-    s_Swerve.followTrajectoryCommand(traj, true);
-    // addCommands(
-    //   s_Swerve.followTrajectoryCommand(traj, true)(traj, true);
-    // )
+  public ExampleAuto(
+    Swerve s_Swerve,
+    Elevator m_Elevator,
+    Claw m_Claw,
+    int EP,
+    int AP,
+    String path
+  ) {
+    PathPlannerTrajectory traj = PathPlanner.loadPath(path, 2, 2);
+    addCommands(
+      m_Elevator.sequentialSetPositions(EP, AP),
+      new WaitCommand(2),
+      //add claw open
+      // wait
+      m_Elevator.setStow(),
+      new WaitCommand(2),
+      s_Swerve.followTrajectoryCommand(traj, true)
+    );
   }
 }

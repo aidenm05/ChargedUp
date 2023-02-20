@@ -23,26 +23,26 @@ public final class Constants {
   // this is used to set a threshold where the arm position needs to be considered
   public static final int elevatorLowerThreshold = 60000;
   // set height for elevator pos 1
-  public static final int elevatorPos1 = 212426;
+  public static final int elevatorTopCone = 212426;
   // set height for elevator pos 2
-  public static final int elevatorPos2 = 128800;
-  public static final int elevatorPos3 = 152741;
-  public static final int elevatorPos4 = 72136;
-  public static final int elevatorPos5 = 0;
-  public static final int elevatorPos6 = 41777;
+  public static final int elevatorMidCone = 128800;
+  public static final int elevatorTopCube = 152741;
+  public static final int elevatorMidCube = 72136;
+  public static final int elevatorStow = 0;
+  public static final int elevatorFloor = 41777;
 
   // arm constants
   public static final int armUpperLimit = 1450;
   // this is used to set a threshold of where the elevator postion needs to be considered
   public static final int armLowerThreshold = 800;
   // set height for arm pos 1
-  public static final int armPos1 = 937;
+  public static final int armTopCone = 937;
   // set height for arm pos 2
-  public static final int armPos2 = 1126;
-  public static final int armPos3 = 1000;
-  public static final int armPos4 = 1143;
-  public static final int armPos5 = 1500;
-  public static final int armPos6 = 386;
+  public static final int armMidCone = 1126;
+  public static final int armTopCube = 1000;
+  public static final int armMidCube = 1143;
+  public static final int armStow = 1500;
+  public static final int armFloor = 386;
 
   // weird motion magic
   /**
@@ -136,7 +136,7 @@ public final class Constants {
     /** Meters per Second */
     public static final double maxSpeed = 4.5; //TODO: This must be tuned to specific robot
     /** Radians per Second */
-    public static final double maxAngularVelocity = 10.0; //TODO: This must be tuned to specific robot
+    public static final double maxAngularVelocity = Math.PI * 2; //TODO: This must be tuned to specific robot
 
     /* Neutral Modes */
     public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
