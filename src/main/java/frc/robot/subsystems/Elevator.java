@@ -50,7 +50,7 @@ public class Elevator extends SubsystemBase {
       armMotor.setInverted(false);
 
       armMotor.configForwardSoftLimitEnable(true);
-      armMotor.configForwardSoftLimitThreshold(1540);
+      armMotor.configForwardSoftLimitThreshold(Constants.armTrueSoftLimit);
       armMotor.configReverseSoftLimitEnable(true);
       armMotor.configReverseSoftLimitThreshold(0);
       armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
@@ -175,13 +175,13 @@ public class Elevator extends SubsystemBase {
   }
 
   public CommandBase armDown() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -.4))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -.25))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armDown");
   }
 
   public CommandBase armUp() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, .4))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, .25))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armUp");
   }
@@ -324,6 +324,98 @@ public class Elevator extends SubsystemBase {
           )
         )
     );
+  }
+
+  public CommandBase parallelSetPositions(
+    final int elevatorPosition,
+    int armPosition
+  ) {
+    return runOnce(() ->
+        armMotor.set(TalonFXControlMode.MotionMagic, Constants.armUpperLimit)
+      )
+      .andThen(
+        Commands.waitUntil(() ->
+          armMotor.getActiveTrajectoryPosition() > Constants.armUpperLimit - 100
+        )
+      )
+      .andThen(
+        runOnce(() ->
+          mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)
+        )
+      )
+      .andThen(
+        Commands.waitUntil(() ->
+          mainMotor.getActiveTrajectoryPosition() < elevatorPosition + 5000 &&
+          mainMotor.getActiveTrajectoryPosition() > elevatorPosition - 5000
+        )
+      )
+      .andThen(
+        runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition))
+      )
+      .andThen(
+        Commands
+          .waitUntil(() ->
+            mainMotor.getActiveTrajectoryPosition() < armPosition + 20 &&
+            armMotor.getActiveTrajectoryPosition() > armPosition - 20
+          )
+          .andThen(
+            runOnce(() -> armMotor.set(TalonFXControlMode.PercentOutput, 0))
+          )
+          .andThen(
+            runOnce(() -> mainMotor.set(TalonFXControlMode.PercentOutput, 0))
+          )
+      );
+  }
+
+  // Test this
+  public CommandBase setStow() {
+    return runOnce(() ->
+        armMotor.set(TalonFXControlMode.MotionMagic, Constants.armUpperLimit)
+      )
+      .andThen(
+        Commands.waitUntil(() ->
+          armMotor.getActiveTrajectoryPosition() > Constants.armUpperLimit - 100
+        )
+      ) // set to current upperlimit
+      .andThen(
+        runOnce(() ->
+          armMotor.configForwardSoftLimitThreshold(Constants.armPos5)
+        )
+      ) // set soft limit to be stow position
+      .andThen(
+        runOnce(() ->
+          mainMotor.set(TalonFXControlMode.MotionMagic, Constants.elevatorPos5)
+        )
+      ) // set elevator to 0
+      .andThen(
+        Commands.waitUntil(() ->
+          mainMotor.getActiveTrajectoryPosition() <
+          Constants.elevatorPos5 +
+          5000 &&
+          mainMotor.getActiveTrajectoryPosition() >
+          Constants.elevatorPos5 -
+          5000
+        )
+      )
+      .andThen(
+        runOnce(() ->
+          armMotor.set(TalonFXControlMode.MotionMagic, Constants.armPos5)
+        )
+      ) //^wait until finished, set arm to stow
+      .andThen(
+        Commands.waitUntil(() ->
+          armMotor.getActiveTrajectoryPosition() > Constants.armPos5 - 30
+        )
+      ) //wait until finished
+      .andThen(
+        runOnce(() ->
+          armMotor.configForwardSoftLimitThreshold(Constants.armTrueSoftLimit)
+        )
+      ) //set soft limit back to what it was
+      .andThen(runOnce(() -> armMotor.set(TalonFXControlMode.PercentOutput, 0)))
+      .andThen(
+        runOnce(() -> mainMotor.set(TalonFXControlMode.PercentOutput, 0))
+      );
   }
 
   @Override

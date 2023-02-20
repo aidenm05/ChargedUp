@@ -33,13 +33,9 @@ public class RobotContainer {
   Trigger exampleTrigger = new Trigger(() -> driver1.getLeftTriggerAxis() > 0.5
   );
   /* Drive Controls */
-  private final int translationAxis = (int) (
-    1 * XboxController.Axis.kLeftY.value
-  );
-  private final int strafeAxis = (int) (1 * XboxController.Axis.kLeftX.value);
-  private final int rotationAxis = (int) (
-    1 * XboxController.Axis.kRightX.value
-  );
+  private final int translationAxis = XboxController.Axis.kLeftY.value;
+  private final int strafeAxis = XboxController.Axis.kLeftX.value;
+  private final int rotationAxis = XboxController.Axis.kRightX.value;
 
   /* Driver Buttons */
   private final JoystickButton back1 = new JoystickButton(
@@ -160,8 +156,8 @@ public class RobotContainer {
       s_Swerve.setDefaultCommand(
         new TeleopSwerve(
           s_Swerve,
-          () -> -driver1.getRawAxis(translationAxis),
-          () -> -driver1.getRawAxis(strafeAxis),
+          () -> driver1.getRawAxis(translationAxis),
+          () -> driver1.getRawAxis(strafeAxis),
           () -> driver1.getRawAxis(rotationAxis),
           () -> back1.getAsBoolean()
         )
@@ -170,12 +166,12 @@ public class RobotContainer {
       s_Swerve.setDefaultCommand(
         new TeleopSwerve(
           s_Swerve,
-          () -> Math.pow(-0.6 * driver1.getRawAxis(translationAxis), 1),
-          () -> Math.pow(-0.6 * driver1.getRawAxis(strafeAxis), 1),
-          () -> Math.pow(-1 * driver1.getRawAxis(rotationAxis), 1),
+          () -> -Math.pow(0.7 * driver1.getRawAxis(translationAxis), 1),
+          () -> -Math.pow(0.7 * driver1.getRawAxis(strafeAxis), 1),
+          () -> -Math.pow(driver1.getRawAxis(rotationAxis), 1),
           () -> back1.getAsBoolean()
         )
-      );
+      ); // 0.7 is the modification to default speed. The second number is the exponent. Increase for wider deadband. Do not increase beyond 3.
     }
     m_Elevator.armAndElevator();
 
@@ -210,26 +206,46 @@ public class RobotContainer {
       PathPlannerTrajectory traj = PathPlanner.loadPath("Drive4Sesny", 2, 2);
       bButton1.onTrue(s_Swerve.followTrajectoryCommand(traj, true));
 
+      //Manual Arm Positions
       yButton1.whileTrue(m_Elevator.armUp());
       xButton1.whileTrue(m_Elevator.armDown());
 
+      //Elevator Arm Presets
       b1.onTrue(
-        m_Elevator.setPosition(Constants.elevatorTopCone, Constants.armTopCone)
-      );
-      b3.onTrue(
-        m_Elevator.setPosition(Constants.elevatorMidCone, Constants.armMidCone)
+        m_Elevator.parallelSetPositions(
+          Constants.elevatorPos1,
+          Constants.armPos1
+        )
       );
       b2.onTrue(
-        m_Elevator.setPosition(Constants.elevatorTopCube, Constants.armTopCube)
+        m_Elevator.parallelSetPositions(
+          Constants.elevatorPos2,
+          Constants.armPos2
+        )
+      );
+      b3.onTrue(
+        m_Elevator.parallelSetPositions(
+          Constants.elevatorPos3,
+          Constants.armPos3
+        )
       );
       b4.onTrue(
-        m_Elevator.setPosition(Constants.elevatorMidCube, Constants.armMidCube)
+        m_Elevator.parallelSetPositions(
+          Constants.elevatorPos4,
+          Constants.armPos4
+        )
       );
       b5.onTrue(
-        m_Elevator.setPosition(Constants.elevatorStow, Constants.armStow)
+        m_Elevator.parallelSetPositions(
+          Constants.elevatorPos5,
+          Constants.armPos5
+        ) //change this to setStow() with no arguements when ready to test.
       );
       b6.onTrue(
-        m_Elevator.setPosition(Constants.elevatorFloor, Constants.armFloor)
+        m_Elevator.parallelSetPositions(
+          Constants.elevatorPos6,
+          Constants.armPos6
+        )
       );
 
       b7.whileTrue(m_Elevator.armUp());

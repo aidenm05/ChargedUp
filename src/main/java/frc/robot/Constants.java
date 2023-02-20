@@ -16,31 +16,33 @@ public final class Constants {
   public static final double LIMELIGHT_DEADBAND = 1;
   public static final double MIN_STEER_K = .4;
 
+  public static final int armTrueSoftLimit = 1540;
+
   // elevator constants
   public static final int elevatorUpperLimit = 220000;
   // this is used to set a threshold where the arm position needs to be considered
   public static final int elevatorLowerThreshold = 60000;
   // set height for elevator pos 1
-  public static final int elevatorTopCone = 215550;
+  public static final int elevatorPos1 = 212426;
   // set height for elevator pos 2
-  public static final int elevatorMidCone = 135400;
-  public static final int elevatorTopCube = 60000;
-  public static final int elevatorMidCube = 60000;
-  public static final int elevatorStow = 60000;
-  public static final int elevatorFloor = 41777;
+  public static final int elevatorPos2 = 128800;
+  public static final int elevatorPos3 = 152741;
+  public static final int elevatorPos4 = 72136;
+  public static final int elevatorPos5 = 0;
+  public static final int elevatorPos6 = 41777;
 
   // arm constants
   public static final int armUpperLimit = 1450;
   // this is used to set a threshold of where the elevator postion needs to be considered
   public static final int armLowerThreshold = 800;
   // set height for arm pos 1
-  public static final int armTopCone = 1057;
+  public static final int armPos1 = 937;
   // set height for arm pos 2
-  public static final int armMidCone = 1210;
-  public static final int armTopCube = 1000;
-  public static final int armMidCube = 1000;
-  public static final int armStow = 1000;
-  public static final int armFloor = 386;
+  public static final int armPos2 = 1126;
+  public static final int armPos3 = 1000;
+  public static final int armPos4 = 1143;
+  public static final int armPos5 = 1500;
+  public static final int armPos6 = 386;
 
   // weird motion magic
   /**
