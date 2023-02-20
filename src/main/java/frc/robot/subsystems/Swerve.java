@@ -123,11 +123,37 @@ public class Swerve extends SubsystemBase {
     return gyro.getRoll();
   }
 
+  public double getPitch() {
+    return gyro.getPitch();
+  }
+
   public void autoBalance() {
     m_balancePID.setTolerance(.001);
     double pidOutput;
     pidOutput = MathUtil.clamp(m_balancePID.calculate(getRoll(), 0), -0.4, 0.4);
     drive(new Translation2d(-pidOutput, 0), 0.0, false, true);
+  }
+
+  public void xWheels() { //2 1 0 3, BL, FR, FL, BR
+    mSwerveMods[0].setDesiredState(
+        new SwerveModuleState(0.0, new Rotation2d(45)),
+        false
+      );
+
+    mSwerveMods[1].setDesiredState(
+        new SwerveModuleState(0.0, new Rotation2d(45)),
+        false
+      );
+
+    mSwerveMods[2].setDesiredState(
+        new SwerveModuleState(0.0, new Rotation2d(125)),
+        false
+      );
+
+    mSwerveMods[3].setDesiredState(
+        new SwerveModuleState(0.0, new Rotation2d(125)),
+        false
+      );
   }
 
   public void alignToGoal() {
