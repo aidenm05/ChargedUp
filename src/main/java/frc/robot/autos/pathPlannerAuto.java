@@ -30,10 +30,7 @@ public class pathPlannerAuto extends SequentialCommandGroup {
     addCommands(
       new SequentialCommandGroup(
         new InstantCommand(() ->
-          m_Elevator.setPosition(
-            Constants.elevatorTopCone,
-            Constants.armTopCone
-          )
+          m_Elevator.setPosition(Constants.elevatorPos1, Constants.armPos1)
         ),
         new WaitCommand(1),
         new InstantCommand(() -> m_Claw.openAllOut()),
