@@ -42,7 +42,7 @@ public final class Constants {
   public static final int armMidCone = 1126;
   public static final int armTopCube = 1000;
   public static final int armMidCube = 1143;
-  public static final int armStow = 1500;
+  public static final int armStow = 1700;
   public static final int armFloor = 386;
 
   // weird motion magic

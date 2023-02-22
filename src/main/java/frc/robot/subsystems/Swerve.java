@@ -283,6 +283,8 @@ public class Swerve extends SubsystemBase {
       );
       SmartDashboard.putNumber("X pose", this.getPose().getX());
       SmartDashboard.putNumber("Y pose", this.getPose().getY());
+      SmartDashboard.putBoolean("AUTO", DriverStation.isAutonomous());
+      SmartDashboard.putBoolean("AUTOenabled", DriverStation.isAutonomousEnabled());
     }
   }
 
