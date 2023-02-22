@@ -178,29 +178,17 @@ public class RobotContainer {
 
     SmartDashboard.putData("Auto Chooser", m_autoChooser);
 
-    if (Constants.mantis) {
-      s_Swerve.setDefaultCommand(
-        new TeleopSwerve(
-          s_Swerve,
-          () -> driver1.getRawAxis(translationAxis),
-          () -> driver1.getRawAxis(strafeAxis),
-          () -> driver1.getRawAxis(rotationAxis),
-          () -> back1.getAsBoolean(),
-          () -> driver1.getLeftTriggerAxis()
-        )
-      );
-    } else {
-      s_Swerve.setDefaultCommand(
-        new TeleopSwerve(
-          s_Swerve,
-          () -> -Math.pow(0.7 * driver1.getRawAxis(translationAxis), 1),
-          () -> -Math.pow(0.7 * driver1.getRawAxis(strafeAxis), 1),
-          () -> -Math.pow(driver1.getRawAxis(rotationAxis), 1),
-          () -> back1.getAsBoolean(),
-          () -> driver1.getLeftTriggerAxis()
-        )
-      ); // 0.7 is the modification to default speed. The second number is the exponent. Increase for wider deadband. Do not increase beyond 3.
-    }
+    s_Swerve.setDefaultCommand(
+      new TeleopSwerve(
+        s_Swerve,
+        () -> driver1.getRawAxis(translationAxis),
+        () -> driver1.getRawAxis(strafeAxis),
+        () -> driver1.getRawAxis(rotationAxis),
+        () -> back1.getAsBoolean(),
+        () -> driver1.getLeftTriggerAxis()
+      )
+    );
+
     m_Elevator.armAndElevator();
 
     // Configure the button bindings
@@ -290,25 +278,25 @@ public class RobotContainer {
 
       dUp1.whileTrue(
         new InstantCommand(() ->
-          s_Swerve.drive(new Translation2d(0.2, 0), 0, true, false)
+          s_Swerve.drive(new Translation2d(0.2, 0), 0, true, true)
         )
       );
 
       dRight1.whileTrue(
         new InstantCommand(() ->
-          s_Swerve.drive(new Translation2d(0, 0.2), 0, true, false)
+          s_Swerve.drive(new Translation2d(0, 0.2), 0, true, true)
         )
       );
 
       dDown1.whileTrue(
         new InstantCommand(() ->
-          s_Swerve.drive(new Translation2d(-0.2, 0), 0, true, false)
+          s_Swerve.drive(new Translation2d(-0.2, 0), 0, true, true)
         )
       );
 
       dLeft1.whileTrue(
         new InstantCommand(() ->
-          s_Swerve.drive(new Translation2d(0, -0.2), 0, true, false)
+          s_Swerve.drive(new Translation2d(0, -0.2), 0, true, true)
         )
       );
     }

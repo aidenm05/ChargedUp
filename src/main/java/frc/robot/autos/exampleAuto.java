@@ -35,8 +35,9 @@ public class ExampleAuto extends SequentialCommandGroup {
     addCommands(
       m_Elevator.sequentialSetPositions(EP, AP),
       new WaitCommand(2),
-      //add claw open
-      // wait
+      m_Claw.openAllOut(),
+      new WaitCommand(2),
+      // m_Claw.motorOff(),
       m_Elevator.setStow(),
       new WaitCommand(2),
       s_Swerve.followTrajectoryCommand(traj, true)
