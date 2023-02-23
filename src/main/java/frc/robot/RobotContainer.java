@@ -189,7 +189,7 @@ public class RobotContainer {
       )
     );
 
-    m_Elevator.armAndElevator();
+    m_Elevator.armAndElevatorStopPercentMode();
 
     // Configure the button bindings
     configureButtonBindings();
