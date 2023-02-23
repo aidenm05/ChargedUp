@@ -181,9 +181,9 @@ public class RobotContainer {
     s_Swerve.setDefaultCommand(
       new TeleopSwerve(
         s_Swerve,
-        () -> driver1.getRawAxis(translationAxis),
-        () -> driver1.getRawAxis(strafeAxis),
-        () -> driver1.getRawAxis(rotationAxis),
+        () -> -driver1.getRawAxis(translationAxis),
+        () -> -driver1.getRawAxis(strafeAxis),
+        () -> -driver1.getRawAxis(rotationAxis),
         () -> back1.getAsBoolean(),
         () -> driver1.getLeftTriggerAxis()
       )
