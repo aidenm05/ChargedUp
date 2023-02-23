@@ -376,11 +376,12 @@ public class Elevator extends SubsystemBase {
   // Test this
   public CommandBase setStow() {
     return runOnce(() ->
-        armMotor.set(TalonFXControlMode.MotionMagic, Constants.armUpperLimit)
+        armMotor.set(TalonFXControlMode.MotionMagic, Constants.armMidCube)
       )
       .andThen(
         Commands.waitUntil(() ->
-          armMotor.getActiveTrajectoryPosition() > Constants.armUpperLimit - 100
+          armMotor.getActiveTrajectoryPosition() > Constants.armMidCube - 100 &&
+          armMotor.getActiveTrajectoryPosition() < Constants.armMidCube + 100
         )
       ) // set to current upperlimit
       .andThen(
