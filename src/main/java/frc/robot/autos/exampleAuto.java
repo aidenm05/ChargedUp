@@ -33,11 +33,12 @@ public class ExampleAuto extends SequentialCommandGroup {
   ) {
     PathPlannerTrajectory traj = PathPlanner.loadPath(path, 2, 2);
     addCommands(
+      m_Claw.closeAllHold(),
       m_Elevator.sequentialSetPositions(EP, AP),
-      new WaitCommand(2),
+      // new WaitCommand(2),
       m_Claw.openAllOut(),
       new WaitCommand(2),
-      // m_Claw.motorOff(),
+      m_Claw.motorOff(),
       m_Elevator.setStow(),
       new WaitCommand(2),
       s_Swerve.followTrajectoryCommand(traj, true)

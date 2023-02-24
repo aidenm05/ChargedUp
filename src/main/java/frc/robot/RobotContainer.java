@@ -222,9 +222,7 @@ public class RobotContainer {
       PathPlannerTrajectory traj = PathPlanner.loadPath("Drive4Sesny", 2, 2);
       // bButton1.onTrue(s_Swerve.followTrajectoryCommand(traj, true));
 
-      //Manual Arm Positions
-      yButton1.whileTrue(m_Elevator.armUp());
-      xButton1.whileTrue(m_Elevator.armDown());
+      xButton1.onTrue(s_Swerve.xWheelsCommand());
 
       //Elevator Arm Presets
       b1.onTrue(
@@ -277,27 +275,19 @@ public class RobotContainer {
       // bButton1.onTrue(s_Swerve.drive1m());
 
       dUp1.whileTrue(
-        new InstantCommand(() ->
-          s_Swerve.drive(new Translation2d(0.2, 0), 0, true, true)
-        )
+        s_Swerve.driveContinuous(new Translation2d(0, -0.2), 0, true, false)
       );
 
       dRight1.whileTrue(
-        new InstantCommand(() ->
-          s_Swerve.drive(new Translation2d(0, 0.2), 0, true, true)
-        )
+        s_Swerve.driveContinuous(new Translation2d(0.2, 0), 0, true, false)
       );
 
       dDown1.whileTrue(
-        new InstantCommand(() ->
-          s_Swerve.drive(new Translation2d(-0.2, 0), 0, true, true)
-        )
+        s_Swerve.driveContinuous(new Translation2d(0, 0.2), 0, true, false)
       );
 
       dLeft1.whileTrue(
-        new InstantCommand(() ->
-          s_Swerve.drive(new Translation2d(0, -0.2), 0, true, true)
-        )
+        s_Swerve.driveContinuous(new Translation2d(-0.2, 0), 0, true, false)
       );
     }
   }

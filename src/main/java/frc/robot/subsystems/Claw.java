@@ -20,8 +20,8 @@ public class Claw extends SubsystemBase {
 
   public Claw() {
     if (!Constants.mantis) {
-      clawPiston1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
-      clawPiston2 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 3); //idk
+      clawPiston1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 1, 0);
+      clawPiston2 = new DoubleSolenoid(PneumaticsModuleType.REVPH, 3, 2); //idk
       clawMotor = new TalonFX(4);
       clawPiston1.set(Value.kForward);
       clawPiston2.set(Value.kForward);
@@ -33,7 +33,7 @@ public class Claw extends SubsystemBase {
   }
 
   public CommandBase motorOff() {
-    return run(() -> clawMotor.set(ControlMode.PercentOutput, 0));
+    return runOnce(() -> clawMotor.set(ControlMode.PercentOutput, 0));
   }
 
   public CommandBase motorReverse() {

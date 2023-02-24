@@ -119,6 +119,17 @@ public class Swerve extends SubsystemBase {
     }
   }
 
+  public CommandBase driveContinuous(
+    Translation2d translation,
+    double rotation,
+    boolean fieldRelative,
+    boolean isOpenLoop
+  ) {
+    return run(() ->
+      this.drive(translation, rotation, fieldRelative, isOpenLoop)
+    );
+  }
+
   public double getRoll() {
     return gyro.getRoll();
   }
@@ -135,25 +146,25 @@ public class Swerve extends SubsystemBase {
   }
 
   public void xWheels() { //2 1 0 3, BL, FR, FL, BR
-    mSwerveMods[0].setDesiredState(
-        new SwerveModuleState(0.0, new Rotation2d(45)),
-        false
+    mSwerveMods[0].setAngle(
+        new SwerveModuleState(0.1, new Rotation2d(3 * (Math.PI) / 4))
       );
 
-    mSwerveMods[1].setDesiredState(
-        new SwerveModuleState(0.0, new Rotation2d(45)),
-        false
+    mSwerveMods[1].setAngle(
+        new SwerveModuleState(0.1, new Rotation2d(-(Math.PI) / 4))
       );
 
-    mSwerveMods[2].setDesiredState(
-        new SwerveModuleState(0.0, new Rotation2d(125)),
-        false
+    mSwerveMods[2].setAngle(
+        new SwerveModuleState(0.1, new Rotation2d((Math.PI) / 4))
       );
 
-    mSwerveMods[3].setDesiredState(
-        new SwerveModuleState(0.0, new Rotation2d(125)),
-        false
+    mSwerveMods[3].setAngle(
+        new SwerveModuleState(0.1, new Rotation2d(-(3 * Math.PI) / 4))
       );
+  }
+
+  public CommandBase xWheelsCommand() {
+    return runOnce(() -> xWheels());
   }
 
   public void alignToGoal() {
@@ -284,7 +295,10 @@ public class Swerve extends SubsystemBase {
       SmartDashboard.putNumber("X pose", this.getPose().getX());
       SmartDashboard.putNumber("Y pose", this.getPose().getY());
       SmartDashboard.putBoolean("AUTO", DriverStation.isAutonomous());
-      SmartDashboard.putBoolean("AUTOenabled", DriverStation.isAutonomousEnabled());
+      SmartDashboard.putBoolean(
+        "AUTOenabled",
+        DriverStation.isAutonomousEnabled()
+      );
     }
   }
 

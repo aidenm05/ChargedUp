@@ -192,7 +192,6 @@ public class Elevator extends SubsystemBase {
       armMotor.set(TalonFXControlMode.PercentOutput, 0);
       mainMotor.set(TalonFXControlMode.PercentOutput, 0);
     }
-
   }
 
   public CommandBase armMM1() {
@@ -334,44 +333,36 @@ public class Elevator extends SubsystemBase {
     final int elevatorPosition,
     int armPosition
   ) {
-      return runOnce(() ->
-          armMotor.set(TalonFXControlMode.MotionMagic, Constants.armUpperLimit)
+    return runOnce(() ->
+        armMotor.set(TalonFXControlMode.MotionMagic, Constants.armUpperLimit)
+      )
+      .andThen(
+        Commands.waitUntil(() ->
+          armMotor.getActiveTrajectoryPosition() > Constants.armUpperLimit - 100
         )
-        .andThen(
-          Commands.waitUntil(() ->
-            armMotor.getActiveTrajectoryPosition() >
-            Constants.armUpperLimit -
-            100
-          )
+      )
+      .andThen(
+        runOnce(() ->
+          mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)
         )
-        .andThen(
-          runOnce(() ->
-            mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)
-          )
+      )
+      .andThen(
+        Commands.waitUntil(() ->
+          mainMotor.getActiveTrajectoryPosition() < elevatorPosition + 5000 &&
+          mainMotor.getActiveTrajectoryPosition() > elevatorPosition - 5000
         )
-        .andThen(
-          Commands.waitUntil(() ->
-            mainMotor.getActiveTrajectoryPosition() < elevatorPosition + 5000 &&
-            mainMotor.getActiveTrajectoryPosition() > elevatorPosition - 5000
-          )
+      )
+      .andThen(
+        runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition))
+      )
+      .andThen(
+        Commands.waitUntil(() ->
+          armMotor.getActiveTrajectoryPosition() < armPosition + 30 &&
+          armMotor.getActiveTrajectoryPosition() > armPosition - 30
         )
-        .andThen(
-          runOnce(() ->
-            armMotor.set(TalonFXControlMode.MotionMagic, armPosition)
-          )
-        )
-        .andThen(
-          Commands
-            .waitUntil(() ->
-              armMotor.getActiveTrajectoryPosition() < armPosition + 30 &&
-              armMotor.getActiveTrajectoryPosition() > armPosition - 30
-            )
-            .andThen(
-              runOnce(() -> this.armAndElevatorStopPercentMode())
-            )
-        );
-    }
-  
+      )
+      .andThen(runOnce(() -> this.armAndElevatorStopPercentMode()));
+  }
 
   // Test this
   public CommandBase setStow() {
@@ -411,7 +402,7 @@ public class Elevator extends SubsystemBase {
       ) //^wait until finished, set arm to stow
       .andThen(
         Commands.waitUntil(() ->
-          armMotor.getActiveTrajectoryPosition() > Constants.armStow - 30 && 
+          armMotor.getActiveTrajectoryPosition() > Constants.armStow - 30 &&
           armMotor.getActiveTrajectoryPosition() < Constants.armStow + 30
         )
       ) //wait until finished
@@ -420,9 +411,7 @@ public class Elevator extends SubsystemBase {
           armMotor.configForwardSoftLimitThreshold(Constants.armUpperLimit)
         )
       ) //set soft limit back to what it was
-      .andThen(
-              runOnce(() -> this.armAndElevatorStopPercentMode())
-            );
+      .andThen(runOnce(() -> this.armAndElevatorStopPercentMode()));
   }
 
   @Override
