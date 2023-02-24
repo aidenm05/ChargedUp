@@ -222,7 +222,9 @@ public class RobotContainer {
       PathPlannerTrajectory traj = PathPlanner.loadPath("Drive4Sesny", 2, 2);
       // bButton1.onTrue(s_Swerve.followTrajectoryCommand(traj, true));
 
-      xButton1.onTrue(s_Swerve.xWheelsCommand());
+      xButton1.onTrue(s_Swerve.moveToGoalRetroreflective());
+
+      yButton1.onTrue(s_Swerve.moveToGoalAprilTags());
 
       //Elevator Arm Presets
       b1.onTrue(

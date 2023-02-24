@@ -168,7 +168,12 @@ public class Swerve extends SubsystemBase {
   }
 
   public void alignToGoal() {
-    drive(new Translation2d(0, m_Limelight.getSteeringValue()), 0, true, false);
+    drive(
+      new Translation2d(0, 0.5 * m_Limelight.getSteeringValue()),
+      0,
+      true,
+      false
+    );
   }
 
   // WIP
