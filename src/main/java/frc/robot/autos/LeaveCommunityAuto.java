@@ -11,7 +11,7 @@ import frc.robot.subsystems.Swerve;
 public class LeaveCommunityAuto extends SequentialCommandGroup {
 
   public LeaveCommunityAuto(Swerve s_Swerve, Elevator m_Elevator, Claw m_Claw) {
-    PathPlannerTrajectory traj = PathPlanner.loadPath("Leave", 3, 3);
+    PathPlannerTrajectory traj = PathPlanner.loadPath("Drive4Sesny", 2, 2);
     addCommands(s_Swerve.followTrajectoryCommand(traj, true));
   }
 }

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -181,6 +182,14 @@ public class RobotContainer {
       )
     );
 
+    // m_autoChooser.addOption(
+    //   "Pick up cone and come back",
+    //   s_Swerve.followTrajectoryCommand(
+    //     PathPlanner.loadPath("Drive4Sesney", 3, 3),
+    //     true
+    //   )
+    // );
+
     SmartDashboard.putData("Auto Chooser", m_autoChooser);
 
     s_Swerve.setDefaultCommand(
@@ -217,13 +226,10 @@ public class RobotContainer {
       rightBumper1.whileTrue(m_Claw.open1In());
       rightBumper1.onFalse(m_Claw.closeAllHold());
 
-      leftStickButton1.toggleOnTrue(m_Elevator.setStow());
-      leftStickButton1.toggleOnFalse(
-        m_Elevator.sequentialSetPositions(
-          Constants.elevatorFloor,
-          Constants.armFloor
-        )
-      );
+      // leftStickButton1.onTrue(new ConditionalCommand(m_Elevator.setStow(), m_Elevator.sequentialSetPositions(
+      //   Constants.elevatorFloor,
+      //   Constants.armFloor
+      // ), leftStickButton1.))
 
       // aButton1.onTrue(m_Elevator.setPositions(205800, 976));
       // bButton1.onTrue(m_Elevator.setPositions(80000, 1000));
@@ -292,19 +298,19 @@ public class RobotContainer {
       // bButton1.onTrue(s_Swerve.drive1m());
 
       dUp1.whileTrue(
-        s_Swerve.driveContinuous(new Translation2d(0, -0.2), 0, true, false)
+        s_Swerve.driveContinuous(new Translation2d(.2, 0), 0, true, false)
       );
 
       dRight1.whileTrue(
-        s_Swerve.driveContinuous(new Translation2d(0.2, 0), 0, true, false)
+        s_Swerve.driveContinuous(new Translation2d(0, -0.2), 0, true, false)
       );
 
       dDown1.whileTrue(
-        s_Swerve.driveContinuous(new Translation2d(0, 0.2), 0, true, false)
+        s_Swerve.driveContinuous(new Translation2d(-0.2, 0), 0, true, false)
       );
 
       dLeft1.whileTrue(
-        s_Swerve.driveContinuous(new Translation2d(-0.2, 0), 0, true, false)
+        s_Swerve.driveContinuous(new Translation2d(0, .2), 0, true, false)
       );
     }
   }

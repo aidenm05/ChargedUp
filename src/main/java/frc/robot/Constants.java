@@ -45,7 +45,7 @@ public final class Constants {
   public static final int armStow = 1600;
   public static final int armFloor = 510;
   // arm encoder
-  public static final double armEncoderOffset = 26.4;
+  public static final double armEncoderOffset = 204.785;
 
   // weird motion magic
   /**
