@@ -30,6 +30,7 @@ public class TeleopSwerve extends CommandBase {
     DoubleSupplier thrustTrigger
   ) {
     speedChoice = new SendableChooser<Double>();
+    speedChoice.setDefaultOption(".5", .5);
     speedChoice.addOption(".2", .2);
     speedChoice.addOption(".5", .5);
     speedChoice.addOption(".7", .7);

@@ -20,7 +20,7 @@ public final class Constants {
   //1655
 
   // elevator constants
-  public static final int elevatorUpperLimit = 220000;
+  public static final int elevatorUpperLimit = 214500;
   // this is used to set a threshold where the arm position needs to be considered
   public static final int elevatorLowerThreshold = 60000;
   // set height for elevator pos 1
@@ -30,7 +30,7 @@ public final class Constants {
   public static final int elevatorTopCube = 152741;
   public static final int elevatorMidCube = 72136;
   public static final int elevatorStow = 0;
-  public static final int elevatorFloor = 41777;
+  public static final int elevatorFloor = 29800;
 
   // arm constants
   public static final int armUpperLimit = 1450;
@@ -43,7 +43,9 @@ public final class Constants {
   public static final int armTopCube = 1000;
   public static final int armMidCube = 1143;
   public static final int armStow = 1600;
-  public static final int armFloor = 386;
+  public static final int armFloor = 510;
+  // arm encoder
+  public static final double armEncoderOffset = 26.4;
 
   // weird motion magic
   /**

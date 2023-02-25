@@ -21,9 +21,9 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 import java.util.List;
 
-public class ExampleAuto extends SequentialCommandGroup {
+public class DropConeFollowPath extends SequentialCommandGroup {
 
-  public ExampleAuto(
+  public DropConeFollowPath(
     Swerve s_Swerve,
     Elevator m_Elevator,
     Claw m_Claw,

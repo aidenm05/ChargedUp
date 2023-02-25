@@ -54,7 +54,7 @@ public class Swerve extends SubsystemBase {
   public Pigeon2 gyro;
   private GenericEntry gyroAngle;
   Limelight m_Limelight;
-  private PIDController m_balancePID = new PIDController(0, 0, 0); //actually get
+  private PIDController m_balancePID = new PIDController(2, 0, 0); //actually get
 
   public Swerve(Limelight limelight) {
     m_Limelight = limelight;
@@ -139,10 +139,15 @@ public class Swerve extends SubsystemBase {
   }
 
   public void autoBalance() {
-    m_balancePID.setTolerance(.001);
+    m_balancePID.setTolerance(.1);
     double pidOutput;
     pidOutput = MathUtil.clamp(m_balancePID.calculate(getRoll(), 0), -0.4, 0.4);
-    drive(new Translation2d(-pidOutput, 0), 0.0, false, true);
+    drive(new Translation2d(-pidOutput, 0), 0.0, true, false);
+    SmartDashboard.putNumber("gyro PID output", pidOutput);
+  }
+
+  public CommandBase autoBalanceContinuous() {
+    return run(() -> autoBalance()).until(() -> Math.abs(getRoll()) < .5);
   }
 
   public void xWheels() { //2 1 0 3, BL, FR, FL, BR
@@ -275,7 +280,9 @@ public class Swerve extends SubsystemBase {
   @Override
   public void periodic() {
     swerveOdometry.update(getYaw(), getModulePositions());
-    SmartDashboard.putNumber("gyro", gyro.getYaw());
+
+    SmartDashboard.putNumber("gyro roll", gyro.getRoll());
+    SmartDashboard.putNumber("gyro yaw", gyro.getYaw());
     gyroAngle.setDouble(gyro.getYaw());
     //SmartDashboard.putNumber("gyro2", getyaw);
     SmartDashboard.putNumber("yawdegrees", getYaw().getDegrees());

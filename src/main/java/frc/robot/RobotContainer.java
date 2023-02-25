@@ -72,6 +72,11 @@ public class RobotContainer {
     driver1,
     XboxController.Button.kStart.value
   );
+  private final JoystickButton leftStickButton1 = new JoystickButton(
+    driver1,
+    XboxController.Button.kLeftStick.value
+  );
+
   private final POVButton dUp1 = new POVButton(driver1, 0);
 
   private final POVButton dRight1 = new POVButton(driver1, 90);
@@ -166,7 +171,7 @@ public class RobotContainer {
 
     m_autoChooser.addOption(
       "Top Cone (Generated)",
-      new ExampleAuto(
+      new DropConeFollowPath(
         s_Swerve,
         m_Elevator,
         m_Claw,
@@ -212,6 +217,14 @@ public class RobotContainer {
       rightBumper1.whileTrue(m_Claw.open1In());
       rightBumper1.onFalse(m_Claw.closeAllHold());
 
+      leftStickButton1.toggleOnTrue(m_Elevator.setStow());
+      leftStickButton1.toggleOnFalse(
+        m_Elevator.sequentialSetPositions(
+          Constants.elevatorFloor,
+          Constants.armFloor
+        )
+      );
+
       // aButton1.onTrue(m_Elevator.setPositions(205800, 976));
       // bButton1.onTrue(m_Elevator.setPositions(80000, 1000));
       aButton1.whileTrue(m_Claw.openAllOut());
@@ -222,9 +235,11 @@ public class RobotContainer {
       PathPlannerTrajectory traj = PathPlanner.loadPath("Drive4Sesny", 2, 2);
       // bButton1.onTrue(s_Swerve.followTrajectoryCommand(traj, true));
 
-      xButton1.onTrue(s_Swerve.moveToGoalRetroreflective());
+      // xButton1.onTrue(s_Swerve.moveToGoalRetroreflective());
 
-      yButton1.onTrue(s_Swerve.moveToGoalAprilTags());
+      // yButton1.onTrue(s_Swerve.moveToGoalAprilTags());
+
+      xButton1.whileTrue(s_Swerve.autoBalanceContinuous());
 
       //Elevator Arm Presets
       b1.onTrue(
