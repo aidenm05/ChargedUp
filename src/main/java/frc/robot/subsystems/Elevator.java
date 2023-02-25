@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -10,7 +11,10 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -25,6 +29,7 @@ public class Elevator extends SubsystemBase {
   public WPI_TalonFX mainMotor;
   public WPI_TalonFX followerMotor;
   public WPI_TalonFX armMotor;
+  public WPI_CANCoder armEncoder;
   public double calculatedPOutput = 0;
   public double motorPosition;
   public int smoothing = 0;
@@ -44,6 +49,7 @@ public class Elevator extends SubsystemBase {
       mainMotor = new WPI_TalonFX(1); // add "torch as second parameter when on canivore"
       followerMotor = new WPI_TalonFX(2); // add "torch as second parameter when on canivore"
       armMotor = new WPI_TalonFX(3);
+      armEncoder = new WPI_CANCoder(1);
 
       armMotor.setNeutralMode(NeutralMode.Brake);
       armMotor.configNeutralDeadband(.001);
@@ -55,6 +61,13 @@ public class Elevator extends SubsystemBase {
       armMotor.configReverseSoftLimitEnable(true);
       armMotor.configReverseSoftLimitThreshold(0);
       armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
+      armMotor.configRemoteFeedbackFilter(armEncoder, 0);
+
+      armEncoder.configSensorInitializationStrategy(
+        SensorInitializationStrategy.BootToAbsolutePosition
+      );
+      armEncoder.configMagnetOffset(Constants.armEncoderOffset);
+      armEncoder.configSensorDirection(true);
 
       mainMotor.configSelectedFeedbackSensor(
         TalonFXFeedbackDevice.IntegratedSensor,
@@ -337,9 +350,13 @@ public class Elevator extends SubsystemBase {
         armMotor.set(TalonFXControlMode.MotionMagic, Constants.armUpperLimit)
       )
       .andThen(
-        Commands.waitUntil(() ->
-          armMotor.getActiveTrajectoryPosition() > Constants.armUpperLimit - 100
-        )
+        Commands
+          .waitUntil(() ->
+            armMotor.getActiveTrajectoryPosition() >
+            Constants.armUpperLimit -
+            100
+          )
+          .withTimeout(1)
       )
       .andThen(
         runOnce(() ->
@@ -347,19 +364,23 @@ public class Elevator extends SubsystemBase {
         )
       )
       .andThen(
-        Commands.waitUntil(() ->
-          mainMotor.getActiveTrajectoryPosition() < elevatorPosition + 5000 &&
-          mainMotor.getActiveTrajectoryPosition() > elevatorPosition - 5000
-        )
+        Commands
+          .waitUntil(() ->
+            mainMotor.getActiveTrajectoryPosition() < elevatorPosition + 5000 &&
+            mainMotor.getActiveTrajectoryPosition() > elevatorPosition - 5000
+          )
+          .withTimeout(1.5)
       )
       .andThen(
         runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition))
       )
       .andThen(
-        Commands.waitUntil(() ->
-          armMotor.getActiveTrajectoryPosition() < armPosition + 30 &&
-          armMotor.getActiveTrajectoryPosition() > armPosition - 30
-        )
+        Commands
+          .waitUntil(() ->
+            armMotor.getActiveTrajectoryPosition() < armPosition + 20 &&
+            armMotor.getActiveTrajectoryPosition() > armPosition - 20
+          )
+          .withTimeout(1)
       )
       .andThen(runOnce(() -> this.armAndElevatorStopPercentMode()));
   }
@@ -370,10 +391,14 @@ public class Elevator extends SubsystemBase {
         armMotor.set(TalonFXControlMode.MotionMagic, Constants.armMidCube)
       )
       .andThen(
-        Commands.waitUntil(() ->
-          armMotor.getActiveTrajectoryPosition() > Constants.armMidCube - 100 &&
-          armMotor.getActiveTrajectoryPosition() < Constants.armMidCube + 100
-        )
+        Commands
+          .waitUntil(() ->
+            armMotor.getActiveTrajectoryPosition() >
+            Constants.armMidCube -
+            100 &&
+            armMotor.getActiveTrajectoryPosition() < Constants.armMidCube + 100
+          )
+          .withTimeout(1)
       ) // set to current upperlimit
       .andThen(
         runOnce(() ->
@@ -386,14 +411,16 @@ public class Elevator extends SubsystemBase {
         )
       ) // set elevator to 0
       .andThen(
-        Commands.waitUntil(() ->
-          mainMotor.getActiveTrajectoryPosition() <
-          Constants.elevatorStow +
-          5000 &&
-          mainMotor.getActiveTrajectoryPosition() >
-          Constants.elevatorStow -
-          5000
-        )
+        Commands
+          .waitUntil(() ->
+            mainMotor.getActiveTrajectoryPosition() <
+            Constants.elevatorStow +
+            5000 &&
+            mainMotor.getActiveTrajectoryPosition() >
+            Constants.elevatorStow -
+            5000
+          )
+          .withTimeout(1.5)
       )
       .andThen(
         runOnce(() ->
@@ -401,10 +428,12 @@ public class Elevator extends SubsystemBase {
         )
       ) //^wait until finished, set arm to stow
       .andThen(
-        Commands.waitUntil(() ->
-          armMotor.getActiveTrajectoryPosition() > Constants.armStow - 30 &&
-          armMotor.getActiveTrajectoryPosition() < Constants.armStow + 30
-        )
+        Commands
+          .waitUntil(() ->
+            armMotor.getActiveTrajectoryPosition() > Constants.armStow - 30 &&
+            armMotor.getActiveTrajectoryPosition() < Constants.armStow + 30
+          )
+          .withTimeout(1)
       ) //wait until finished
       .andThen(
         runOnce(() ->
