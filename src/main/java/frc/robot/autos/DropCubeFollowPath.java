@@ -21,9 +21,9 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 import java.util.List;
 
-public class DropConeFollowPath extends SequentialCommandGroup {
+public class DropCubeFollowPath extends SequentialCommandGroup {
 
-  public DropConeFollowPath(
+  public DropCubeFollowPath(
     Swerve s_Swerve,
     Elevator m_Elevator,
     Claw m_Claw,
@@ -33,7 +33,7 @@ public class DropConeFollowPath extends SequentialCommandGroup {
   ) {
     PathPlannerTrajectory traj = PathPlanner.loadPath(path, 2, 2);
     addCommands(
-      m_Claw.closeAllHold(),
+      m_Claw.open1Hold(),
       m_Elevator.sequentialSetPositions(EP, AP),
       // new WaitCommand(2),
       m_Claw.openAllOut(),

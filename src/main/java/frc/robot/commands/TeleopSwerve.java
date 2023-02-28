@@ -33,6 +33,7 @@ public class TeleopSwerve extends CommandBase {
     speedChoice.setDefaultOption(".5", .5);
     speedChoice.addOption(".2", .2);
     speedChoice.addOption(".5", .5);
+    speedChoice.addOption(".6", .6);
     speedChoice.addOption(".7", .7);
     speedChoice.addOption("1", 1.0);
     SmartDashboard.putData("Speed", speedChoice);

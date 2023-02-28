@@ -430,10 +430,10 @@ public class Elevator extends SubsystemBase {
       .andThen(
         Commands
           .waitUntil(() ->
-            armMotor.getActiveTrajectoryPosition() > Constants.armStow - 30 &&
-            armMotor.getActiveTrajectoryPosition() < Constants.armStow + 30
+            armMotor.getActiveTrajectoryPosition() > Constants.armStow - 20 &&
+            armMotor.getActiveTrajectoryPosition() < Constants.armStow + 20
           )
-          .withTimeout(1)
+          .withTimeout(2)
       ) //wait until finished
       .andThen(
         runOnce(() ->

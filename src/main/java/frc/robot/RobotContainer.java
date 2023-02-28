@@ -166,12 +166,7 @@ public class RobotContainer {
     );
 
     m_autoChooser.addOption(
-      "Top Cone",
-      new TopConeAuto(s_Swerve, m_Elevator, m_Claw)
-    );
-
-    m_autoChooser.addOption(
-      "Top Cone (Generated)",
+      "Top Cone Leave Community",
       new DropConeFollowPath(
         s_Swerve,
         m_Elevator,
@@ -182,13 +177,29 @@ public class RobotContainer {
       )
     );
 
-    // m_autoChooser.addOption(
-    //   "Pick up cone and come back",
-    //   s_Swerve.followTrajectoryCommand(
-    //     PathPlanner.loadPath("Drive4Sesney", 3, 3),
-    //     true
-    //   )
-    // );
+    m_autoChooser.addOption(
+      "Mid Cone Leave Community",
+      new DropConeFollowPath(
+        s_Swerve,
+        m_Elevator,
+        m_Claw,
+        Constants.elevatorMidCone,
+        Constants.armMidCone,
+        "Leave"
+      )
+    );
+
+    m_autoChooser.addOption(
+      "Top Cube Leave Community",
+      new DropCubeFollowPath(
+        s_Swerve,
+        m_Elevator,
+        m_Claw,
+        Constants.elevatorTopCube,
+        Constants.armTopCube,
+        "Leave"
+      )
+    );
 
     SmartDashboard.putData("Auto Chooser", m_autoChooser);
 
