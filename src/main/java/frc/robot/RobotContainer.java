@@ -1,25 +1,19 @@
 package frc.robot;
 
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-import java.lang.reflect.InaccessibleObjectException;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -123,13 +117,6 @@ public class RobotContainer {
     XboxController.Button.kBack.value
   );
 
-  // private final Trigger rightTrigger1 = new Trigger(() ->
-  //   driver1.getRawAxis(3) > 0.7
-  // );
-  // private final Trigger leftTrigger1 = new Trigger(() ->
-  //   driver1.getRawAxis(2) < 0.7
-  // );
-
   final JoystickButton b1 = new JoystickButton(buttonBoard, 1);
   final JoystickButton b2 = new JoystickButton(buttonBoard, 2);
   final JoystickButton b3 = new JoystickButton(buttonBoard, 3);
@@ -142,8 +129,6 @@ public class RobotContainer {
   final JoystickButton b10 = new JoystickButton(buttonBoard, 10);
   Trigger bbStickF = new Trigger(() -> buttonBoard.getRawAxis(1) > 0.7);
   Trigger bbStickB = new Trigger(() -> buttonBoard.getRawAxis(1) < -0.7);
-
-  // private final JoystickAxis rightTrigButton = new JoystickButton(driver1, XboxController.Axis.kRightTrigger)
 
   /* Subsystems */
   private final Limelight m_Limelight = new Limelight();
@@ -166,6 +151,50 @@ public class RobotContainer {
     );
 
     m_autoChooser.addOption(
+      "Cone Then Cube",
+      new ConeThenCube(s_Swerve, m_Elevator, m_Claw)
+    );
+
+    m_autoChooser.addOption(
+      "Top Cone Charge Balance",
+      new DropConeFollowPath(
+        s_Swerve,
+        m_Elevator,
+        m_Claw,
+        Constants.elevatorTopCone,
+        Constants.armTopCone,
+        "GPWithCharge",
+        true
+      )
+    );
+
+    m_autoChooser.addOption(
+      "Cone Then Cube",
+      new DropConeFollowPath(
+        s_Swerve,
+        m_Elevator,
+        m_Claw,
+        Constants.elevatorTopCone,
+        Constants.armTopCone,
+        "ConeThenCube",
+        true
+      )
+    );
+
+    m_autoChooser.addOption(
+      "Top Cube Charge Balance",
+      new DropCubeFollowPath(
+        s_Swerve,
+        m_Elevator,
+        m_Claw,
+        Constants.elevatorTopCube,
+        Constants.armTopCube,
+        "GPWithCharge",
+        true
+      )
+    );
+
+    m_autoChooser.addOption(
       "Top Cone Leave Community",
       new DropConeFollowPath(
         s_Swerve,
@@ -173,7 +202,8 @@ public class RobotContainer {
         m_Claw,
         Constants.elevatorTopCone,
         Constants.armTopCone,
-        "Leave"
+        "Leave",
+        false
       )
     );
 
@@ -185,7 +215,8 @@ public class RobotContainer {
         m_Claw,
         Constants.elevatorMidCone,
         Constants.armMidCone,
-        "Leave"
+        "Leave",
+        false
       )
     );
 
@@ -197,7 +228,21 @@ public class RobotContainer {
         m_Claw,
         Constants.elevatorTopCube,
         Constants.armTopCube,
-        "Leave"
+        "Leave",
+        false
+      )
+    );
+
+    m_autoChooser.addOption(
+      "Mid Cube Leave Community",
+      new DropCubeFollowPath(
+        s_Swerve,
+        m_Elevator,
+        m_Claw,
+        Constants.elevatorMidCube,
+        Constants.armMidCube,
+        "Leave",
+        false
       )
     );
 
@@ -229,9 +274,6 @@ public class RobotContainer {
   private void configureButtonBindings() {
     /* Driver Buttons */
     if (!Constants.mantis) {
-      //aButton1.onTrue(m_Elevator.armMM1());
-      //bButton1.onTrue(m_Elevator.armMM2());g
-
       leftBumper1.whileTrue(m_Claw.openAllIn());
       leftBumper1.onFalse(m_Claw.open1Hold());
       rightBumper1.whileTrue(m_Claw.open1In());
@@ -246,11 +288,6 @@ public class RobotContainer {
       // bButton1.onTrue(m_Elevator.setPositions(80000, 1000));
       aButton1.whileTrue(m_Claw.openAllOut());
       aButton1.onFalse(m_Claw.motorOff());
-      // bButton1.onTrue(m_Claw.motorReverse());
-      // back1.onTrue(m_Claw.motorOff());
-
-      PathPlannerTrajectory traj = PathPlanner.loadPath("Drive4Sesny", 2, 2);
-      // bButton1.onTrue(s_Swerve.followTrajectoryCommand(traj, true));
 
       // xButton1.onTrue(s_Swerve.moveToGoalRetroreflective());
 
@@ -303,10 +340,6 @@ public class RobotContainer {
 
       start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
       back1.onTrue(new InstantCommand(() -> Swerve.resetModulesToAbsolute()));
-      //back2.onTrue(m_Arm.resetArmEncoder());
-      // leftBumper1.whileTrue(m_Elevator.runDown());
-      // rightBumper1.whileTrue(m_Elevator.runUp());
-      // bButton1.onTrue(s_Swerve.drive1m());
 
       dUp1.whileTrue(
         s_Swerve.driveContinuous(new Translation2d(.2, 0), 0, true, false)

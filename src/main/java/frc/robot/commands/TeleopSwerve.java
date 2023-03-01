@@ -71,11 +71,6 @@ public class TeleopSwerve extends CommandBase {
     strafeVal = strafeVal * thrustVal;
     rotationVal = rotationVal * thrustVal;
 
-    //if (!fullSpeed.getAsBoolean()) {
-    // translationVal = translationVal * (double) speedChoice.getSelected();
-    //strafeVal = strafeVal * (double) speedChoice.getSelected();
-    //  rotationVal = rotationVal * (double) speedChoice.getSelected();
-    // }
     /* Drive */
     s_Swerve.drive(
       new Translation2d(translationVal, strafeVal)

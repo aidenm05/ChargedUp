@@ -12,6 +12,10 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
 
+  //LED constants
+
+  public static final int CANdleID = 1;
+
   public static final boolean mantis = false;
   public static final double LIMELIGHT_DEADBAND = 0.5;
   public static final double MIN_STEER_K = .4;

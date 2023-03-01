@@ -59,14 +59,6 @@ public class Limelight extends SubsystemBase {
       .setNumber(0.0);
   }
 
-  // public void setToRetroreflectiveTape() {
-  //   NetworkTableInstance
-  //     .getDefault()
-  //     .getTable("limelight")
-  //     .getEntry("ledMode")
-  //     .setNumber(0.0);
-  // }
-
   public void setToRetroreflectiveTape() {
     NetworkTableInstance
       .getDefault()
