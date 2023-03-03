@@ -36,6 +36,7 @@ public class ConeThenCube extends SequentialCommandGroup {
       m_Claw.open1Hold(),
       m_Elevator.setStow(),
       s_Swerve.followTrajectoryCommand(traj3, false),
+      new WaitCommand(2),
       m_Elevator.sequentialSetPositions(
         Constants.elevatorTopCube,
         Constants.armTopCube

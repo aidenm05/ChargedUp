@@ -14,7 +14,8 @@ public final class Constants {
 
   //LED constants
 
-  public static final int CANdleID = 1;
+  public static final int CANdleID1 = 1;
+  public static final int CANdleID2 = 2;
 
   public static final boolean mantis = false;
   public static final double LIMELIGHT_DEADBAND = 0.5;
@@ -37,7 +38,7 @@ public final class Constants {
   public static final int elevatorFloor = 29800;
 
   // arm constants
-  public static final int armUpperLimit = 1300;
+  public static final int armUpperLimit = 1350; // DO NOT TOUCH
   // this is used to set a threshold of where the elevator postion needs to be considered
   public static final int armLowerThreshold = 800;
   // set height for arm pos 1
@@ -46,10 +47,10 @@ public final class Constants {
   public static final int armMidCone = 1126;
   public static final int armTopCube = 1000;
   public static final int armMidCube = 1143;
-  public static final int armStow = 1600;
+  public static final int armStow = 1550;
   public static final int armFloor = 510;
   // arm encoder
-  public static final double armEncoderOffset = 23.115;
+  public static final double armEncoderOffset = 329.967;
 
   // weird motion magic
   /**
@@ -219,7 +220,7 @@ public final class Constants {
     public static final double kMaxAngularSpeedRadiansPerSecondSquared =
       Math.PI;
 
-    public static final double kPXController = 2;
+    public static final double kPXController = 2.2;
     public static final double kPYController = 2;
     public static final double kPThetaController = 10;
 

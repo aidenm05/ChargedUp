@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -127,14 +128,18 @@ public class RobotContainer {
   final JoystickButton b8 = new JoystickButton(buttonBoard, 8);
   final JoystickButton b9 = new JoystickButton(buttonBoard, 9);
   final JoystickButton b10 = new JoystickButton(buttonBoard, 10);
+  final JoystickButton b11 = new JoystickButton(buttonBoard, 11);
+  final JoystickButton b12 = new JoystickButton(buttonBoard, 12);
+
   Trigger bbStickF = new Trigger(() -> buttonBoard.getRawAxis(1) > 0.7);
   Trigger bbStickB = new Trigger(() -> buttonBoard.getRawAxis(1) < -0.7);
 
   /* Subsystems */
   private final Limelight m_Limelight = new Limelight();
   private final Swerve s_Swerve = new Swerve(m_Limelight);
-  private final Elevator m_Elevator = new Elevator();
+  public final Elevator m_Elevator = new Elevator();
   private final Claw m_Claw = new Claw();
+  private final LED m_LED = new LED();
 
   private SendableChooser<Command> m_autoChooser = new SendableChooser<>();
 
@@ -143,7 +148,7 @@ public class RobotContainer {
     Swerve.resetModulesToAbsolute();
     Swerve.resetModulesToAbsolute();
 
-    m_autoChooser.addOption("Nothing", new InstantCommand());
+    m_autoChooser.setDefaultOption("Nothing", new InstantCommand());
 
     m_autoChooser.addOption(
       "Leave Community",
@@ -169,17 +174,30 @@ public class RobotContainer {
     );
 
     m_autoChooser.addOption(
-      "Cone Then Cube",
+      "mobility",
       new DropConeFollowPath(
         s_Swerve,
         m_Elevator,
         m_Claw,
         Constants.elevatorTopCone,
         Constants.armTopCone,
-        "ConeThenCube",
+        "GPMobilityCharge",
         true
       )
     );
+
+    // m_autoChooser.addOption(
+    //   "Cone Then Cube",
+    //   new DropConeFollowPath(
+    //     s_Swerve,
+    //     m_Elevator,
+    //     m_Claw,
+    //     Constants.elevatorTopCone,
+    //     Constants.armTopCone,
+    //     "ConeThenCube",
+    //     true
+    //   )
+    // );
 
     m_autoChooser.addOption(
       "Top Cube Charge Balance",
@@ -293,7 +311,9 @@ public class RobotContainer {
 
       // yButton1.onTrue(s_Swerve.moveToGoalAprilTags());
 
-      xButton1.whileTrue(s_Swerve.autoBalanceContinuous());
+      // xButton1.whileTrue(new RunCommand(s_Swerve::autoBalance, s_Swerve));
+
+      xButton1.onTrue(s_Swerve.xWheelsCommand());
 
       //Elevator Arm Presets
       b1.onTrue(
@@ -320,12 +340,7 @@ public class RobotContainer {
           Constants.armMidCube
         )
       );
-      b5.onTrue(
-        m_Elevator.sequentialSetPositions(
-          Constants.elevatorStow,
-          Constants.armStow
-        ) //change this to setStow() with no arguements when ready to test.
-      );
+      b5.onTrue(m_Elevator.setStow());
       b6.onTrue(
         m_Elevator.sequentialSetPositions(
           Constants.elevatorFloor,
@@ -338,8 +353,12 @@ public class RobotContainer {
       b9.whileTrue(m_Elevator.runUp());
       b10.whileTrue(m_Elevator.runDown());
 
+      b11.onTrue(new InstantCommand(() -> m_LED.LEDColor(255, 140, 0)));
+      b12.onTrue(new InstantCommand(() -> m_LED.LEDColor(255, 0, 255)));
+
       start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
       back1.onTrue(new InstantCommand(() -> Swerve.resetModulesToAbsolute()));
+      bButton1.onTrue(s_Swerve.driveL());
 
       dUp1.whileTrue(
         s_Swerve.driveContinuous(new Translation2d(.2, 0), 0, true, false)

@@ -22,6 +22,7 @@ public class Elevator extends SubsystemBase {
   public WPI_TalonFX mainMotor;
   public WPI_TalonFX followerMotor;
   public WPI_TalonFX armMotor;
+  public WPI_TalonFX armFollower;
   public WPI_CANCoder armEncoder;
   public double calculatedPOutput = 0;
   public double motorPosition;
@@ -43,8 +44,10 @@ public class Elevator extends SubsystemBase {
       followerMotor = new WPI_TalonFX(2); // add "torch as second parameter when on canivore"
       armMotor = new WPI_TalonFX(3);
       armEncoder = new WPI_CANCoder(1);
+      armFollower = new WPI_TalonFX(5);
 
       armMotor.setNeutralMode(NeutralMode.Brake);
+      armFollower.setNeutralMode(NeutralMode.Brake);
       armMotor.configNeutralDeadband(.001);
       armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
       armMotor.setInverted(false);
@@ -55,6 +58,14 @@ public class Elevator extends SubsystemBase {
       armMotor.configReverseSoftLimitThreshold(0);
       armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
       armMotor.configRemoteFeedbackFilter(armEncoder, 0);
+      armFollower.follow(armMotor);
+      armFollower.setInverted(TalonFXInvertType.OpposeMaster); //maybe cw vs ccw
+      armFollower.configSupplyCurrentLimit(elevatorSupplyLimit);
+
+      armMotor.configForwardSoftLimitEnable(true);
+      armMotor.configForwardSoftLimitThreshold(Constants.armUpperLimit);
+      armMotor.configReverseSoftLimitEnable(true);
+      armMotor.configReverseSoftLimitThreshold(0);
 
       armEncoder.configSensorInitializationStrategy(
         SensorInitializationStrategy.BootToAbsolutePosition
@@ -187,10 +198,10 @@ public class Elevator extends SubsystemBase {
   }
 
   public void armAndElevatorStopPercentMode() {
-    if (!DriverStation.isAutonomous()) {
-      armMotor.set(TalonFXControlMode.PercentOutput, 0);
-      mainMotor.set(TalonFXControlMode.PercentOutput, 0);
-    }
+    // if (!DriverStation.isAutonomous()) {
+    armMotor.set(TalonFXControlMode.PercentOutput, 0);
+    mainMotor.set(TalonFXControlMode.PercentOutput, 0.02);
+    // }
   }
 
   public CommandBase sequentialSetPositions(
@@ -239,15 +250,17 @@ public class Elevator extends SubsystemBase {
   // Test this
   public CommandBase setStow() {
     return runOnce(() ->
-        armMotor.set(TalonFXControlMode.MotionMagic, Constants.armMidCube)
+        armMotor.set(TalonFXControlMode.MotionMagic, Constants.armUpperLimit)
       )
       .andThen(
         Commands
           .waitUntil(() ->
             armMotor.getActiveTrajectoryPosition() >
-            Constants.armMidCube -
+            Constants.armUpperLimit -
             100 &&
-            armMotor.getActiveTrajectoryPosition() < Constants.armMidCube + 100
+            armMotor.getActiveTrajectoryPosition() <
+            Constants.armUpperLimit +
+            100
           )
           .withTimeout(1)
       ) // set to current upperlimit
@@ -271,7 +284,7 @@ public class Elevator extends SubsystemBase {
             Constants.elevatorStow -
             5000
           )
-          .withTimeout(1.5)
+          .withTimeout(2.25)
       )
       .andThen(
         runOnce(() ->
@@ -290,7 +303,8 @@ public class Elevator extends SubsystemBase {
         runOnce(() ->
           armMotor.configForwardSoftLimitThreshold(Constants.armUpperLimit)
         )
-      ) //set soft limit back to what it was
+      )
+      // ) //set soft limit back to what it was
       .andThen(runOnce(() -> this.armAndElevatorStopPercentMode()));
   }
 

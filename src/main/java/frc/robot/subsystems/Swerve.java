@@ -42,7 +42,7 @@ public class Swerve extends SubsystemBase {
   public Pigeon2 gyro;
   private GenericEntry gyroAngle;
   Limelight m_Limelight;
-  private PIDController m_balancePID = new PIDController(2, 0, 0); //actually get
+  private PIDController m_balancePID = new PIDController(0.045, 0, 0); //actually get
 
   public Swerve(Limelight limelight) {
     m_Limelight = limelight;
@@ -127,11 +127,11 @@ public class Swerve extends SubsystemBase {
   }
 
   public void autoBalance() {
-    m_balancePID.setTolerance(.1);
+    m_balancePID.setTolerance(.0001);
     double pidOutput;
-    pidOutput = MathUtil.clamp(m_balancePID.calculate(getRoll(), 0), -0.4, 0.4);
-    drive(new Translation2d(-pidOutput, 0), 0.0, true, false);
-    SmartDashboard.putNumber("gyro PID output", pidOutput);
+    pidOutput = MathUtil.clamp(m_balancePID.calculate(getRoll(), 0), -1, 1);
+    drive(new Translation2d(pidOutput, 0), 0.0, false, true);
+    SmartDashboard.putNumber("PID output", pidOutput);
   }
 
   public CommandBase autoBalanceContinuous() {
@@ -213,6 +213,26 @@ public class Swerve extends SubsystemBase {
       );
   }
 
+  public CommandBase driveL() {
+    PathPlannerTrajectory traj = PathPlanner.loadPath("Driveleft", 2, 2);
+    return followTrajectoryCommand(traj, true);
+  }
+
+  public CommandBase driveR() {
+    PathPlannerTrajectory traj = PathPlanner.loadPath("Driveright", 2, 2);
+    return followTrajectoryCommand(traj, true);
+  }
+
+  public CommandBase driveF() {
+    PathPlannerTrajectory traj = PathPlanner.loadPath("Driveforward", 2, 2);
+    return followTrajectoryCommand(traj, true);
+  }
+
+  public CommandBase driveB() {
+    PathPlannerTrajectory traj = PathPlanner.loadPath("Drivebackward", 2, 2);
+    return followTrajectoryCommand(traj, true);
+  }
+
   /* Used by SwerveControllerCommand in Auto */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
@@ -268,6 +288,8 @@ public class Swerve extends SubsystemBase {
   @Override
   public void periodic() {
     swerveOdometry.update(getYaw(), getModulePositions());
+
+    m_balancePID.setTolerance(.0001);
 
     SmartDashboard.putNumber("gyro roll", gyro.getRoll());
     SmartDashboard.putNumber("gyro yaw", gyro.getYaw());
@@ -330,20 +352,6 @@ public class Swerve extends SubsystemBase {
         this // Requires this drive subsystem
       )
     );
-  }
-
-  public CommandBase driveCommand() {
-    PathPlannerTrajectory trajectory = PathPlanner.loadPath(
-      "Drive4Sesny",
-      3,
-      3
-    );
-
-    return runOnce(() -> {
-        resetOdometry(trajectory.getInitialPose());
-      })
-      .andThen(followTrajectoryCommand(trajectory, true))
-      .andThen(() -> drive(new Translation2d(0, 0), 0, true, false));
   }
   //want to comment this bc it uses the same variables so just in case
 

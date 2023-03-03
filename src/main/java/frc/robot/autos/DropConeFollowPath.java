@@ -2,6 +2,7 @@ package frc.robot.autos;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Claw;
@@ -33,7 +34,7 @@ public class DropConeFollowPath extends SequentialCommandGroup {
     );
     if (runBalancer) {
       addCommands(
-        s_Swerve.autoBalanceContinuous().withTimeout(6),
+        new RunCommand(s_Swerve::autoBalance, s_Swerve),
         s_Swerve.xWheelsCommand()
       );
     }

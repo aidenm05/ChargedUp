@@ -118,8 +118,7 @@ public class SwerveModule {
       )
       ? lastAngle
       : desiredState.angle; //Prevent rotating module if speed is less then 1%. Prevents Jittering.
-    Rotation2d oldAngle = getAngle();
-    angle = optimizeTurn(oldAngle, angle);
+
     mAngleMotor.set(
       ControlMode.Position,
       Conversions.degreesToFalcon(

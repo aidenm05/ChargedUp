@@ -5,11 +5,13 @@
 package frc.robot;
 
 import com.pathplanner.lib.server.PathPlannerServer;
-
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
+import frc.robot.subsystems.Elevator;
+// import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 
@@ -37,7 +39,9 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     ctreConfigs = new CTREConfigs();
     Constants.confirmMantisConstants();
+    // LED.CANdleSystem();
     PathPlannerServer.startServer(5811); // 5811 = port number. adjust this according to your needs
+    CameraServer.startAutomaticCapture();
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
@@ -63,6 +67,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    m_robotContainer.m_Elevator.armAndElevatorStopPercentMode();
     Swerve.resetModulesToAbsolute();
   }
 
