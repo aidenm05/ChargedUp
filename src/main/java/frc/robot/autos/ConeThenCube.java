@@ -12,9 +12,8 @@ import frc.robot.subsystems.Swerve;
 public class ConeThenCube extends SequentialCommandGroup {
 
   public ConeThenCube(Swerve s_Swerve, Elevator m_Elevator, Claw m_Claw) {
-    PathPlannerTrajectory traj1 = PathPlanner.loadPath("Cone2GP", 2, 2);
-    PathPlannerTrajectory traj2 = PathPlanner.loadPath("GPGet", .5, 2);
-    PathPlannerTrajectory traj3 = PathPlanner.loadPath("GP2Cube", 2, 2);
+    PathPlannerTrajectory traj1 = PathPlanner.loadPath("Cone2GP", 4, 4);
+    PathPlannerTrajectory traj3 = PathPlanner.loadPath("GP2Cube", 4, 4);
     addCommands(
       m_Claw.closeAllHold(),
       m_Elevator.sequentialSetPositions(
@@ -22,7 +21,7 @@ public class ConeThenCube extends SequentialCommandGroup {
         Constants.armTopCone
       ),
       m_Claw.openAllOut(),
-      new WaitCommand(.5),
+      new WaitCommand(.25),
       m_Claw.motorOff(),
       m_Elevator.setStow(),
       // new WaitCommand(.5), // If running too quickly, add back in
@@ -32,11 +31,10 @@ public class ConeThenCube extends SequentialCommandGroup {
         Constants.armFloor
       ),
       m_Claw.openAllIn(),
-      s_Swerve.followTrajectoryCommand(traj2, false),
       m_Claw.open1Hold(),
       m_Elevator.setStow(),
       s_Swerve.followTrajectoryCommand(traj3, false),
-      new WaitCommand(2),
+      new WaitCommand(1),
       m_Elevator.sequentialSetPositions(
         Constants.elevatorTopCube,
         Constants.armTopCube
