@@ -73,6 +73,11 @@ public class RobotContainer {
     XboxController.Button.kLeftStick.value
   );
 
+  private final JoystickButton rightStickButton1 = new JoystickButton(
+    driver1,
+    XboxController.Button.kRightStick.value
+  );
+
   private final POVButton dUp1 = new POVButton(driver1, 0);
 
   private final POVButton dRight1 = new POVButton(driver1, 90);
@@ -314,6 +319,15 @@ public class RobotContainer {
       // xButton1.whileTrue(new RunCommand(s_Swerve::autoBalance, s_Swerve));
 
       xButton1.onTrue(s_Swerve.xWheelsCommand());
+
+      leftStickButton1.onTrue(
+        m_Elevator.sequentialSetPositions(
+          Constants.elevatorFloor,
+          Constants.armFloor
+        )
+      );
+
+      rightStickButton1.onTrue(m_Elevator.setStow());
 
       //Elevator Arm Presets
       b1.onTrue(

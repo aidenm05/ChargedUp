@@ -297,7 +297,7 @@ public class Elevator extends SubsystemBase {
             armMotor.getActiveTrajectoryPosition() > Constants.armStow - 20 &&
             armMotor.getActiveTrajectoryPosition() < Constants.armStow + 20
           )
-          .withTimeout(2)
+          .withTimeout(3)
       ) //wait until finished
       .andThen(
         runOnce(() ->

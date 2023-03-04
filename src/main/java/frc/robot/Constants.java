@@ -32,10 +32,10 @@ public final class Constants {
   public static final int elevatorTopCone = 389113;
   // set height for elevator pos 2
   public static final int elevatorMidCone = 256283;
-  public static final int elevatorTopCube = 261679;
-  public static final int elevatorMidCube = 107347;
+  public static final int elevatorTopCube = 292621;
+  public static final int elevatorMidCube = 138740;
   public static final int elevatorStow = 0;
-  public static final int elevatorFloor = 59243;
+  public static final int elevatorFloor = 67341;
 
   // arm constants
   public static final int armUpperLimit = 1450; // DO NOT TOUCH
@@ -45,10 +45,10 @@ public final class Constants {
   public static final int armTopCone = 1145;
   // set height for arm pos 2
   public static final int armMidCone = 1332;
-  public static final int armTopCube = 995;
+  public static final int armTopCube = 1013;
   public static final int armMidCube = 1334;
   public static final int armStow = 1609;
-  public static final int armFloor = 575;
+  public static final int armFloor = 461;
   // arm encoder
   public static final double armEncoderOffset = 312.02;
 
