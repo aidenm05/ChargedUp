@@ -116,16 +116,16 @@ public class Elevator extends SubsystemBase {
 
       /* Set Motion Magic gains in slot0 - see documentation */
       mainMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
-      mainMotor.config_kF(Constants.kSlotIdx, 0.0479, Constants.kTimeoutMs);
-      mainMotor.config_kP(Constants.kSlotIdx, 0.07, Constants.kTimeoutMs);
-      mainMotor.config_kI(Constants.kSlotIdx, 0.001, Constants.kTimeoutMs);
-      mainMotor.config_kD(Constants.kSlotIdx, 0.6, Constants.kTimeoutMs);
-      mainMotor.config_IntegralZone(0, 50);
+      mainMotor.config_kF(Constants.kSlotIdx, 0.048, Constants.kTimeoutMs);
+      mainMotor.config_kP(Constants.kSlotIdx, 0.2, Constants.kTimeoutMs);
+      mainMotor.config_kI(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
+      mainMotor.config_kD(Constants.kSlotIdx, 2, Constants.kTimeoutMs);
+      mainMotor.config_IntegralZone(0, 200);
       mainMotor.configAllowableClosedloopError(0, 100);
 
       /* Set acceleration and vcruise velocity - see documentation */
-      mainMotor.configMotionCruiseVelocity(16000, Constants.kTimeoutMs);
-      mainMotor.configMotionAcceleration(16000, Constants.kTimeoutMs);
+      mainMotor.configMotionCruiseVelocity(21000, Constants.kTimeoutMs);
+      mainMotor.configMotionAcceleration(25000, Constants.kTimeoutMs);
 
       armMotor.setStatusFramePeriod(
         StatusFrameEnhanced.Status_13_Base_PIDF0,
@@ -146,10 +146,10 @@ public class Elevator extends SubsystemBase {
 
       /* Set Motion Magic gains in slot0 - see documentation */
       armMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
-      armMotor.config_kF(Constants.kSlotIdx, 3.602, Constants.kTimeoutMs);
-      armMotor.config_kP(Constants.kSlotIdx, 5, Constants.kTimeoutMs);
-      armMotor.config_kI(Constants.kSlotIdx, 0.001, Constants.kTimeoutMs);
-      armMotor.config_kD(Constants.kSlotIdx, 50, Constants.kTimeoutMs);
+      armMotor.config_kF(Constants.kSlotIdx, 3.5, Constants.kTimeoutMs);
+      armMotor.config_kP(Constants.kSlotIdx, 4.1, Constants.kTimeoutMs);
+      armMotor.config_kI(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
+      armMotor.config_kD(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
       armMotor.configAllowableClosedloopError(0, 20);
 
       /* Set acceleration and vcruise velocity - see documentation */
@@ -174,25 +174,25 @@ public class Elevator extends SubsystemBase {
   }
 
   public CommandBase runDown() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -0.2))
-      .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.3))
+      .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0))
       .withName("runDown");
   }
 
   public CommandBase runUp() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, 0.2))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, 0.3))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("runUp");
   }
 
   public CommandBase armDown() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -.25))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -0.1))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armDown");
   }
 
   public CommandBase armUp() {
-    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, .25))
+    return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, 0.1))
       .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
       .withName("armUp");
   }
@@ -200,7 +200,7 @@ public class Elevator extends SubsystemBase {
   public void armAndElevatorStopPercentMode() {
     // if (!DriverStation.isAutonomous()) {
     armMotor.set(TalonFXControlMode.PercentOutput, 0);
-    mainMotor.set(TalonFXControlMode.PercentOutput, 0.02);
+    mainMotor.set(TalonFXControlMode.PercentOutput, 0.0);
     // }
   }
 
@@ -231,7 +231,7 @@ public class Elevator extends SubsystemBase {
             mainMotor.getActiveTrajectoryPosition() < elevatorPosition + 5000 &&
             mainMotor.getActiveTrajectoryPosition() > elevatorPosition - 5000
           )
-          .withTimeout(1.5)
+          .withTimeout(2.5)
       )
       .andThen(
         runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition))

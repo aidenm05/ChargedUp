@@ -127,10 +127,10 @@ public class Swerve extends SubsystemBase {
   }
 
   public void autoBalance() {
-    m_balancePID.setTolerance(.0001);
+    m_balancePID.setTolerance(2);
     double pidOutput;
     pidOutput = MathUtil.clamp(m_balancePID.calculate(getRoll(), 0), -1, 1);
-    drive(new Translation2d(pidOutput, 0), 0.0, false, true);
+    drive(new Translation2d(-1 * pidOutput, 0), 0.0, false, true);
     SmartDashboard.putNumber("PID output", pidOutput);
   }
 
@@ -289,7 +289,7 @@ public class Swerve extends SubsystemBase {
   public void periodic() {
     swerveOdometry.update(getYaw(), getModulePositions());
 
-    m_balancePID.setTolerance(.0001);
+    m_balancePID.setTolerance(2);
 
     SmartDashboard.putNumber("gyro roll", gyro.getRoll());
     SmartDashboard.putNumber("gyro yaw", gyro.getYaw());
