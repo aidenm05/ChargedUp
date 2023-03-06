@@ -67,6 +67,12 @@ public class Claw extends SubsystemBase {
       .andThen(runOnce(() -> clawMotor.set(ControlMode.PercentOutput, -.2)));
   }
 
+  public CommandBase openAllDrop() {
+    return runOnce(() -> clawPiston2.set(Value.kReverse))
+      .andThen(runOnce(() -> clawPiston1.set(Value.kReverse)));
+  }
+
+
   public CommandBase closeAllHold() {
     return runOnce(() -> clawPiston1.set(Value.kForward))
       .andThen(runOnce(() -> clawPiston2.set(Value.kForward)))

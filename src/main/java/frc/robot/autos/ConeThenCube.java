@@ -20,7 +20,7 @@ public class ConeThenCube extends SequentialCommandGroup {
         Constants.elevatorTopCone,
         Constants.armTopCone
       ),
-      m_Claw.openAllOut(),
+      m_Claw.openAllDrop(),
       new WaitCommand(.25),
       m_Claw.motorOff(),
       m_Elevator.setStow(),

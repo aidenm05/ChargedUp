@@ -116,16 +116,16 @@ public class Elevator extends SubsystemBase {
 
       /* Set Motion Magic gains in slot0 - see documentation */
       mainMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
-      mainMotor.config_kF(Constants.kSlotIdx, 0.048, Constants.kTimeoutMs);
-      mainMotor.config_kP(Constants.kSlotIdx, 0.2, Constants.kTimeoutMs);
+      mainMotor.config_kF(Constants.kSlotIdx, 0.060176, Constants.kTimeoutMs);
+      mainMotor.config_kP(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
       mainMotor.config_kI(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
-      mainMotor.config_kD(Constants.kSlotIdx, 2, Constants.kTimeoutMs);
+      mainMotor.config_kD(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
       mainMotor.config_IntegralZone(0, 200);
       mainMotor.configAllowableClosedloopError(0, 100);
 
       /* Set acceleration and vcruise velocity - see documentation */
-      mainMotor.configMotionCruiseVelocity(21000, Constants.kTimeoutMs);
-      mainMotor.configMotionAcceleration(25000, Constants.kTimeoutMs);
+      mainMotor.configMotionCruiseVelocity(10000, Constants.kTimeoutMs);
+      mainMotor.configMotionAcceleration(10000, Constants.kTimeoutMs);
 
       armMotor.setStatusFramePeriod(
         StatusFrameEnhanced.Status_13_Base_PIDF0,
@@ -164,7 +164,7 @@ public class Elevator extends SubsystemBase {
 
       //DISABLE MOTION MAGIC
       armMotor.set(ControlMode.PercentOutput, 0.0);
-      mainMotor.set(ControlMode.PercentOutput, 0.0);
+      mainMotor.set(ControlMode.PercentOutput, 0.03);
     }
   }
 
@@ -174,14 +174,14 @@ public class Elevator extends SubsystemBase {
   }
 
   public CommandBase runDown() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.3))
-      .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.1))
+      .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.03))
       .withName("runDown");
   }
 
   public CommandBase runUp() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, 0.3))
-      .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.0))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, 0.1))
+      .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.03))
       .withName("runUp");
   }
 
@@ -200,7 +200,7 @@ public class Elevator extends SubsystemBase {
   public void armAndElevatorStopPercentMode() {
     // if (!DriverStation.isAutonomous()) {
     armMotor.set(TalonFXControlMode.PercentOutput, 0);
-    mainMotor.set(TalonFXControlMode.PercentOutput, 0.0);
+    mainMotor.set(TalonFXControlMode.PercentOutput, 0.03);
     // }
   }
 

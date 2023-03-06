@@ -25,7 +25,7 @@ public class DropConeFollowPath extends SequentialCommandGroup {
       m_Claw.closeAllHold(),
       m_Elevator.sequentialSetPositions(EP, AP),
       // new WaitCommand(2),
-      m_Claw.openAllOut(),
+      m_Claw.openAllDrop(),
       new WaitCommand(.5),
       m_Claw.motorOff(),
       m_Elevator.setStow(),

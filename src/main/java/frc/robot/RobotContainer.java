@@ -311,6 +311,7 @@ public class RobotContainer {
       // bButton1.onTrue(m_Elevator.setPositions(80000, 1000));
       aButton1.whileTrue(m_Claw.openAllOut());
       aButton1.onFalse(m_Claw.motorOff());
+      bButton1.whileTrue(m_Claw.openAllDrop());
 
       // xButton1.onTrue(s_Swerve.moveToGoalRetroreflective());
 
@@ -372,7 +373,6 @@ public class RobotContainer {
 
       start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
       back1.onTrue(new InstantCommand(() -> Swerve.resetModulesToAbsolute()));
-      bButton1.onTrue(s_Swerve.driveL());
 
       dUp1.whileTrue(
         s_Swerve.driveContinuous(new Translation2d(.2, 0), 0, true, false)
