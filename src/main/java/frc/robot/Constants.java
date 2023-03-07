@@ -58,7 +58,8 @@ public final class Constants {
    * 0,1,2 or 3. Only the first two (0,1) are visible in web-based
    * configuration.
    */
-  public static final int kSlotIdx = 0;
+  public static final int kSlotIdx0 = 0;
+  public static final int kSlotIdx1 = 1;
   public final int test = 0;
   public static final int kPIDLoopIdx = 0;
   public static int kTimeoutMs = 30;

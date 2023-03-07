@@ -102,6 +102,7 @@ public class Elevator extends SubsystemBase {
         10,
         Constants.kTimeoutMs
       );
+
       mainMotor.setStatusFramePeriod(
         StatusFrameEnhanced.Status_10_MotionMagic,
         10,
@@ -115,13 +116,22 @@ public class Elevator extends SubsystemBase {
       mainMotor.configPeakOutputReverse(-1, Constants.kTimeoutMs);
 
       /* Set Motion Magic gains in slot0 - see documentation */
-      mainMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
-      mainMotor.config_kF(Constants.kSlotIdx, 0.060176, Constants.kTimeoutMs);
-      mainMotor.config_kP(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
-      mainMotor.config_kI(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
-      mainMotor.config_kD(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
-      mainMotor.config_IntegralZone(0, 200);
-      mainMotor.configAllowableClosedloopError(0, 100);
+  
+      mainMotor.config_kF(Constants.kSlotIdx0, 0.060176, Constants.kTimeoutMs);
+      mainMotor.config_kP(Constants.kSlotIdx0, 0, Constants.kTimeoutMs);
+      mainMotor.config_kI(Constants.kSlotIdx0, 0, Constants.kTimeoutMs);
+      mainMotor.config_kD(Constants.kSlotIdx0, 0, Constants.kTimeoutMs);
+      mainMotor.config_IntegralZone(Constants.kSlotIdx0, 200);
+      mainMotor.configAllowableClosedloopError(Constants.kSlotIdx0, 200);
+
+           /* Set Motion Magic gains in slot1 - see documentation */
+      mainMotor.selectProfileSlot(Constants.kSlotIdx1, Constants.kPIDLoopIdx);
+      mainMotor.config_kF(Constants.kSlotIdx1, 0.060176, Constants.kTimeoutMs);
+      mainMotor.config_kP(Constants.kSlotIdx1, 0, Constants.kTimeoutMs);
+      mainMotor.config_kI(Constants.kSlotIdx1, 0, Constants.kTimeoutMs);
+      mainMotor.config_kD(Constants.kSlotIdx1, 0, Constants.kTimeoutMs);
+      mainMotor.config_IntegralZone(Constants.kSlotIdx1, 200);
+      mainMotor.configAllowableClosedloopError(Constants.kSlotIdx1, 100);
 
       /* Set acceleration and vcruise velocity - see documentation */
       mainMotor.configMotionCruiseVelocity(10000, Constants.kTimeoutMs);
@@ -145,12 +155,12 @@ public class Elevator extends SubsystemBase {
       armMotor.configPeakOutputReverse(-1, Constants.kTimeoutMs);
 
       /* Set Motion Magic gains in slot0 - see documentation */
-      armMotor.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
-      armMotor.config_kF(Constants.kSlotIdx, 3.5, Constants.kTimeoutMs);
-      armMotor.config_kP(Constants.kSlotIdx, 4.1, Constants.kTimeoutMs);
-      armMotor.config_kI(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
-      armMotor.config_kD(Constants.kSlotIdx, 0, Constants.kTimeoutMs);
-      armMotor.configAllowableClosedloopError(0, 20);
+      armMotor.selectProfileSlot(Constants.kSlotIdx0, Constants.kPIDLoopIdx);
+      armMotor.config_kF(Constants.kSlotIdx0, 3.5, Constants.kTimeoutMs);
+      armMotor.config_kP(Constants.kSlotIdx0, 4.1, Constants.kTimeoutMs);
+      armMotor.config_kI(Constants.kSlotIdx0, 0, Constants.kTimeoutMs);
+      armMotor.config_kD(Constants.kSlotIdx0, 0, Constants.kTimeoutMs);
+      armMotor.configAllowableClosedloopError(Constants.kSlotIdx0, 20);
 
       /* Set acceleration and vcruise velocity - see documentation */
       armMotor.configMotionCruiseVelocity(213, Constants.kTimeoutMs);
@@ -208,6 +218,7 @@ public class Elevator extends SubsystemBase {
     final int elevatorPosition,
     int armPosition
   ) {
+    mainMotor.selectProfileSlot(Constants.kSlotIdx0, Constants.kPIDLoopIdx);
     return runOnce(() ->
         armMotor.set(TalonFXControlMode.MotionMagic, Constants.armUpperLimit)
       )
@@ -231,7 +242,7 @@ public class Elevator extends SubsystemBase {
             mainMotor.getActiveTrajectoryPosition() < elevatorPosition + 5000 &&
             mainMotor.getActiveTrajectoryPosition() > elevatorPosition - 5000
           )
-          .withTimeout(2.5)
+          .withTimeout(1.5)
       )
       .andThen(
         runOnce(() -> armMotor.set(TalonFXControlMode.MotionMagic, armPosition))
@@ -249,6 +260,7 @@ public class Elevator extends SubsystemBase {
 
   // Test this
   public CommandBase setStow() {
+    mainMotor.selectProfileSlot(Constants.kSlotIdx1, Constants.kPIDLoopIdx);
     return runOnce(() ->
         armMotor.set(TalonFXControlMode.MotionMagic, Constants.armUpperLimit)
       )
