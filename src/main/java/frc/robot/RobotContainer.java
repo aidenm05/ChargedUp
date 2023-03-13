@@ -166,6 +166,11 @@ public class RobotContainer {
     );
 
     m_autoChooser.addOption(
+      "Cone Then Cone",
+      new ConeThenCone(s_Swerve, m_Elevator, m_Claw)
+    );
+
+    m_autoChooser.addOption(
       "Top Cone Charge Balance",
       new DropConeFollowPath(
         s_Swerve,
@@ -179,7 +184,7 @@ public class RobotContainer {
     );
 
     m_autoChooser.addOption(
-      "mobility",
+      "Top Cone Mobility Balance",
       new DropConeFollowPath(
         s_Swerve,
         m_Elevator,
@@ -188,6 +193,19 @@ public class RobotContainer {
         Constants.armTopCone,
         "GPMobilityCharge",
         true
+      )
+    );
+
+    m_autoChooser.addOption(
+      "Top Cone Then Grab Piece",
+      new DropConeFollowPath(
+        s_Swerve,
+        m_Elevator,
+        m_Claw,
+        Constants.elevatorTopCone,
+        Constants.armTopCone,
+        "Cone2GP",
+        false
       )
     );
 
@@ -309,9 +327,9 @@ public class RobotContainer {
 
       // aButton1.onTrue(m_Elevator.setPositions(205800, 976));
       // bButton1.onTrue(m_Elevator.setPositions(80000, 1000));
-      aButton1.whileTrue(m_Claw.openAllOut());
+      aButton1.onTrue(m_Claw.openAllOut());
       aButton1.onFalse(m_Claw.motorOff());
-      bButton1.whileTrue(m_Claw.openAllDrop());
+      bButton1.onTrue(m_Claw.openAllDrop());
 
       // xButton1.onTrue(s_Swerve.moveToGoalRetroreflective());
 

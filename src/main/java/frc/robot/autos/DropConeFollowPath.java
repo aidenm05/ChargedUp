@@ -27,7 +27,7 @@ public class DropConeFollowPath extends SequentialCommandGroup {
       // new WaitCommand(2),
       m_Claw.openAllDrop(),
       new WaitCommand(.5),
-      m_Claw.motorOff(),
+      // m_Claw.motorOff(), // dont think we need for this
       m_Elevator.setStow(),
       // new WaitCommand(.5), // If running too quickly, add back in
       s_Swerve.followTrajectoryCommand(traj, true)
