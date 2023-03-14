@@ -14,7 +14,6 @@ public class ConeThenGrab extends SequentialCommandGroup {
 
   public ConeThenGrab(Swerve s_Swerve, Elevator m_Elevator, Claw m_Claw) {
     PathPlannerTrajectory traj1 = PathPlanner.loadPath("Cone2GP", 4, 4);
-    PathPlannerTrajectory traj3 = PathPlanner.loadPath("GP2Cube", 4, 4);
     addCommands(
       m_Claw.closeAllHold(),
       m_Elevator.sequentialSetPositions(

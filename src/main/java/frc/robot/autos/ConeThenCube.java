@@ -24,7 +24,6 @@ public class ConeThenCube extends SequentialCommandGroup {
       m_Claw.openAllDrop(),
       new WaitCommand(.25),
       m_Claw.motorOff(),
-
       new ParallelCommandGroup(
         new SequentialCommandGroup(
           m_Elevator.setStow(),
@@ -40,11 +39,15 @@ public class ConeThenCube extends SequentialCommandGroup {
           s_Swerve.followTrajectoryCommand(traj1, true)
         )
       ),
-
       m_Claw.open1Hold(),
-
-      new ParallelCommandGroup(m_Elevator.setStow(), new SequentialCommandGroup( new WaitCommand(.5), s_Swerve.followTrajectoryCommand(traj3, false),)
-      new WaitCommand(1),
+      new ParallelCommandGroup(
+        m_Elevator.setStow(),
+        new SequentialCommandGroup(
+          new WaitCommand(.5),
+          s_Swerve.followTrajectoryCommand(traj3, false)
+        )
+      ),
+      new WaitCommand(.5),
       m_Elevator.sequentialSetPositions(
         Constants.elevatorTopCube,
         Constants.armTopCube

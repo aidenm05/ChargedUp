@@ -116,7 +116,7 @@ public class Elevator extends SubsystemBase {
       mainMotor.configPeakOutputReverse(-1, Constants.kTimeoutMs);
 
       /* Set Motion Magic gains in slot0 - see documentation */
-  
+
       mainMotor.config_kF(Constants.kSlotIdx0, 0.060176, Constants.kTimeoutMs);
       mainMotor.config_kP(Constants.kSlotIdx0, 0, Constants.kTimeoutMs);
       mainMotor.config_kI(Constants.kSlotIdx0, 0, Constants.kTimeoutMs);
@@ -124,7 +124,7 @@ public class Elevator extends SubsystemBase {
       mainMotor.config_IntegralZone(Constants.kSlotIdx0, 200);
       mainMotor.configAllowableClosedloopError(Constants.kSlotIdx0, 200);
 
-           /* Set Motion Magic gains in slot1 - see documentation */
+      /* Set Motion Magic gains in slot1 - see documentation */
       mainMotor.selectProfileSlot(Constants.kSlotIdx1, Constants.kPIDLoopIdx);
       mainMotor.config_kF(Constants.kSlotIdx1, 0.060176, Constants.kTimeoutMs);
       mainMotor.config_kP(Constants.kSlotIdx1, 0, Constants.kTimeoutMs);
@@ -197,19 +197,19 @@ public class Elevator extends SubsystemBase {
 
   public CommandBase armDown() {
     return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -0.1))
-      .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
+      .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.03))
       .withName("armDown");
   }
 
   public CommandBase armUp() {
     return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, 0.1))
-      .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.0))
+      .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.030))
       .withName("armUp");
   }
 
   public void armAndElevatorStopPercentMode() {
     // if (!DriverStation.isAutonomous()) {
-    armMotor.set(TalonFXControlMode.PercentOutput, 0);
+    armMotor.set(TalonFXControlMode.PercentOutput, 0.03);
     mainMotor.set(TalonFXControlMode.PercentOutput, 0.03);
     // }
   }

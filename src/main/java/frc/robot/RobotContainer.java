@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -350,24 +351,52 @@ public class RobotContainer {
 
       //Elevator Arm Presets
       b1.onTrue(
+        // new SequentialCommandGroup(
+        //   s_Swerve.moveToGoalRetroreflective(),
+        //   m_Elevator.sequentialSetPositions(
+        //     Constants.elevatorTopCone,
+        //     Constants.armTopCone
+        //   )
+        // )
         m_Elevator.sequentialSetPositions(
           Constants.elevatorTopCone,
           Constants.armTopCone
         )
       );
       b2.onTrue(
+        // new SequentialCommandGroup(
+        //   s_Swerve.moveToGoalRetroreflective(),
+        //   m_Elevator.sequentialSetPositions(
+        //     Constants.elevatorMidCone,
+        //     Constants.armMidCone
+        //   )
+        // )
         m_Elevator.sequentialSetPositions(
           Constants.elevatorMidCone,
           Constants.armMidCone
         )
       );
       b3.onTrue(
+        // new SequentialCommandGroup(
+        //   s_Swerve.moveToGoalAprilTags(),
+        //   m_Elevator.sequentialSetPositions(
+        //     Constants.elevatorTopCube,
+        //     Constants.armTopCube
+        //   )
+        // )
         m_Elevator.sequentialSetPositions(
           Constants.elevatorTopCube,
           Constants.armTopCube
         )
       );
       b4.onTrue(
+        // new SequentialCommandGroup(
+        //   s_Swerve.moveToGoalAprilTags(),
+        //   m_Elevator.sequentialSetPositions(
+        //     Constants.elevatorMidCube,
+        //     Constants.armMidCube
+        //   )
+        // )
         m_Elevator.sequentialSetPositions(
           Constants.elevatorMidCube,
           Constants.armMidCube
