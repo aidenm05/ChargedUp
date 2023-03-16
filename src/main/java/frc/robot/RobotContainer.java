@@ -357,7 +357,7 @@ public class RobotContainer {
       //Elevator Arm Presets
       b1.onTrue(
         new SequentialCommandGroup(
-          s_Swerve.moveToGoalRetroreflective(),
+          //s_Swerve.moveToGoalRetroreflective(),
           m_Elevator.sequentialSetPositions(
             Constants.elevatorTopCone,
             Constants.armTopCone
@@ -370,7 +370,7 @@ public class RobotContainer {
       );
       b2.onTrue(
         new SequentialCommandGroup(
-          s_Swerve.moveToGoalRetroreflective(),
+          //s_Swerve.moveToGoalRetroreflective(),
           m_Elevator.sequentialSetPositions(
             Constants.elevatorMidCone,
             Constants.armMidCone

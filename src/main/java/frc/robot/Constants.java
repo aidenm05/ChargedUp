@@ -29,25 +29,25 @@ public final class Constants {
   // this is used to set a threshold where the arm position needs to be considered
   public static final int elevatorLowerThreshold = 60000;
   // set height for elevator pos 1
-  public static final int elevatorTopCone = 123552;
+  public static final int elevatorTopCone = 129200;
   // set height for elevator pos 2
-  public static final int elevatorMidCone = 75000;
+  public static final int elevatorMidCone = 79960;
   public static final int elevatorTopCube = 97542;
   public static final int elevatorMidCube = 41381;
   public static final int elevatorStow = 0;
   public static final int elevatorFloor = 21477;
 
   // arm constants
-  public static final int armUpperLimit = 1450; // DO NOT TOUCH
+  public static final int armUpperLimit = 1400; // DO NOT TOUCH
   // this is used to set a threshold of where the elevator postion needs to be considered
   public static final int armLowerThreshold = 800;
   // set height for arm pos 1
-  public static final int armTopCone = 1145;
+  public static final int armTopCone = 992;
   // set height for arm pos 2
-  public static final int armMidCone = 1332;
+  public static final int armMidCone = 1254;
   public static final int armTopCube = 1013;
   public static final int armMidCube = 1334;
-  public static final int armStow = 1609;
+  public static final int armStow = 1675;
   public static final int armFloor = 461;
   // arm encoder
   public static final double armEncoderOffset = 312.02;

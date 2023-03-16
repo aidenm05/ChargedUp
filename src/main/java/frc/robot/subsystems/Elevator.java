@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -50,7 +51,7 @@ public class Elevator extends SubsystemBase {
       armFollower.setNeutralMode(NeutralMode.Brake);
       armMotor.configNeutralDeadband(.001);
       armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
-      armMotor.setInverted(false);
+      armMotor.setInverted(TalonFXInvertType.CounterClockwise);
 
       armMotor.configForwardSoftLimitEnable(true);
       armMotor.configForwardSoftLimitThreshold(Constants.armUpperLimit);
@@ -59,7 +60,7 @@ public class Elevator extends SubsystemBase {
       armMotor.configSupplyCurrentLimit(elevatorSupplyLimit);
       armMotor.configRemoteFeedbackFilter(armEncoder, 0);
       armFollower.follow(armMotor);
-      armFollower.setInverted(TalonFXInvertType.OpposeMaster); //maybe cw vs ccw
+      armFollower.setInverted(TalonFXInvertType.Clockwise); //maybe cw vs ccw
       armFollower.configSupplyCurrentLimit(elevatorSupplyLimit);
 
       armMotor.configForwardSoftLimitEnable(true);
@@ -118,24 +119,24 @@ public class Elevator extends SubsystemBase {
       /* Set Motion Magic gains in slot0 - see documentation */
 
       mainMotor.config_kF(Constants.kSlotIdx0, 0.060176, Constants.kTimeoutMs);
-      mainMotor.config_kP(Constants.kSlotIdx0, 0, Constants.kTimeoutMs);
+      mainMotor.config_kP(Constants.kSlotIdx0, 0.2, Constants.kTimeoutMs);
       mainMotor.config_kI(Constants.kSlotIdx0, 0, Constants.kTimeoutMs);
       mainMotor.config_kD(Constants.kSlotIdx0, 0, Constants.kTimeoutMs);
       mainMotor.config_IntegralZone(Constants.kSlotIdx0, 200);
-      mainMotor.configAllowableClosedloopError(Constants.kSlotIdx0, 200);
+      mainMotor.configAllowableClosedloopError(Constants.kSlotIdx0, 400);
 
       /* Set Motion Magic gains in slot1 - see documentation */
       mainMotor.selectProfileSlot(Constants.kSlotIdx1, Constants.kPIDLoopIdx);
       mainMotor.config_kF(Constants.kSlotIdx1, 0.060176, Constants.kTimeoutMs);
-      mainMotor.config_kP(Constants.kSlotIdx1, 0, Constants.kTimeoutMs);
+      mainMotor.config_kP(Constants.kSlotIdx1, 0.2, Constants.kTimeoutMs);
       mainMotor.config_kI(Constants.kSlotIdx1, 0, Constants.kTimeoutMs);
       mainMotor.config_kD(Constants.kSlotIdx1, 0, Constants.kTimeoutMs);
       mainMotor.config_IntegralZone(Constants.kSlotIdx1, 200);
       mainMotor.configAllowableClosedloopError(Constants.kSlotIdx1, 100);
 
       /* Set acceleration and vcruise velocity - see documentation */
-      mainMotor.configMotionCruiseVelocity(10000, Constants.kTimeoutMs);
-      mainMotor.configMotionAcceleration(10000, Constants.kTimeoutMs);
+      mainMotor.configMotionCruiseVelocity(15500, Constants.kTimeoutMs);
+      mainMotor.configMotionAcceleration(15500, Constants.kTimeoutMs);
 
       armMotor.setStatusFramePeriod(
         StatusFrameEnhanced.Status_13_Base_PIDF0,
@@ -239,8 +240,10 @@ public class Elevator extends SubsystemBase {
       .andThen(
         Commands
           .waitUntil(() ->
-            mainMotor.getActiveTrajectoryPosition() < elevatorPosition + 5000 &&
-            mainMotor.getActiveTrajectoryPosition() > elevatorPosition - 5000
+            mainMotor.getActiveTrajectoryPosition() <
+            elevatorPosition +
+            20000 &&
+            mainMotor.getActiveTrajectoryPosition() > elevatorPosition - 20000
           )
           .withTimeout(1.5)
       )
@@ -283,7 +286,12 @@ public class Elevator extends SubsystemBase {
       ) // set soft limit to be stow position
       .andThen(
         runOnce(() ->
-          mainMotor.set(TalonFXControlMode.MotionMagic, Constants.elevatorStow)
+          mainMotor.set(
+            TalonFXControlMode.MotionMagic,
+            Constants.elevatorStow,
+            DemandType.ArbitraryFeedForward,
+            0.03
+          )
         )
       ) // set elevator to 0
       .andThen(
