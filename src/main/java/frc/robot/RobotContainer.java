@@ -142,7 +142,7 @@ public class RobotContainer {
 
   /* Subsystems */
   private final Limelight m_Limelight = new Limelight();
-  private final Swerve s_Swerve = new Swerve(m_Limelight);
+  public final Swerve s_Swerve = new Swerve(m_Limelight);
   public final Elevator m_Elevator = new Elevator();
   private final Claw m_Claw = new Claw();
   private final LED m_LED = new LED();
@@ -344,6 +344,7 @@ public class RobotContainer {
       // xButton1.whileTrue(new RunCommand(s_Swerve::autoBalance, s_Swerve));
 
       xButton1.onTrue(s_Swerve.xWheelsCommand());
+      // xButton1.onTrue(new SnapToAngle(s_Swerve, 0));
 
       leftStickButton1.onTrue(
         m_Elevator.sequentialSetPositions(
@@ -357,7 +358,8 @@ public class RobotContainer {
       //Elevator Arm Presets
       b1.onTrue(
         new SequentialCommandGroup(
-          //s_Swerve.moveToGoalRetroreflective(),
+          // s_Swerve.moveToGoalRetroreflective(),
+          s_Swerve.moveToGoalRetroreflective(),
           m_Elevator.sequentialSetPositions(
             Constants.elevatorTopCone,
             Constants.armTopCone
@@ -370,7 +372,7 @@ public class RobotContainer {
       );
       b2.onTrue(
         new SequentialCommandGroup(
-          //s_Swerve.moveToGoalRetroreflective(),
+          s_Swerve.moveToGoalRetroreflective(),
           m_Elevator.sequentialSetPositions(
             Constants.elevatorMidCone,
             Constants.armMidCone
@@ -383,7 +385,7 @@ public class RobotContainer {
       );
       b3.onTrue(
         new SequentialCommandGroup(
-          // s_Swerve.moveToGoalAprilTags(),
+          s_Swerve.moveToGoalAprilTags(),
           m_Elevator.sequentialSetPositions(
             Constants.elevatorTopCube,
             Constants.armTopCube
@@ -396,7 +398,7 @@ public class RobotContainer {
       );
       b4.onTrue(
         new SequentialCommandGroup(
-          // s_Swerve.moveToGoalAprilTags(),
+          s_Swerve.moveToGoalAprilTags(),
           m_Elevator.sequentialSetPositions(
             Constants.elevatorMidCube,
             Constants.armMidCube
@@ -420,8 +422,18 @@ public class RobotContainer {
       b9.whileTrue(m_Elevator.runUp());
       b10.whileTrue(m_Elevator.runDown());
 
-      b11.onTrue(new InstantCommand(() -> m_LED.LEDColor(255, 140, 0)));
-      b12.onTrue(new InstantCommand(() -> m_LED.LEDColor(255, 0, 255)));
+      b11.onTrue(
+        new InstantCommand(() -> {
+          m_LED.LEDColor(255, 140, 0);
+          m_Limelight.setToRetroreflectiveTape();
+        })
+      );
+      b12.onTrue(
+        new InstantCommand(() -> {
+          m_LED.LEDColor(255, 0, 255);
+          m_Limelight.setToAprilTags();
+        })
+      );
 
       start1.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
       back1.onTrue(new InstantCommand(() -> Swerve.resetModulesToAbsolute()));

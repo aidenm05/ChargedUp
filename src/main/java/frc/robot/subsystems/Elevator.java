@@ -135,8 +135,8 @@ public class Elevator extends SubsystemBase {
       mainMotor.configAllowableClosedloopError(Constants.kSlotIdx1, 100);
 
       /* Set acceleration and vcruise velocity - see documentation */
-      mainMotor.configMotionCruiseVelocity(15500, Constants.kTimeoutMs);
-      mainMotor.configMotionAcceleration(15500, Constants.kTimeoutMs);
+      mainMotor.configMotionCruiseVelocity(17000, Constants.kTimeoutMs);
+      mainMotor.configMotionAcceleration(17000, Constants.kTimeoutMs);
 
       armMotor.setStatusFramePeriod(
         StatusFrameEnhanced.Status_13_Base_PIDF0,
@@ -174,9 +174,18 @@ public class Elevator extends SubsystemBase {
       armMotor.configForwardSoftLimitThreshold(Constants.armUpperLimit);
 
       //DISABLE MOTION MAGIC
-      armMotor.set(ControlMode.PercentOutput, 0.0);
+      armMotor.set(ControlMode.PercentOutput, feedForward());
       mainMotor.set(ControlMode.PercentOutput, 0.03);
     }
+  }
+
+  public double feedForward() {
+    double armPos = armMotor.getSelectedSensorPosition();
+    double degrees =
+      (armPos - Constants.horizontalPos) / Constants.ticksPerDegrees;
+    double radians = java.lang.Math.toRadians(degrees);
+    double cosineScalar = java.lang.Math.cos(radians);
+    return Constants.maxFF * cosineScalar;
   }
 
   //nice run up and down commands
@@ -198,19 +207,23 @@ public class Elevator extends SubsystemBase {
 
   public CommandBase armDown() {
     return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, -0.1))
-      .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.03))
+      .finallyDo(interrupted ->
+        armMotor.set(ControlMode.PercentOutput, feedForward())
+      )
       .withName("armDown");
   }
 
   public CommandBase armUp() {
     return run(() -> armMotor.set(TalonFXControlMode.PercentOutput, 0.1))
-      .finallyDo(interrupted -> armMotor.set(ControlMode.PercentOutput, 0.030))
+      .finallyDo(interrupted ->
+        armMotor.set(ControlMode.PercentOutput, feedForward())
+      )
       .withName("armUp");
   }
 
   public void armAndElevatorStopPercentMode() {
     // if (!DriverStation.isAutonomous()) {
-    armMotor.set(TalonFXControlMode.PercentOutput, 0.03);
+    armMotor.set(TalonFXControlMode.PercentOutput, feedForward());
     mainMotor.set(TalonFXControlMode.PercentOutput, 0.03);
     // }
   }
@@ -272,18 +285,18 @@ public class Elevator extends SubsystemBase {
     return runOnce(() ->
         armMotor.set(TalonFXControlMode.MotionMagic, Constants.armUpperLimit)
       )
-      .andThen(
-        Commands
-          .waitUntil(() ->
-            armMotor.getActiveTrajectoryPosition() >
-            Constants.armUpperLimit -
-            100 &&
-            armMotor.getActiveTrajectoryPosition() <
-            Constants.armUpperLimit +
-            100
-          )
-          .withTimeout(1)
-      ) // set to current upperlimit
+      // .andThen(
+      //   Commands
+      // .waitUntil(() ->
+      //   armMotor.getActiveTrajectoryPosition() >
+      //   Constants.armUpperLimit -
+      //   100 &&
+      //   armMotor.getActiveTrajectoryPosition() <
+      //   Constants.armUpperLimit +
+      //   100
+      // )
+      // .withTimeout(1)
+      //) // set to current upperlimit
       .andThen(
         runOnce(() ->
           armMotor.configForwardSoftLimitThreshold(Constants.armStow)

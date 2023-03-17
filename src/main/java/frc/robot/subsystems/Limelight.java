@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -11,6 +12,14 @@ public class Limelight extends SubsystemBase {
   double ty = 0;
   double tv = 0;
   double ta = 0;
+  private SendableChooser<Boolean> m_limelightSwitch = new SendableChooser<>();
+
+  public Limelight() {
+    m_limelightSwitch.setDefaultOption("On", true);
+    m_limelightSwitch.addOption("Off", false);
+
+    SmartDashboard.putData("Limelight Switch", m_limelightSwitch);
+  }
 
   //rotation for vision tracking-- we need to correct rotation on the limelight
 
@@ -74,6 +83,10 @@ public class Limelight extends SubsystemBase {
 
     // if tv = 0, target is not valid so return 0.0
     if (tv == 0) {
+      return 0.0;
+    }
+
+    if (m_limelightSwitch.getSelected() == false) {
       return 0.0;
     }
 

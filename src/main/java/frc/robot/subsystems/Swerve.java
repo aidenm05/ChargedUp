@@ -162,7 +162,7 @@ public class Swerve extends SubsystemBase {
 
   public void alignToGoal() {
     drive(
-      new Translation2d(0, 0.5 * -m_Limelight.getSteeringValue()),
+      new Translation2d(0, 0.5 * m_Limelight.getSteeringValue()),
       0,
       true,
       false
@@ -195,22 +195,25 @@ public class Swerve extends SubsystemBase {
   //   }
   // }
 
-  public CommandBase moveToGoalAprilTags() {
-    return runOnce(() -> m_Limelight.setToAprilTags())
-      .andThen(() -> Timer.delay(.5))
-      .andThen(
-        run(() -> alignToGoal())
-          .until(() -> m_Limelight.getSteeringValue() == 0)
-      );
+  public CommandBase moveToGoal() {
+    return run(() -> alignToGoal())
+      .until(() -> m_Limelight.getSteeringValue() == 0)
+      .withTimeout(1)
+      .andThen(() -> drive(new Translation2d(0, 0), 0, true, false));
   }
 
   public CommandBase moveToGoalRetroreflective() {
-    return runOnce(() -> m_Limelight.setToRetroreflectiveTape())
-      .andThen(() -> Timer.delay(.5))
-      .andThen(
-        run(() -> alignToGoal())
-          .until(() -> m_Limelight.getSteeringValue() == 0)
-      );
+    return run(() -> alignToGoal())
+      .until(() -> m_Limelight.getSteeringValue() == 0)
+      .withTimeout(1)
+      .andThen(() -> drive(new Translation2d(0, 0), 0, true, false));
+  }
+
+  public CommandBase moveToGoalAprilTags() {
+    return run(() -> alignToGoal())
+      .until(() -> m_Limelight.getSteeringValue() == 0)
+      .withTimeout(2)
+      .andThen(() -> drive(new Translation2d(0, 0), 0, true, false));
   }
 
   public CommandBase driveL() {

@@ -18,8 +18,8 @@ public final class Constants {
   public static final int CANdleID2 = 2;
 
   public static final boolean mantis = false;
-  public static final double LIMELIGHT_DEADBAND = 0.5;
-  public static final double MIN_STEER_K = .4;
+  public static final double LIMELIGHT_DEADBAND = 0.15;
+  public static final double MIN_STEER_K = .05;
 
   //1540
   //1655
@@ -51,6 +51,12 @@ public final class Constants {
   public static final int armStow = 1675;
   public static final int armFloor = 461;
   public static final int armShelf = 1040;
+
+  //arm feed forward
+  public static final int horizontalPos = 870;
+  public static final int ticksPerDegrees = 4096 / 360;
+  public static final double maxFF = .03;
+
   // arm encoder
   public static final double armEncoderOffset = 312.02;
 
