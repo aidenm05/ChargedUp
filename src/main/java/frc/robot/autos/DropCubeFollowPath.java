@@ -20,7 +20,7 @@ public class DropCubeFollowPath extends SequentialCommandGroup {
     String path,
     boolean runBalancer
   ) {
-    PathPlannerTrajectory traj = PathPlanner.loadPath(path, 2, 2);
+    PathPlannerTrajectory traj = PathPlanner.loadPath(path, 1.5, 2);
     addCommands(
       m_Claw.open1Hold(),
       m_Elevator.sequentialSetPositions(EP, AP),

@@ -42,7 +42,7 @@ public class Swerve extends SubsystemBase {
   public Pigeon2 gyro;
   private GenericEntry gyroAngle;
   Limelight m_Limelight;
-  private PIDController m_balancePID = new PIDController(0.045, 0, 0); //actually get
+  private PIDController m_balancePID = new PIDController(0.05, 0, 0); //actually get
 
   public Swerve(Limelight limelight) {
     m_Limelight = limelight;
@@ -162,7 +162,7 @@ public class Swerve extends SubsystemBase {
 
   public void alignToGoal() {
     drive(
-      new Translation2d(0, 0.5 * m_Limelight.getSteeringValue()),
+      new Translation2d(0, 0.5 * -m_Limelight.getSteeringValue()),
       0,
       true,
       false
@@ -271,6 +271,10 @@ public class Swerve extends SubsystemBase {
 
   public void zeroGyro() {
     gyro.setYaw(0);
+  }
+
+  public CommandBase zeroGyroCommand() {
+    return runOnce(() -> zeroGyro());
   }
 
   public Rotation2d getYaw() {

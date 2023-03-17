@@ -383,7 +383,7 @@ public class RobotContainer {
       );
       b3.onTrue(
         new SequentialCommandGroup(
-          s_Swerve.moveToGoalAprilTags(),
+          // s_Swerve.moveToGoalAprilTags(),
           m_Elevator.sequentialSetPositions(
             Constants.elevatorTopCube,
             Constants.armTopCube
@@ -396,7 +396,7 @@ public class RobotContainer {
       );
       b4.onTrue(
         new SequentialCommandGroup(
-          s_Swerve.moveToGoalAprilTags(),
+          // s_Swerve.moveToGoalAprilTags(),
           m_Elevator.sequentialSetPositions(
             Constants.elevatorMidCube,
             Constants.armMidCube
@@ -410,8 +410,8 @@ public class RobotContainer {
       b5.onTrue(m_Elevator.setStow());
       b6.onTrue(
         m_Elevator.sequentialSetPositions(
-          Constants.elevatorFloor,
-          Constants.armFloor
+          Constants.elevatorShelf,
+          Constants.armShelf
         )
       );
 

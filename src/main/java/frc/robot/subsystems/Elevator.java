@@ -164,8 +164,8 @@ public class Elevator extends SubsystemBase {
       armMotor.configAllowableClosedloopError(Constants.kSlotIdx0, 20);
 
       /* Set acceleration and vcruise velocity - see documentation */
-      armMotor.configMotionCruiseVelocity(213, Constants.kTimeoutMs);
-      armMotor.configMotionAcceleration(213, Constants.kTimeoutMs);
+      armMotor.configMotionCruiseVelocity(250, Constants.kTimeoutMs);
+      armMotor.configMotionAcceleration(250, Constants.kTimeoutMs);
 
       mainMotor.configForwardSoftLimitEnable(true);
       mainMotor.configForwardSoftLimitThreshold(Constants.elevatorUpperLimit);
@@ -234,7 +234,12 @@ public class Elevator extends SubsystemBase {
       )
       .andThen(
         runOnce(() ->
-          mainMotor.set(TalonFXControlMode.MotionMagic, elevatorPosition)
+          mainMotor.set(
+            TalonFXControlMode.MotionMagic,
+            elevatorPosition,
+            DemandType.ArbitraryFeedForward,
+            0.03
+          )
         )
       )
       .andThen(
@@ -242,8 +247,8 @@ public class Elevator extends SubsystemBase {
           .waitUntil(() ->
             mainMotor.getActiveTrajectoryPosition() <
             elevatorPosition +
-            20000 &&
-            mainMotor.getActiveTrajectoryPosition() > elevatorPosition - 20000
+            30000 &&
+            mainMotor.getActiveTrajectoryPosition() > elevatorPosition - 30000
           )
           .withTimeout(1.5)
       )

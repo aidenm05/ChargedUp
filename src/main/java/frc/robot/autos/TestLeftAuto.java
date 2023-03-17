@@ -11,6 +11,6 @@ public class TestLeftAuto extends SequentialCommandGroup {
 
   public TestLeftAuto(Swerve s_Swerve, Elevator m_Elevator, Claw m_Claw) {
     PathPlannerTrajectory traj = PathPlanner.loadPath("Driveleft", 2, 2);
-    addCommands(s_Swerve.followTrajectoryCommand(traj, true));
+    addCommands(s_Swerve.followTrajectoryCommand(traj, false));
   }
 }
