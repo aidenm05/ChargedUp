@@ -357,57 +357,57 @@ public class RobotContainer {
 
       //Elevator Arm Presets
       b1.onTrue(
-        new SequentialCommandGroup(
-          // s_Swerve.moveToGoalRetroreflective(),
-          s_Swerve.moveToGoalRetroreflective(),
-          m_Elevator.sequentialSetPositions(
-            Constants.elevatorTopCone,
-            Constants.armTopCone
-          )
-        )
-        // m_Elevator.sequentialSetPositions(
-        //   Constants.elevatorTopCone,
-        //   Constants.armTopCone
+        // new SequentialCommandGroup(
+        //   // s_Swerve.moveToGoalRetroreflective(),
+        //   // s_Swerve.moveToGoalRetroreflective(),
+        //   m_Elevator.sequentialSetPositions(
+        //     Constants.elevatorTopCone,
+        //     Constants.armTopCone
+        //   )
         // )
+        m_Elevator.sequentialSetPositions(
+          Constants.elevatorTopCone,
+          Constants.armTopCone
+        )
       );
       b2.onTrue(
-        new SequentialCommandGroup(
-          s_Swerve.moveToGoalRetroreflective(),
-          m_Elevator.sequentialSetPositions(
-            Constants.elevatorMidCone,
-            Constants.armMidCone
-          )
-        )
-        // m_Elevator.sequentialSetPositions(
-        //   Constants.elevatorMidCone,
-        //   Constants.armMidCone
+        // new SequentialCommandGroup(
+        //   // s_Swerve.moveToGoalRetroreflective(),
+        //   m_Elevator.sequentialSetPositions(
+        //     Constants.elevatorMidCone,
+        //     Constants.armMidCone
+        //   )
         // )
+        m_Elevator.sequentialSetPositions(
+          Constants.elevatorMidCone,
+          Constants.armMidCone
+        )
       );
       b3.onTrue(
-        new SequentialCommandGroup(
-          s_Swerve.moveToGoalAprilTags(),
-          m_Elevator.sequentialSetPositions(
-            Constants.elevatorTopCube,
-            Constants.armTopCube
-          )
-        )
-        // m_Elevator.sequentialSetPositions(
-        //   Constants.elevatorTopCube,
-        //   Constants.armTopCube
+        // new SequentialCommandGroup(
+        //   // s_Swerve.moveToGoalAprilTags(),
+        //   m_Elevator.sequentialSetPositions(
+        //     Constants.elevatorTopCube,
+        //     Constants.armTopCube
+        //   )
         // )
+        m_Elevator.sequentialSetPositions(
+          Constants.elevatorTopCube,
+          Constants.armTopCube
+        )
       );
       b4.onTrue(
-        new SequentialCommandGroup(
-          s_Swerve.moveToGoalAprilTags(),
-          m_Elevator.sequentialSetPositions(
-            Constants.elevatorMidCube,
-            Constants.armMidCube
-          )
-        )
-        // m_Elevator.sequentialSetPositions(
-        //   Constants.elevatorMidCube,
-        //   Constants.armMidCube
+        // new SequentialCommandGroup(
+        //   // s_Swerve.moveToGoalAprilTags(),
+        //   m_Elevator.sequentialSetPositions(
+        //     Constants.elevatorMidCube,
+        //     Constants.armMidCube
+        //   )
         // )
+        m_Elevator.sequentialSetPositions(
+          Constants.elevatorMidCube,
+          Constants.armMidCube
+        )
       );
       b5.onTrue(m_Elevator.setStow());
       b6.onTrue(
