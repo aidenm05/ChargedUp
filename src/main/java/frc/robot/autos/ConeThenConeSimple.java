@@ -10,9 +10,9 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
 
-public class ConeThenCone extends SequentialCommandGroup {
+public class ConeThenConeSimple extends SequentialCommandGroup {
 
-  public ConeThenCone(Swerve s_Swerve, Elevator m_Elevator, Claw m_Claw) {
+  public ConeThenConeSimple(Swerve s_Swerve, Elevator m_Elevator, Claw m_Claw) {
     PathPlannerTrajectory traj1 = PathPlanner.loadPath("Cone2GP", 3.5, 3);
     PathPlannerTrajectory traj3 = PathPlanner.loadPath("GP2Cone", 3.5, 3);
     addCommands(
@@ -24,18 +24,17 @@ public class ConeThenCone extends SequentialCommandGroup {
       m_Claw.openAllDrop(),
       new WaitCommand(.25),
       m_Claw.motorOff(),
+      m_Elevator.setStow(),
       new ParallelCommandGroup(
         new SequentialCommandGroup(
-          m_Elevator.setStow(),
           new WaitCommand(.25),
           m_Elevator.sequentialSetPositions(
             Constants.elevatorFloor,
             Constants.armFloor
           ),
-          m_Claw.open1In()
+          m_Claw.openAllIn()
         ),
         new SequentialCommandGroup(
-          new WaitCommand(.5),
           s_Swerve.followTrajectoryCommand(traj1, true)
         )
       ),
@@ -43,17 +42,17 @@ public class ConeThenCone extends SequentialCommandGroup {
       new ParallelCommandGroup(
         m_Elevator.setStow(),
         new SequentialCommandGroup(
-          new WaitCommand(.5),
           s_Swerve.followTrajectoryCommand(traj3, false)
         )
       ),
       new WaitCommand(.5),
       m_Elevator.sequentialSetPositions(
-        Constants.elevatorTopCube,
-        Constants.armTopCube
+        Constants.elevatorTopCone,
+        Constants.armTopCone
       ),
       m_Claw.openAllDrop(),
       new WaitCommand(.5),
+      m_Claw.motorOff(),
       m_Elevator.setStow()
     );
   }

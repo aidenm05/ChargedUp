@@ -168,7 +168,7 @@ public class RobotContainer {
 
     m_autoChooser.addOption(
       "Cone Then Cone",
-      new ConeThenCone(s_Swerve, m_Elevator, m_Claw)
+      new ConeThenConeSimple(s_Swerve, m_Elevator, m_Claw)
     );
 
     m_autoChooser.addOption(

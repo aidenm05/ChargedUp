@@ -194,13 +194,13 @@ public class Elevator extends SubsystemBase {
   }
 
   public CommandBase runDown() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.1))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, -.2))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.03))
       .withName("runDown");
   }
 
   public CommandBase runUp() {
-    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, 0.1))
+    return run(() -> mainMotor.set(TalonFXControlMode.PercentOutput, 0.27))
       .finallyDo(interrupted -> mainMotor.set(ControlMode.PercentOutput, 0.03))
       .withName("runUp");
   }
