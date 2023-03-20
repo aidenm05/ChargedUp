@@ -17,13 +17,13 @@ public class Claw extends SubsystemBase {
   public TalonFX clawMotor;
 
   public Claw() {
-    if (!Constants.mantis) {
+    
       clawPiston1 = new Solenoid(PneumaticsModuleType.REVPH, 1);
       clawPiston2 = new Solenoid(PneumaticsModuleType.REVPH, 2); //idk
       clawMotor = new TalonFX(4);
       clawPiston1.set(true);
       clawPiston2.set(false);
-    }
+    
   }
 
   public CommandBase motorForward() {

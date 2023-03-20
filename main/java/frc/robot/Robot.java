@@ -39,7 +39,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     ctreConfigs = new CTREConfigs();
-    Constants.confirmMantisConstants();
     PathPlannerServer.startServer(5811); // 5811 = port number. adjust this according to your needs
     CameraServer.startAutomaticCapture();
    m_robotContainer = new RobotContainer();

@@ -43,7 +43,7 @@ public class Elevator extends SubsystemBase {
       .1
     );
 
-    if (!Constants.mantis) {
+
       mainMotor = new WPI_TalonFX(1); // add "torch as second parameter when on canivore"
      // followerMotor = new WPI_TalonFX(2); // add "torch as second parameter when on canivore"
       armMotor = new WPI_TalonFX(3);
@@ -182,7 +182,7 @@ public class Elevator extends SubsystemBase {
       armMotor.set(ControlMode.PercentOutput, feedForward());
       mainMotor.set(ControlMode.PercentOutput, 0.03);
     }
-  }
+  
 
   public double feedForward() {
     double armPos = armMotor.getSelectedSensorPosition();
